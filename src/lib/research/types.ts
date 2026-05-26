@@ -60,6 +60,17 @@ export const methodologies = [
 export type Discipline = (typeof disciplines)[number];
 export type Methodology = (typeof methodologies)[number];
 
+export const researchStrategies = [
+  "beginner-safe research",
+  "high-impact/high-risk research",
+  "fast publishable topics",
+  "interdisciplinary innovation",
+  "practitioner-oriented research",
+  "theory-heavy research"
+] as const;
+
+export type ResearchStrategy = (typeof researchStrategies)[number];
+
 export type RetrievedPaper = {
   id: string;
   title: string;
@@ -451,6 +462,78 @@ export type ResearchRoadmap = {
   unexploredInterdisciplinaryCombinations: RoadmapItem[];
 };
 
+export type PublicationVenueRecommendation = {
+  name: string;
+  type: "journal" | "conference" | "venue";
+  classification: "SSCI" | "SCI" | "Scopus" | "unknown";
+  classificationEvidence: string;
+  impactTrendEstimate: string;
+  methodologyFit: number;
+  topicFit: number;
+  publishabilityReasoning: string;
+  evidencePaperIds: string[];
+};
+
+export type PublicationIntelligence = {
+  journals: PublicationVenueRecommendation[];
+  conferences: PublicationVenueRecommendation[];
+  publishabilityReasoning: string[];
+  warnings: string[];
+};
+
+export type DatasetRecommendation = {
+  name: string;
+  sourceUrl: string;
+  type: "public dataset" | "survey" | "interview" | "experiment" | "ethical API/scraping" | "institutional data";
+  suitability: string;
+  sampleType: string;
+  estimatedSampleSizeGuidance: string;
+  difficulty: "low" | "medium" | "high";
+  ethicalNotes: string;
+  evidence: string;
+};
+
+export type DatasetIntelligence = {
+  recommendations: DatasetRecommendation[];
+  surveyInterviewSuitability: string;
+  experimentalFeasibility: string;
+  apiScrapingPossibilities: string;
+  dataDifficultyEstimate: "low" | "medium" | "high";
+  sampleTypeRecommendations: string[];
+};
+
+export type LongTermResearchRoadmap = {
+  strategy: ResearchStrategy;
+  shortTermPaperIdeas: RoadmapItem[];
+  followUpStudyChains: RoadmapItem[];
+  dissertationThesisPathways: RoadmapItem[];
+  futureExpansionDirections: RoadmapItem[];
+  multiPaperResearchAgendas: RoadmapItem[];
+  progressiveTheoryDevelopmentPaths: RoadmapItem[];
+};
+
+export type CompetitionSignal = {
+  label: string;
+  level: "low" | "moderate" | "high";
+  evidence: string;
+  paperIds: string[];
+};
+
+export type ResearchCompetitionIntelligence = {
+  oversaturatedTopics: CompetitionSignal[];
+  rapidlyGrowingAreas: CompetitionSignal[];
+  neglectedDomains: CompetitionSignal[];
+  highlyCompetitiveSpaces: CompetitionSignal[];
+  emergingOpportunities: CompetitionSignal[];
+  decliningResearchTrends: CompetitionSignal[];
+};
+
+export type ExportBundle = {
+  markdown: string;
+  bibtex: string;
+  citationNote: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -467,6 +550,7 @@ export type Topic = {
   publicationSuitabilityEstimate: string;
   researchPlan: ResearchPlan;
   researchDesignGuidance: ResearchDesignGuidance;
+  datasetIntelligence: DatasetIntelligence;
   academicContribution: string;
   practicalContribution: string;
   scores: Scores;
@@ -507,6 +591,7 @@ export type ResearchIntelligenceResult = {
     keywords: string[];
     discipline: Discipline;
     methodology: Methodology;
+    strategy: ResearchStrategy;
   };
   papers: RetrievedPaper[];
   synthesis: Synthesis;
@@ -519,6 +604,11 @@ export type ResearchIntelligenceResult = {
   literatureReviewDraft: LiteratureReviewDraft;
   debateAnalysis: DebateSignal[];
   researchRoadmap: ResearchRoadmap;
+  publicationIntelligence: PublicationIntelligence;
+  datasetIntelligence: DatasetIntelligence;
+  longTermResearchRoadmap: LongTermResearchRoadmap;
+  competitionIntelligence: ResearchCompetitionIntelligence;
+  exportBundle: ExportBundle;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

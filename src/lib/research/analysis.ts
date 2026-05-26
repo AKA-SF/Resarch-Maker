@@ -3,6 +3,7 @@ import type {
   EvidenceItem,
   Gap,
   Methodology,
+  ResearchStrategy,
   ResearchIntelligenceResult,
   RetrievedPaper,
   Scores,
@@ -23,6 +24,15 @@ import {
   buildResearchRoadmap,
   detectDebates
 } from "./bibliometrics";
+import {
+  buildCompetitionIntelligence,
+  buildDatasetIntelligence,
+  buildExportBundle,
+  buildLongTermRoadmap,
+  buildPublicationIntelligence,
+  orderGapsByStrategy,
+  tuneTopicForStrategy
+} from "./strategy";
 
 const broadConcepts = new Set([
   "psychology",
@@ -286,6 +296,7 @@ export function generateTopics(
   keywords: string[],
   discipline: Discipline,
   methodology: Methodology,
+  strategy: ResearchStrategy,
   papers: RetrievedPaper[],
   synthesis: Synthesis,
   gaps: Gap[],
@@ -300,7 +311,7 @@ export function generateTopics(
     synthesis.relatedTheories[0]?.label ??
     keywords[1] ??
     "learning outcomes";
-  const usableGaps = gaps.length > 0 ? gaps : [
+  const usableGaps = orderGapsByStrategy(gaps.length > 0 ? gaps : [
     {
       type: "underexplored_intersection" as const,
       claim: `검색된 근거는 ${keywords.join(", ")} 주변의 탐색적 주제 생성을 뒷받침하지만, 강한 연구 갭은 탐지되지 않았습니다.`,
@@ -308,7 +319,7 @@ export function generateTopics(
       confidence: "low" as const,
       paperIds: papers.slice(0, 3).map((paper) => paper.id)
     }
-  ];
+  ], strategy);
 
   return usableGaps.slice(0, 4).map((gap, index) => {
     const context = keywords.join(", ");
@@ -369,13 +380,14 @@ export function generateTopics(
         journalConferenceDirections: [],
         methodologyRisks: []
       },
+      datasetIntelligence: buildDatasetIntelligence(discipline, methodology, strategy, papers),
       academicContribution: `검색 문헌에서 약하게 연결된 교차점을 검증합니다: ${gap.evidence}`,
       practicalContribution: `${disciplineLabel} 현장에서 어떤 개념이 측정 가능하고 실행 가능하며 개입 설계에 적합한지 판단하는 데 도움을 줄 수 있습니다.`,
       scores,
       evidencePaperIds: gap.paperIds.length > 0 ? gap.paperIds : papers.slice(index, index + 3).map((paper) => paper.id),
       inferenceNotice: "생성된 추론입니다. 연결된 근거는 신호와 빈도만 뒷받침하며, 사람의 검토 없이 연구 갭을 증명하지 않습니다."
     };
-    return graph
+    const completedTopic = graph
       ? {
           ...baseTopic,
           methodologyRecommendations: recommendMethodologies(baseTopic, papers, graph, discipline, methodology),
@@ -383,6 +395,7 @@ export function generateTopics(
           researchDesignGuidance: buildResearchDesignGuidance(baseTopic, discipline, methodology)
         }
       : baseTopic;
+    return tuneTopicForStrategy(completedTopic, strategy);
   });
 }
 
@@ -390,7 +403,8 @@ export function buildResearchIntelligenceResult(
   keywords: string[],
   discipline: Discipline,
   methodology: Methodology,
-  papers: RetrievedPaper[]
+  papers: RetrievedPaper[],
+  strategy: ResearchStrategy = "beginner-safe research"
 ): ResearchIntelligenceResult {
   const synthesis = synthesizeLiterature(papers);
   const theoryGraph = buildTheoryGraph(papers, keywords);
@@ -401,14 +415,19 @@ export function buildResearchIntelligenceResult(
   const literatureMap = buildLiteratureMap(papers, synthesis, theoryGraph);
   const debateAnalysis = detectDebates(papers, synthesis, bibliometricAnalysis);
   const gaps = detectGaps(keywords, methodology, papers, synthesis, theoryGraph, relationshipAnalysis);
-  const topics = generateTopics(keywords, discipline, methodology, papers, synthesis, gaps, theoryGraph);
+  const topics = generateTopics(keywords, discipline, methodology, strategy, papers, synthesis, gaps, theoryGraph);
   const copilot = buildCopilotIntelligence(topics, synthesis, theoryGraph, relationshipAnalysis, trendAnalysis, gaps, papers);
   const literatureReviewDraft = buildLiteratureReviewDraft(papers, synthesis, gaps, literatureMap, trendAnalysis, debateAnalysis);
   const researchRoadmap = buildResearchRoadmap(papers, synthesis, gaps, citationIntelligence, bibliometricAnalysis, literatureMap);
+  const publicationIntelligence = buildPublicationIntelligence(papers, methodology, strategy);
+  const datasetIntelligence = buildDatasetIntelligence(discipline, methodology, strategy, papers);
+  const longTermResearchRoadmap = buildLongTermRoadmap(topics, synthesis, strategy);
+  const competitionIntelligence = buildCompetitionIntelligence(synthesis, trendAnalysis, bibliometricAnalysis);
+  const exportBundle = buildExportBundle(topics, papers, publicationIntelligence);
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
-    query: { keywords, discipline, methodology },
+    query: { keywords, discipline, methodology, strategy },
     papers,
     synthesis,
     theoryGraph,
@@ -420,6 +439,11 @@ export function buildResearchIntelligenceResult(
     literatureReviewDraft,
     debateAnalysis,
     researchRoadmap,
+    publicationIntelligence,
+    datasetIntelligence,
+    longTermResearchRoadmap,
+    competitionIntelligence,
+    exportBundle,
     copilot,
     domainIntelligence,
     gaps,

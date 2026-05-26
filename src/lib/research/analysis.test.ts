@@ -8,7 +8,7 @@ const papers: RetrievedPaper[] = [
     title: "AI education and self-efficacy in adaptive learning",
     year: 2025,
     doi: null,
-    source: "OpenAlex",
+    source: "Computers & Education",
     url: "https://example.test/p1",
     citedByCount: 12,
     concepts: ["Artificial intelligence", "Education", "Self-efficacy", "Learning analytics"],
@@ -24,7 +24,7 @@ const papers: RetrievedPaper[] = [
     title: "Technology acceptance model for AI tutors",
     year: 2024,
     doi: null,
-    source: "OpenAlex",
+    source: "Education and Information Technologies",
     url: "https://example.test/p2",
     citedByCount: 8,
     concepts: ["Technology acceptance model", "Human-computer interaction"],
@@ -108,5 +108,24 @@ describe("research analysis", () => {
     expect(result.debateAnalysis.length).toBeGreaterThan(0);
     expect(result.literatureReviewDraft.exportMarkdown).toContain("Retrieved evidence");
     expect(result.researchRoadmap.recommendedNextStepStudies.length).toBeGreaterThan(0);
+  });
+
+  it("adapts publication, dataset, roadmap, competition, and export outputs by strategy", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "high-impact/high-risk research"
+    );
+    expect(result.query.strategy).toBe("high-impact/high-risk research");
+    expect(result.topics[0].title).toContain("고임팩트/고위험");
+    expect(result.publicationIntelligence.journals.length).toBeGreaterThan(0);
+    expect(result.datasetIntelligence.recommendations.some((item) => item.name.includes("PISA"))).toBe(true);
+    expect(result.topics[0].datasetIntelligence.recommendations.length).toBeGreaterThan(0);
+    expect(result.longTermResearchRoadmap.strategy).toBe("high-impact/high-risk research");
+    expect(result.competitionIntelligence.oversaturatedTopics.length).toBeGreaterThan(0);
+    expect(result.exportBundle.markdown).toContain("Research Strategy Export");
+    expect(result.exportBundle.bibtex).toContain("@misc");
   });
 });

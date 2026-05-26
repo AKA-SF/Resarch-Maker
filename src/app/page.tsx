@@ -7,6 +7,7 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  Download,
   FileText,
   GitFork,
   Layers3,
@@ -15,28 +16,43 @@ import {
   MessageSquare,
   Network,
   Rocket,
+  Save,
   Scale,
   Search,
   ShieldCheck,
   Sparkles,
+  Star,
   TriangleAlert,
   Users,
   Wand2
 } from "lucide-react";
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   disciplines,
   methodologies,
+  researchStrategies,
   type CopilotMessage,
   type Discipline,
   type GraphNode,
   type Methodology,
+  type ResearchStrategy,
   type ResearchIntelligenceResult,
   type Topic
 } from "@/lib/research/types";
 import { disciplineLabels, methodologyLabels } from "@/lib/research/domain";
+import { strategyLabels } from "@/lib/research/strategy";
 
 const initialKeywords = "AI, education, self-efficacy";
+
+type SavedWorkspace = {
+  id: string;
+  title: string;
+  keywords: string;
+  strategy: ResearchStrategy;
+  createdAt: string;
+  topicCount: number;
+  bookmarkedTopicTitles: string[];
+};
 
 const scoreLabels: Record<string, string> = {
   novelty: "참신성",
@@ -292,14 +308,24 @@ export default function Home() {
   const [keywords, setKeywords] = useState(initialKeywords);
   const [discipline, setDiscipline] = useState<Discipline>("education");
   const [methodology, setMethodology] = useState<Methodology>("quantitative");
+  const [strategy, setStrategy] = useState<ResearchStrategy>("beginner-safe research");
   const [result, setResult] = useState<ResearchIntelligenceResult | null>(null);
   const [copilotMessages, setCopilotMessages] = useState<CopilotMessage[]>([]);
+  const [savedWorkspaces, setSavedWorkspaces] = useState<SavedWorkspace[]>([]);
+  const [bookmarkedTopics, setBookmarkedTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const paperMap = useMemo(() => new Map(result?.papers.map((paper) => [paper.id, paper]) ?? []), [result]);
   const maxTrend = Math.max(1, ...(result?.synthesis.trends.map((trend) => trend.support) ?? [1]));
   const relatedAndEmerging = uniqueEvidence([...(result?.synthesis.relatedTheories ?? []), ...(result?.synthesis.emergingTopics ?? [])]).slice(0, 8);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("ris-workspaces");
+    const bookmarks = window.localStorage.getItem("ris-bookmarks");
+    if (saved) setSavedWorkspaces(JSON.parse(saved) as SavedWorkspace[]);
+    if (bookmarks) setBookmarkedTopics(JSON.parse(bookmarks) as string[]);
+  }, []);
 
   async function runAnalysis(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -308,9 +334,11 @@ export default function Home() {
     const submittedKeywords = String(formData?.get("keywords") ?? keywords);
     const submittedDiscipline = String(formData?.get("discipline") ?? discipline) as Discipline;
     const submittedMethodology = String(formData?.get("methodology") ?? methodology) as Methodology;
+    const submittedStrategy = String(formData?.get("strategy") ?? strategy) as ResearchStrategy;
     setKeywords(submittedKeywords);
     setDiscipline(submittedDiscipline);
     setMethodology(submittedMethodology);
+    setStrategy(submittedStrategy);
     setLoading(true);
     setError(null);
     setResult(null);
@@ -323,7 +351,8 @@ export default function Home() {
         body: JSON.stringify({
           keywords: submittedKeywords,
           discipline: submittedDiscipline,
-          methodology: submittedMethodology
+          methodology: submittedMethodology,
+          strategy: submittedStrategy
         })
       });
       const payload = await response.json();
@@ -333,6 +362,22 @@ export default function Home() {
       const typedPayload = payload as ResearchIntelligenceResult;
       setResult(typedPayload);
       setCopilotMessages(typedPayload.copilot.starterMessages);
+      setSavedWorkspaces((current) => {
+        const next = [
+          {
+            id: typedPayload.diagnostics.generatedAt,
+            title: `${submittedKeywords} · ${strategyLabels[submittedStrategy]}`,
+            keywords: submittedKeywords,
+            strategy: submittedStrategy,
+            createdAt: typedPayload.diagnostics.generatedAt,
+            topicCount: typedPayload.topics.length,
+            bookmarkedTopicTitles: []
+          },
+          ...current
+        ].slice(0, 8);
+        window.localStorage.setItem("ris-workspaces", JSON.stringify(next));
+        return next;
+      });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "분석에 실패했습니다.");
     } finally {
@@ -342,6 +387,41 @@ export default function Home() {
 
   function addCopilotMessage(topic: Topic, mode: "improve" | "safe" | "novel" | "methods") {
     setCopilotMessages((current) => [buildImproveMessage(topic, mode), ...current].slice(0, 8));
+  }
+
+  function saveCurrentWorkspace() {
+    if (!result) return;
+    const saved: SavedWorkspace = {
+      id: `${result.diagnostics.generatedAt}-manual`,
+      title: `${keywords} · ${strategyLabels[result.query.strategy]}`,
+      keywords,
+      strategy: result.query.strategy,
+      createdAt: new Date().toISOString(),
+      topicCount: result.topics.length,
+      bookmarkedTopicTitles: bookmarkedTopics
+    };
+    setSavedWorkspaces((current) => {
+      const next = [saved, ...current].slice(0, 8);
+      window.localStorage.setItem("ris-workspaces", JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function toggleBookmark(topicTitle: string) {
+    setBookmarkedTopics((current) => {
+      const next = current.includes(topicTitle) ? current.filter((title) => title !== topicTitle) : [topicTitle, ...current].slice(0, 20);
+      window.localStorage.setItem("ris-bookmarks", JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function downloadText(filename: string, text: string, type: string) {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -381,6 +461,17 @@ export default function Home() {
               {methodologies.map((option) => (
                 <option value={option} key={option} title={`${methodologyLabels[option]}: 연구문제, 문헌 밀도, 분야 규범에 따라 추천 적합도가 달라집니다.`}>
                   {methodologyLabels[option]}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            <span>연구 전략</span>
+            <select name="strategy" value={strategy} onChange={(event) => setStrategy(event.target.value as ResearchStrategy)}>
+              {researchStrategies.map((option) => (
+                <option value={option} key={option}>
+                  {strategyLabels[option]}
                 </option>
               ))}
             </select>
@@ -462,6 +553,152 @@ export default function Home() {
                   <span>리뷰 섹션</span>
                   <strong>{result.literatureReviewDraft.thematicGrouping.length + 6}</strong>
                 </div>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Research Strategy</p>
+                      <h2>개인화 연구 전략</h2>
+                    </div>
+                    <Rocket size={22} />
+                  </div>
+                  <div className="domain-grid">
+                    <div>
+                      <span>선택 전략</span>
+                      <strong>{strategyLabels[result.query.strategy]}</strong>
+                    </div>
+                    <div>
+                      <span>자료 난이도</span>
+                      <strong>{result.datasetIntelligence.dataDifficultyEstimate}</strong>
+                    </div>
+                    <div>
+                      <span>저널 후보</span>
+                      <strong>{result.publicationIntelligence.journals.length}</strong>
+                    </div>
+                    <div>
+                      <span>저장된 워크스페이스</span>
+                      <strong>{savedWorkspaces.length}</strong>
+                    </div>
+                  </div>
+                  <div className="export-actions">
+                    <button type="button" onClick={saveCurrentWorkspace}><Save size={16} /> 저장</button>
+                    <button type="button" onClick={() => downloadText("research-strategy.md", result.exportBundle.markdown, "text/markdown")}><Download size={16} /> Markdown</button>
+                    <button type="button" onClick={() => downloadText("research-citations.bib", result.exportBundle.bibtex, "text/plain")}><Download size={16} /> BibTeX</button>
+                    <button type="button" onClick={() => window.print()}><FileText size={16} /> PDF</button>
+                  </div>
+                  <p className="muted">{result.exportBundle.citationNote}</p>
+                </section>
+                <section className="panel">
+                  <p className="tag">Workspace History</p>
+                  <h2>저장 워크스페이스 / 히스토리</h2>
+                  <div className="rank-list compact">
+                    {savedWorkspaces.length === 0 ? (
+                      <article><strong>저장된 기록 없음</strong><span>분석을 실행하거나 저장 버튼을 누르면 이곳에 남습니다.</span></article>
+                    ) : (
+                      savedWorkspaces.slice(0, 5).map((item) => (
+                        <article key={item.id}>
+                          <strong>{item.title}</strong>
+                          <span>{new Date(item.createdAt).toLocaleString()} · 토픽 {item.topicCount}개</span>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Journal Targeting</p>
+                      <h2>저널·학회 타깃팅</h2>
+                    </div>
+                    <BookOpen size={22} />
+                  </div>
+                  <div className="rank-list">
+                    {[...result.publicationIntelligence.journals, ...result.publicationIntelligence.conferences].slice(0, 6).map((venue) => (
+                      <article key={`venue-${venue.name}`}>
+                        <strong>{venue.name}</strong>
+                        <span>{venue.type} · 색인: {venue.classification === "unknown" ? "확인 필요" : venue.classification} · 방법 적합 {venue.methodologyFit}/10 · 주제 적합 {venue.topicFit}/10</span>
+                        <p>{venue.impactTrendEstimate}</p>
+                        <p>{venue.publishabilityReasoning}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <ul className="plain-list">
+                    {result.publicationIntelligence.warnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Dataset Intelligence</p>
+                      <h2>데이터셋·수집 추천</h2>
+                    </div>
+                    <ClipboardList size={22} />
+                  </div>
+                  <div className="rank-list">
+                    {result.datasetIntelligence.recommendations.slice(0, 5).map((dataset) => (
+                      <article key={`dataset-${dataset.name}`}>
+                        <strong>{dataset.name}</strong>
+                        <span>{dataset.type} · 난이도 {dataset.difficulty}</span>
+                        <p>{dataset.suitability}</p>
+                        <a href={dataset.sourceUrl} target="_blank" rel="noreferrer">공식 소스 확인</a>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.datasetIntelligence.apiScrapingPossibilities}</p>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <p className="tag">Competition Intelligence</p>
+                  <h2>연구 경쟁 지형</h2>
+                  <div className="map-grid">
+                    <div>
+                      <h3>과포화 후보</h3>
+                      <ul className="plain-list">
+                        {result.competitionIntelligence.oversaturatedTopics.slice(0, 4).map((item) => (
+                          <li key={`over-${item.label}`}>{item.label} · {item.level}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>빠른 성장</h3>
+                      <ul className="plain-list">
+                        {result.competitionIntelligence.rapidlyGrowingAreas.slice(0, 4).map((item) => (
+                          <li key={`grow-${item.label}`}>{item.label} · {item.level}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>기회 영역</h3>
+                      <ul className="plain-list">
+                        {result.competitionIntelligence.emergingOpportunities.slice(0, 4).map((item) => (
+                          <li key={`opp-${item.label}`}>{item.label} · {item.level}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+                <section className="panel">
+                  <p className="tag">Long-term Roadmap</p>
+                  <h2>장기 연구 로드맵</h2>
+                  <div className="rank-list">
+                    {[...result.longTermResearchRoadmap.shortTermPaperIdeas.slice(0, 2), ...result.longTermResearchRoadmap.dissertationThesisPathways.slice(0, 1), ...result.longTermResearchRoadmap.multiPaperResearchAgendas.slice(0, 1)].map((item) => (
+                      <article key={`long-${item.title}`}>
+                        <strong>{item.title}</strong>
+                        <p>{item.rationale}</p>
+                        <span>{item.evidence}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
               </section>
 
               <section className="split wide-left">
@@ -1009,7 +1246,26 @@ export default function Home() {
                         </ul>
                       </div>
                     </details>
+                    <details>
+                      <summary>데이터셋 및 수집 전략</summary>
+                      <div className="planning-output">
+                        <p><strong>설문/인터뷰:</strong> {topic.datasetIntelligence.surveyInterviewSuitability}</p>
+                        <p><strong>실험 가능성:</strong> {topic.datasetIntelligence.experimentalFeasibility}</p>
+                        <p><strong>자료 난이도:</strong> {topic.datasetIntelligence.dataDifficultyEstimate}</p>
+                        <h4>공개 데이터 후보</h4>
+                        <ul>
+                          {topic.datasetIntelligence.recommendations.slice(0, 4).map((dataset) => (
+                            <li key={`${topic.title}-${dataset.name}`}>
+                              <a href={dataset.sourceUrl} target="_blank" rel="noreferrer">{dataset.name}</a> · {dataset.difficulty} · {dataset.evidence}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </details>
                     <div className="refinement-actions">
+                      <button type="button" onClick={() => toggleBookmark(topic.title)}>
+                        <Star size={16} /> {bookmarkedTopics.includes(topic.title) ? "북마크 해제" : "북마크"}
+                      </button>
                       <button type="button" onClick={() => addCopilotMessage(topic, "improve")}>
                         <Wand2 size={16} /> 이 토픽 개선
                       </button>

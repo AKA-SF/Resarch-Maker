@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { buildResearchIntelligenceResult } from "@/lib/research/analysis";
 import { fetchOpenAlexWorks } from "@/lib/research/openalex";
-import { disciplines, methodologies, type Discipline, type Methodology } from "@/lib/research/types";
+import { disciplines, methodologies, researchStrategies, type Discipline, type Methodology, type ResearchStrategy } from "@/lib/research/types";
 
 type RequestBody = {
   keywords?: unknown;
   discipline?: unknown;
   methodology?: unknown;
+  strategy?: unknown;
 };
 
 function parseKeywords(value: unknown): string[] {
@@ -25,6 +26,10 @@ function isDiscipline(value: unknown): value is Discipline {
 
 function isMethodology(value: unknown): value is Methodology {
   return typeof value === "string" && methodologies.includes(value as Methodology);
+}
+
+function isResearchStrategy(value: unknown): value is ResearchStrategy {
+  return typeof value === "string" && researchStrategies.includes(value as ResearchStrategy);
 }
 
 export async function POST(request: Request) {
@@ -48,9 +53,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "지원되는 연구방법을 선택해 주세요." }, { status: 400 });
   }
 
+  const strategy = isResearchStrategy(body.strategy) ? body.strategy : "beginner-safe research";
+
   try {
     const papers = await fetchOpenAlexWorks(keywords);
-    return NextResponse.json(buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers));
+    return NextResponse.json(buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown retrieval error";
     return NextResponse.json(

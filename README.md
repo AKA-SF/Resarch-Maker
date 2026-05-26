@@ -20,6 +20,10 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Produces AI-assisted literature review drafts that separate retrieved evidence, inferred synthesis, and generated narrative.
 - Surfaces contradiction/debate signals only when retrieved metadata contains explicit evidence or method/theory plurality that needs human follow-up.
 - Generates research roadmaps for beginner-safe topics, high-impact/high-risk directions, future trends, next-step studies, and interdisciplinary combinations.
+- Adds strategy modes for beginner-safe, high-impact/high-risk, fast publishable, interdisciplinary, practitioner-oriented, and theory-heavy planning.
+- Recommends publication venues only from retrieved OpenAlex source names, with indexing status marked as unverified unless independently checked.
+- Suggests public dataset and data collection routes with difficulty, sample, ethics, and source notes.
+- Provides Markdown, BibTeX, browser print/PDF, topic bookmarking, and local workspace history features.
 
 ## Run
 
@@ -58,6 +62,8 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Graph relationships are inferred from co-occurrence in retrieved metadata. They are not full-text claims, causal claims, or definitive citation-network clusters.
 - Citation relationships use OpenAlex metadata only. Shared-reference edges are bibliographic coupling signals, not a complete co-citation map from full reference lists.
 - Debate and contradiction panels do not assert that a scholarly debate exists unless the retrieved metadata contains explicit textual or methodological signals.
+- Publication targeting does not guarantee acceptance and does not verify SSCI/SCI/Scopus status automatically.
+- Dataset recommendations are candidates with official source links and variable-coverage caveats; researchers must verify codebooks and access conditions.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits
