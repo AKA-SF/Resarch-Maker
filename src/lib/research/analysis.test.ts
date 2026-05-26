@@ -13,7 +13,11 @@ const papers: RetrievedPaper[] = [
     citedByCount: 12,
     concepts: ["Artificial intelligence", "Education", "Self-efficacy", "Learning analytics"],
     abstract: "This quantitative survey examines self-efficacy and adaptive AI education. Future research should test longitudinal designs.",
-    authors: ["A. Researcher"]
+    authors: ["A. Researcher", "C. Collaborator"],
+    institutions: ["Example University"],
+    countries: ["KR"],
+    referencedWorks: ["https://openalex.org/W100", "https://openalex.org/W101", "https://openalex.org/W102"],
+    relatedWorks: ["p2"]
   },
   {
     id: "p2",
@@ -24,8 +28,12 @@ const papers: RetrievedPaper[] = [
     url: "https://example.test/p2",
     citedByCount: 8,
     concepts: ["Technology acceptance model", "Human-computer interaction"],
-    abstract: "The technology acceptance model is used to study AI tutors and learning outcomes with regression analysis.",
-    authors: ["B. Scholar"]
+    abstract: "The technology acceptance model is used to study AI tutors and learning outcomes with regression analysis. However, findings remain mixed across contexts.",
+    authors: ["B. Scholar", "C. Collaborator"],
+    institutions: ["Example University", "Second Institute"],
+    countries: ["KR", "US"],
+    referencedWorks: ["https://openalex.org/W100", "https://openalex.org/W101", "https://openalex.org/W102", "https://openalex.org/W103"],
+    relatedWorks: ["p1"]
   }
 ];
 
@@ -87,5 +95,18 @@ describe("research analysis", () => {
     expect(result.domainIntelligence.label).toBe("마케팅");
     expect(result.topics[0].researchDesignGuidance.suggestedAnalysisMethod).toContain("PLS-SEM");
     expect(result.topics[0].methodologyRecommendations.some((item) => item.method === "PLS-SEM")).toBe(true);
+  });
+
+  it("builds citation, bibliometric, literature map, debate, review, and roadmap intelligence", () => {
+    const result = buildResearchIntelligenceResult(["AI", "education", "self-efficacy"], "education", "bibliometric analysis", papers);
+    expect(result.citationIntelligence.network.edges.length).toBeGreaterThan(0);
+    expect(result.citationIntelligence.researchClusters.length).toBeGreaterThan(0);
+    expect(result.bibliometricAnalysis.keywordCooccurrences.length).toBeGreaterThan(0);
+    expect(result.bibliometricAnalysis.authorCollaborations.length).toBeGreaterThan(0);
+    expect(result.bibliometricAnalysis.institutionTrends.length).toBeGreaterThan(0);
+    expect(result.literatureMap.interdisciplinaryBridges.length).toBeGreaterThan(0);
+    expect(result.debateAnalysis.length).toBeGreaterThan(0);
+    expect(result.literatureReviewDraft.exportMarkdown).toContain("Retrieved evidence");
+    expect(result.researchRoadmap.recommendedNextStepStudies.length).toBeGreaterThan(0);
   });
 });

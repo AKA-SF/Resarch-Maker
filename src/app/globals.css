@@ -345,7 +345,11 @@ button:disabled {
 }
 
 .insight-list article,
-.evidence-panel-grid article {
+.evidence-panel-grid article,
+.signal-list article,
+.rank-list article,
+.timeline-list article,
+.review-section-grid article {
   background: #f8faf9;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -551,6 +555,118 @@ button:disabled {
   font-size: 0.86rem;
   line-height: 1.45;
   margin-bottom: 0;
+}
+
+.signal-list,
+.rank-list,
+.timeline-list,
+.review-section-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.signal-list strong,
+.rank-list strong,
+.timeline-list strong {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  margin-bottom: 5px;
+}
+
+.signal-list span,
+.rank-list span,
+.timeline-list span {
+  color: var(--muted);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.signal-list p,
+.rank-list p {
+  color: #34413a;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  margin: 6px 0 0;
+}
+
+.rank-list.compact article {
+  padding: 10px;
+}
+
+.cooccurrence-list {
+  display: grid;
+  gap: 8px;
+}
+
+.cooccurrence-list div {
+  align-items: center;
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 32px;
+  padding: 10px;
+}
+
+.cooccurrence-list span {
+  color: #34413a;
+  font-size: 0.84rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.cooccurrence-list i {
+  background: var(--line);
+  display: block;
+  height: 2px;
+}
+
+.cooccurrence-list strong {
+  color: var(--accent);
+  text-align: right;
+}
+
+.map-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.map-grid div {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.review-section-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.review-section-grid h3 {
+  font-size: 0.95rem;
+}
+
+.review-section-grid p {
+  color: #34413a;
+  font-size: 0.86rem;
+  line-height: 1.48;
+}
+
+.review-export {
+  background: #111814;
+  border-radius: 8px;
+  color: #edf5f1;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 12px 0 0;
+  max-height: 420px;
+  overflow: auto;
+  padding: 14px;
+  white-space: pre-wrap;
 }
 
 .panel {
@@ -856,7 +972,9 @@ details ul {
   .wide-left,
   .gap-grid,
   .topic-grid,
-  .evidence-panel-grid {
+  .evidence-panel-grid,
+  .map-grid,
+  .review-section-grid {
     grid-template-columns: 1fr;
   }
 

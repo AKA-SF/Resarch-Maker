@@ -7,8 +7,11 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  FileText,
   GitFork,
+  Layers3,
   Loader2,
+  MapIcon,
   MessageSquare,
   Network,
   Rocket,
@@ -16,6 +19,8 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
+  TriangleAlert,
+  Users,
   Wand2
 } from "lucide-react";
 import { FormEvent, useMemo, useRef, useState } from "react";
@@ -180,6 +185,71 @@ function TheoryGraphPanel({ result }: { result: ResearchIntelligenceResult }) {
         })}
       </svg>
       <p className="muted">노드와 엣지는 검색된 논문의 제목, 초록, OpenAlex 개념 필드에서 함께 나타난 신호입니다. 이는 추론용 관계망이며 인과 관계나 확정적 인용 네트워크가 아닙니다.</p>
+    </section>
+  );
+}
+
+function CitationNetworkPanel({ result }: { result: ResearchIntelligenceResult }) {
+  const width = 720;
+  const height = 340;
+  const nodes = result.citationIntelligence.network.nodes.slice(0, 14);
+  const nodeIds = new Set(nodes.map((node) => node.id));
+  const edges = result.citationIntelligence.network.edges.filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target)).slice(0, 24);
+  const positions = new Map(
+    nodes.map((node, index) => {
+      const angle = (index / Math.max(1, nodes.length)) * Math.PI * 2 - Math.PI / 2;
+      const radius = 120;
+      return [
+        node.id,
+        {
+          x: width / 2 + Math.cos(angle) * radius,
+          y: height / 2 + Math.sin(angle) * radius
+        }
+      ];
+    })
+  );
+
+  return (
+    <section className="panel graph-panel">
+      <div className="panel-head">
+        <div>
+          <p className="tag">Citation Intelligence</p>
+          <h2>인용 네트워크 시각화</h2>
+        </div>
+        <Network size={22} />
+      </div>
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="OpenAlex 인용 및 공통참고문헌 네트워크">
+        {edges.map((edge) => {
+          const source = positions.get(edge.source);
+          const target = positions.get(edge.target);
+          if (!source || !target) return null;
+          return (
+            <line
+              key={edge.id}
+              x1={source.x}
+              y1={source.y}
+              x2={target.x}
+              y2={target.y}
+              stroke={edge.type === "direct_citation" ? "#c44f2f" : edge.type === "related_work" ? "#3b68a8" : "#176b5f"}
+              strokeWidth={Math.max(1, Math.min(7, edge.weight / 2))}
+              opacity={0.48}
+            />
+          );
+        })}
+        {nodes.map((node) => {
+          const position = positions.get(node.id);
+          if (!position) return null;
+          return (
+            <g key={node.id}>
+              <circle cx={position.x} cy={position.y} r={Math.max(13, Math.min(28, 12 + node.citedByCount / 40))} fill="#2f4b6e" opacity={0.94} />
+              <text x={position.x} y={position.y + 36} textAnchor="middle">
+                {topicShortTitle(node.title).slice(0, 30)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <p className="muted">직접 인용은 OpenAlex `referenced_works`, 연결 신호는 `related_works`와 공통 참고문헌 기반입니다. 원문 참고문헌 전체를 재구성한 완전한 인용망은 아닙니다.</p>
     </section>
   );
 }
@@ -382,6 +452,226 @@ export default function Home() {
                   <span>관계 엣지</span>
                   <strong>{result.theoryGraph.edges.length}</strong>
                 </div>
+                <div>
+                  <Layers3 size={22} />
+                  <span>연구 클러스터</span>
+                  <strong>{result.citationIntelligence.researchClusters.length}</strong>
+                </div>
+                <div>
+                  <FileText size={22} />
+                  <span>리뷰 섹션</span>
+                  <strong>{result.literatureReviewDraft.thematicGrouping.length + 6}</strong>
+                </div>
+              </section>
+
+              <section className="split wide-left">
+                <CitationNetworkPanel result={result} />
+                <section className="panel dashboard-panel">
+                  <p className="tag">Bibliometric Dashboard</p>
+                  <h2>인용·계량 분석</h2>
+                  <div className="dashboard-metrics">
+                    <div>
+                      <span>직접 인용</span>
+                      <strong>{result.citationIntelligence.network.metrics.directCitationEdges}</strong>
+                    </div>
+                    <div>
+                      <span>공통참고문헌</span>
+                      <strong>{result.citationIntelligence.network.metrics.sharedReferenceEdges}</strong>
+                    </div>
+                    <div>
+                      <span>평균 인용</span>
+                      <strong>{result.citationIntelligence.network.metrics.averageCitations.toFixed(1)}</strong>
+                    </div>
+                    <div>
+                      <span>성숙도</span>
+                      <strong>{result.bibliometricAnalysis.researchMaturity.score}/10</strong>
+                    </div>
+                  </div>
+                  <p className="muted">{result.bibliometricAnalysis.researchMaturity.evidence}</p>
+                  <div className="signal-list">
+                    {result.citationIntelligence.highlyCitedPapers.slice(0, 4).map((paper) => (
+                      <article key={`high-${paper.paperId}`}>
+                        <strong>{topicShortTitle(paper.title)}</strong>
+                        <span>{paper.year ?? "연도 미상"} · 인용 {paper.citedByCount}</span>
+                        <p>{paper.reason}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Scientometric Analysis</p>
+                      <h2>키워드 공출현·토픽 진화</h2>
+                    </div>
+                    <BarChart3 size={22} />
+                  </div>
+                  <div className="cooccurrence-list">
+                    {result.bibliometricAnalysis.keywordCooccurrences.slice(0, 8).map((item) => (
+                      <div key={`${item.source}-${item.target}`}>
+                        <span>{item.source}</span>
+                        <i />
+                        <span>{item.target}</span>
+                        <strong>{item.weight}</strong>
+                      </div>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">토픽 진화</h3>
+                  <div className="timeline-list">
+                    {result.bibliometricAnalysis.topicEvolution.slice(0, 6).map((topic) => (
+                      <article key={`evo-${topic.label}`}>
+                        <strong>{topic.label}</strong>
+                        <span>{topic.firstYear ?? "?"} - {topic.latestYear ?? "?"} · {topic.trajectory}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Collaboration Map</p>
+                      <h2>저자·기관·국가 흐름</h2>
+                    </div>
+                    <Users size={22} />
+                  </div>
+                  <div className="rank-list">
+                    {result.citationIntelligence.authorInfluence.slice(0, 5).map((author) => (
+                      <article key={`author-${author.author}`}>
+                        <strong>{author.author}</strong>
+                        <span>{author.paperCount}편 · 총 인용 {author.totalCitations}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">기관/국가</h3>
+                  <div className="rank-list compact">
+                    {result.bibliometricAnalysis.institutionTrends.slice(0, 4).map((institution) => (
+                      <article key={`inst-${institution.institution}`}>
+                        <strong>{institution.institution}</strong>
+                        <span>{institution.countries.join(", ") || "국가 미상"} · {institution.paperCount}편</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel literature-map-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Literature Map</p>
+                      <h2>문헌 지도</h2>
+                    </div>
+                    <MapIcon size={22} />
+                  </div>
+                  <div className="map-grid">
+                    <div>
+                      <h3>기초 이론</h3>
+                      <ul className="plain-list">
+                        {result.literatureMap.foundationalTheories.slice(0, 5).map((item) => (
+                          <li key={`foundation-${item.label}`}>{item.label} · {item.support}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>인접 분야</h3>
+                      <ul className="plain-list">
+                        {result.literatureMap.adjacentDisciplines.slice(0, 5).map((item) => (
+                          <li key={`adjacent-${item.label}`}>{item.label} · {item.support}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>융합 브리지</h3>
+                      <ul className="plain-list">
+                        {result.literatureMap.interdisciplinaryBridges.slice(0, 5).map((bridge) => (
+                          <li key={`bridge-${bridge.source}-${bridge.target}`}>{bridge.source} ↔ {bridge.target}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+                <section className="panel">
+                  <p className="tag">Theory Evolution Timeline</p>
+                  <h2>이론 진화 타임라인</h2>
+                  <div className="timeline-list">
+                    {result.literatureMap.theoryEvolutionTimeline.length === 0 ? (
+                      <p className="muted">연도와 이론 라벨이 함께 있는 명시 신호가 부족합니다.</p>
+                    ) : (
+                      result.literatureMap.theoryEvolutionTimeline.slice(0, 8).map((item) => (
+                        <article key={`${item.year}-${item.label}-${item.evidence}`}>
+                          <strong>{item.year} · {item.label}</strong>
+                          <span>{topicShortTitle(item.evidence)}</span>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel debate-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Debate Detection</p>
+                      <h2>모순·논쟁 신호</h2>
+                    </div>
+                    <TriangleAlert size={22} />
+                  </div>
+                  {result.debateAnalysis.length === 0 ? (
+                    <p className="muted">검색 메타데이터에서 명시적인 모순·논쟁 신호를 충분히 찾지 못했습니다.</p>
+                  ) : (
+                    <div className="insight-list">
+                      {result.debateAnalysis.map((debate) => (
+                        <article key={`${debate.type}-${debate.claim}`}>
+                          <p className="tag">{debate.type.replaceAll("_", " ")}</p>
+                          <h4>{debate.claim}</h4>
+                          <p>{debate.evidence}</p>
+                          <span>신뢰도: {confidenceLabels[debate.confidence]}</span>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+                <section className="panel roadmap-panel">
+                  <p className="tag">Research Roadmap</p>
+                  <h2>연구 로드맵</h2>
+                  <div className="rank-list">
+                    {[...result.researchRoadmap.beginnerSafeTopics.slice(0, 2), ...result.researchRoadmap.highImpactHighRiskTopics.slice(0, 2)].map((item) => (
+                      <article key={`roadmap-${item.title}`}>
+                        <strong>{item.title}</strong>
+                        <p>{item.rationale}</p>
+                        <span>{item.evidence}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="panel review-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">AI-assisted Literature Review</p>
+                    <h2>문헌고찰 초안 내보내기 뷰</h2>
+                  </div>
+                  <FileText size={22} />
+                </div>
+                <div className="review-section-grid">
+                  {[result.literatureReviewDraft.introductionOverview, result.literatureReviewDraft.theorySynthesis, result.literatureReviewDraft.trendDiscussion, result.literatureReviewDraft.contradictionAnalysis, result.literatureReviewDraft.gapSummary, result.literatureReviewDraft.futureResearchDirections].map((section) => (
+                    <article key={`review-${section.title}`}>
+                      <h3>{section.title}</h3>
+                      <p><strong>검색 근거:</strong> {section.retrievedEvidence.slice(0, 2).join(" / ") || "명시 근거 부족"}</p>
+                      <p><strong>추론 종합:</strong> {section.inferredSynthesis}</p>
+                      <p><strong>생성 서술:</strong> {section.generatedNarrative}</p>
+                    </article>
+                  ))}
+                </div>
+                <details>
+                  <summary>Markdown 초안 보기</summary>
+                  <pre className="review-export">{result.literatureReviewDraft.exportMarkdown}</pre>
+                </details>
               </section>
 
               <section className="split wide-left">

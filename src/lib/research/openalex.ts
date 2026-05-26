@@ -2,6 +2,8 @@ import type { RetrievedPaper } from "./types";
 
 type OpenAlexAuthor = {
   author?: { display_name?: string };
+  institutions?: Array<{ display_name?: string; country_code?: string }>;
+  countries?: string[];
 };
 
 type OpenAlexConcept = {
@@ -16,6 +18,8 @@ type OpenAlexWork = {
   cited_by_count?: number;
   concepts?: OpenAlexConcept[];
   authorships?: OpenAlexAuthor[];
+  referenced_works?: string[];
+  related_works?: string[];
   abstract_inverted_index?: Record<string, number[]>;
   primary_location?: {
     landing_page_url?: string;
@@ -64,7 +68,25 @@ function normalizeWork(work: OpenAlexWork): RetrievedPaper | null {
     authors: (work.authorships ?? [])
       .map((authorship) => authorship.author?.display_name)
       .filter((name): name is string => Boolean(name))
-      .slice(0, 6)
+      .slice(0, 6),
+    institutions: [
+      ...new Set(
+        (work.authorships ?? [])
+          .flatMap((authorship) => authorship.institutions ?? [])
+          .map((institution) => institution.display_name)
+          .filter((name): name is string => Boolean(name))
+      )
+    ].slice(0, 8),
+    countries: [
+      ...new Set(
+        (work.authorships ?? []).flatMap((authorship) => [
+          ...(authorship.countries ?? []),
+          ...((authorship.institutions ?? []).map((institution) => institution.country_code).filter(Boolean) as string[])
+        ])
+      )
+    ].slice(0, 8),
+    referencedWorks: (work.referenced_works ?? []).slice(0, 120),
+    relatedWorks: (work.related_works ?? []).slice(0, 20)
   };
 }
 

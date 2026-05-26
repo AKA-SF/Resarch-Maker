@@ -15,6 +15,14 @@ import { methodologies } from "./types";
 import { analyzeRelationships, buildTheoryGraph, buildTrendAnalysis } from "./graph";
 import { buildCopilotIntelligence, buildResearchPlan, recommendMethodologies } from "./copilot";
 import { buildResearchDesignGuidance, disciplineLabels, getDomainIntelligence, getMethodologySignals, methodologyLabels, theorySignals } from "./domain";
+import {
+  buildBibliometricAnalysis,
+  buildCitationIntelligence,
+  buildLiteratureMap,
+  buildLiteratureReviewDraft,
+  buildResearchRoadmap,
+  detectDebates
+} from "./bibliometrics";
 
 const broadConcepts = new Set([
   "psychology",
@@ -388,9 +396,15 @@ export function buildResearchIntelligenceResult(
   const theoryGraph = buildTheoryGraph(papers, keywords);
   const relationshipAnalysis = analyzeRelationships(theoryGraph, papers);
   const trendAnalysis = buildTrendAnalysis(papers, theoryGraph);
+  const citationIntelligence = buildCitationIntelligence(papers);
+  const bibliometricAnalysis = buildBibliometricAnalysis(papers, synthesis);
+  const literatureMap = buildLiteratureMap(papers, synthesis, theoryGraph);
+  const debateAnalysis = detectDebates(papers, synthesis, bibliometricAnalysis);
   const gaps = detectGaps(keywords, methodology, papers, synthesis, theoryGraph, relationshipAnalysis);
   const topics = generateTopics(keywords, discipline, methodology, papers, synthesis, gaps, theoryGraph);
   const copilot = buildCopilotIntelligence(topics, synthesis, theoryGraph, relationshipAnalysis, trendAnalysis, gaps, papers);
+  const literatureReviewDraft = buildLiteratureReviewDraft(papers, synthesis, gaps, literatureMap, trendAnalysis, debateAnalysis);
+  const researchRoadmap = buildResearchRoadmap(papers, synthesis, gaps, citationIntelligence, bibliometricAnalysis, literatureMap);
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -400,6 +414,12 @@ export function buildResearchIntelligenceResult(
     theoryGraph,
     relationshipAnalysis,
     trendAnalysis,
+    citationIntelligence,
+    bibliometricAnalysis,
+    literatureMap,
+    literatureReviewDraft,
+    debateAnalysis,
+    researchRoadmap,
     copilot,
     domainIntelligence,
     gaps,

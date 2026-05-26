@@ -71,6 +71,10 @@ export type RetrievedPaper = {
   concepts: string[];
   abstract: string;
   authors: string[];
+  institutions: string[];
+  countries: string[];
+  referencedWorks: string[];
+  relatedWorks: string[];
 };
 
 export type EvidenceItem = {
@@ -227,6 +231,226 @@ export type TrendAnalysis = {
   frequencyOverTime: TrendDatum[];
 };
 
+export type CitationPaperSignal = {
+  paperId: string;
+  title: string;
+  year: number | null;
+  citedByCount: number;
+  authors: string[];
+  source: string;
+  url: string;
+  reason: string;
+};
+
+export type CitationNetworkNode = {
+  id: string;
+  title: string;
+  year: number | null;
+  citedByCount: number;
+};
+
+export type CitationNetworkEdge = {
+  id: string;
+  source: string;
+  target: string;
+  type: "direct_citation" | "shared_references" | "related_work";
+  weight: number;
+  evidence: string;
+};
+
+export type CoCitationSignal = {
+  title: string;
+  paperIds: string[];
+  sharedReferenceCount: number;
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+};
+
+export type AuthorInfluence = {
+  author: string;
+  paperIds: string[];
+  paperCount: number;
+  totalCitations: number;
+  averageCitations: number;
+};
+
+export type ResearchCluster = {
+  id: string;
+  label: string;
+  paperIds: string[];
+  paperCount: number;
+  totalCitations: number;
+  dominantKeywords: string[];
+  evidence: string;
+};
+
+export type CitationIntelligence = {
+  network: {
+    nodes: CitationNetworkNode[];
+    edges: CitationNetworkEdge[];
+    metrics: {
+      directCitationEdges: number;
+      sharedReferenceEdges: number;
+      relatedWorkEdges: number;
+      averageCitations: number;
+    };
+  };
+  highlyCitedPapers: CitationPaperSignal[];
+  seminalPapers: CitationPaperSignal[];
+  emergingPapers: CitationPaperSignal[];
+  coCitationSignals: CoCitationSignal[];
+  authorInfluence: AuthorInfluence[];
+  researchClusters: ResearchCluster[];
+};
+
+export type KeywordCooccurrence = {
+  source: string;
+  target: string;
+  weight: number;
+  paperIds: string[];
+};
+
+export type PublicationTrendPoint = {
+  year: number;
+  paperCount: number;
+  totalCitations: number;
+  paperIds: string[];
+};
+
+export type TopicEvolution = {
+  label: string;
+  firstYear: number | null;
+  latestYear: number | null;
+  earlyCount: number;
+  recentCount: number;
+  trajectory: "rising" | "declining" | "stable";
+  paperIds: string[];
+};
+
+export type CollaborationEdge = {
+  source: string;
+  target: string;
+  weight: number;
+  paperIds: string[];
+};
+
+export type InstitutionTrend = {
+  institution: string;
+  countries: string[];
+  paperCount: number;
+  recentCount: number;
+  totalCitations: number;
+  paperIds: string[];
+};
+
+export type CountryTrend = {
+  country: string;
+  paperCount: number;
+  recentCount: number;
+  totalCitations: number;
+  paperIds: string[];
+};
+
+export type ResearchMaturity = {
+  stage: "emerging" | "developing" | "maturing" | "saturated";
+  score: number;
+  evidence: string;
+};
+
+export type SaturationSignal = {
+  level: "low" | "moderate" | "high";
+  score: number;
+  evidence: string;
+};
+
+export type BibliometricAnalysis = {
+  keywordCooccurrences: KeywordCooccurrence[];
+  publicationTrends: PublicationTrendPoint[];
+  topicEvolution: TopicEvolution[];
+  authorCollaborations: CollaborationEdge[];
+  institutionTrends: InstitutionTrend[];
+  countryTrends: CountryTrend[];
+  researchMaturity: ResearchMaturity;
+  saturation: SaturationSignal;
+};
+
+export type CompetingFrameworkSignal = {
+  frameworks: string[];
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+  paperIds: string[];
+};
+
+export type InterdisciplinaryBridge = {
+  source: string;
+  target: string;
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+  paperIds: string[];
+};
+
+export type TheoryTimelinePoint = {
+  year: number;
+  label: string;
+  evidence: string;
+  paperIds: string[];
+};
+
+export type LiteratureMap = {
+  foundationalTheories: EvidenceItem[];
+  dominantFrameworks: EvidenceItem[];
+  competingFrameworks: CompetingFrameworkSignal[];
+  adjacentDisciplines: EvidenceItem[];
+  interdisciplinaryBridges: InterdisciplinaryBridge[];
+  theoryEvolutionTimeline: TheoryTimelinePoint[];
+};
+
+export type LiteratureReviewSection = {
+  title: string;
+  retrievedEvidence: string[];
+  inferredSynthesis: string;
+  generatedNarrative: string;
+};
+
+export type LiteratureReviewDraft = {
+  introductionOverview: LiteratureReviewSection;
+  thematicGrouping: LiteratureReviewSection[];
+  theorySynthesis: LiteratureReviewSection;
+  trendDiscussion: LiteratureReviewSection;
+  contradictionAnalysis: LiteratureReviewSection;
+  gapSummary: LiteratureReviewSection;
+  futureResearchDirections: LiteratureReviewSection;
+  exportMarkdown: string;
+};
+
+export type DebateSignal = {
+  type:
+    | "conflicting_findings"
+    | "methodological_disagreement"
+    | "competing_theoretical_explanations"
+    | "inconsistent_empirical_evidence"
+    | "unresolved_debate";
+  claim: string;
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+  paperIds: string[];
+};
+
+export type RoadmapItem = {
+  title: string;
+  rationale: string;
+  evidence: string;
+  paperIds: string[];
+};
+
+export type ResearchRoadmap = {
+  beginnerSafeTopics: RoadmapItem[];
+  highImpactHighRiskTopics: RoadmapItem[];
+  futureTrendForecasts: RoadmapItem[];
+  recommendedNextStepStudies: RoadmapItem[];
+  unexploredInterdisciplinaryCombinations: RoadmapItem[];
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -289,6 +513,12 @@ export type ResearchIntelligenceResult = {
   theoryGraph: TheoryGraph;
   relationshipAnalysis: RelationshipInsight[];
   trendAnalysis: TrendAnalysis;
+  citationIntelligence: CitationIntelligence;
+  bibliometricAnalysis: BibliometricAnalysis;
+  literatureMap: LiteratureMap;
+  literatureReviewDraft: LiteratureReviewDraft;
+  debateAnalysis: DebateSignal[];
+  researchRoadmap: ResearchRoadmap;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];
