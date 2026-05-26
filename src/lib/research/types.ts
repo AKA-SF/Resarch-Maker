@@ -534,6 +534,83 @@ export type ExportBundle = {
   citationNote: string;
 };
 
+export type ResearchAgentRole =
+  | "literature_retrieval"
+  | "theory_extraction"
+  | "citation_intelligence"
+  | "research_gap_analysis"
+  | "methodology_recommendation"
+  | "topic_generation"
+  | "contradiction_detection"
+  | "roadmap_planning";
+
+export type ResearchAgentRun = {
+  role: ResearchAgentRole;
+  name: string;
+  status: "completed" | "limited";
+  inputSummary: string;
+  outputSummary: string;
+  evidence: string;
+  handoffTo: ResearchAgentRole[];
+};
+
+export type MultiAgentWorkflow = {
+  runId: string;
+  pipeline: ResearchAgentRun[];
+  collaborationSummary: string;
+  evidenceBoundary: string;
+};
+
+export type ExplorationPath = {
+  seed: string;
+  path: string[];
+  rationale: string;
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+  paperIds: string[];
+};
+
+export type AutonomousExploration = {
+  adjacentTheoryPaths: ExplorationPath[];
+  emergingConceptPaths: ExplorationPath[];
+  weakDomainExpansionPaths: ExplorationPath[];
+  refinedResearchGoals: string[];
+  specializedDirections: string[];
+};
+
+export type DeepResearchSynthesis = {
+  structuredTheorySynthesis: string[];
+  competingFrameworkAnalysis: string[];
+  unresolvedDebateSummaries: string[];
+  interdisciplinaryConnectionAnalysis: string[];
+  conceptualIntegrationProposals: string[];
+  evidenceBoundary: string;
+};
+
+export type ResearchForecast = {
+  emergingHighGrowthAreas: CompetitionSignal[];
+  likelyFutureResearchTrends: RoadmapItem[];
+  oversaturatedAreas: CompetitionSignal[];
+  decliningThemes: CompetitionSignal[];
+  interdisciplinaryOpportunityZones: RoadmapItem[];
+  forecastBoundary: string;
+};
+
+export type ResearchMemorySeed = {
+  sessionId: string;
+  savedTheoryGraphNodeCount: number;
+  savedLiteratureMapItems: number;
+  priorGeneratedTopicTitles: string[];
+  refinementHistory: string[];
+  evolvingResearchAgenda: string[];
+  comparisonSnapshot: Array<{
+    title: string;
+    novelty: number;
+    feasibility: number;
+    publishability: number;
+  }>;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -609,6 +686,11 @@ export type ResearchIntelligenceResult = {
   longTermResearchRoadmap: LongTermResearchRoadmap;
   competitionIntelligence: ResearchCompetitionIntelligence;
   exportBundle: ExportBundle;
+  multiAgentWorkflow: MultiAgentWorkflow;
+  autonomousExploration: AutonomousExploration;
+  deepResearchSynthesis: DeepResearchSynthesis;
+  researchForecast: ResearchForecast;
+  researchMemorySeed: ResearchMemorySeed;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

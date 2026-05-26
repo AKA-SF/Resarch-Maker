@@ -562,9 +562,54 @@ button:disabled {
 .signal-list,
 .rank-list,
 .timeline-list,
-.review-section-grid {
+.review-section-grid,
+.agent-timeline {
   display: grid;
   gap: 10px;
+}
+
+.agent-timeline article {
+  align-items: start;
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 34px 1fr;
+  padding: 12px;
+}
+
+.agent-timeline article > span {
+  align-items: center;
+  background: var(--accent);
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: 900;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.agent-timeline strong {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+
+.agent-timeline p {
+  color: #34413a;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  margin-bottom: 5px;
+}
+
+.agent-timeline em {
+  color: var(--warning);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 800;
 }
 
 .signal-list strong,

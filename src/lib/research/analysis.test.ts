@@ -128,4 +128,28 @@ describe("research analysis", () => {
     expect(result.exportBundle.markdown).toContain("Research Strategy Export");
     expect(result.exportBundle.bibtex).toContain("@misc");
   });
+
+  it("coordinates multi-agent workflow, autonomous exploration, synthesis, forecast, and memory seed", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "interdisciplinary innovation"
+    );
+    expect(result.multiAgentWorkflow.pipeline.map((agent) => agent.role)).toEqual([
+      "literature_retrieval",
+      "theory_extraction",
+      "citation_intelligence",
+      "research_gap_analysis",
+      "methodology_recommendation",
+      "topic_generation",
+      "contradiction_detection",
+      "roadmap_planning"
+    ]);
+    expect(result.autonomousExploration.refinedResearchGoals.length).toBeGreaterThan(0);
+    expect(result.deepResearchSynthesis.structuredTheorySynthesis.length).toBeGreaterThan(0);
+    expect(result.researchForecast.forecastBoundary).toContain("휴리스틱");
+    expect(result.researchMemorySeed.priorGeneratedTopicTitles.length).toBeGreaterThan(0);
+  });
 });

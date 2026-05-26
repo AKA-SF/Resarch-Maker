@@ -24,6 +24,11 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Recommends publication venues only from retrieved OpenAlex source names, with indexing status marked as unverified unless independently checked.
 - Suggests public dataset and data collection routes with difficulty, sample, ethics, and source notes.
 - Provides Markdown, BibTeX, browser print/PDF, topic bookmarking, and local workspace history features.
+- Orchestrates a lightweight multi-agent research workflow for retrieval, theory extraction, citation intelligence, gap analysis, methodology recommendation, topic generation, contradiction detection, and roadmap planning.
+- Adds autonomous exploration paths for adjacent theories, emerging concepts, weak domain links, refined research goals, and specialized directions.
+- Generates deep synthesis outputs for theory synthesis, competing frameworks, unresolved debates, interdisciplinary connections, and conceptual integration proposals.
+- Persists local research memory seeds, evolving agendas, comparison snapshots, and collaborative workspace history in the browser.
+- Adds forecast dashboards for high-growth areas, likely future trends, saturated areas, declining themes, and interdisciplinary opportunity zones.
 
 ## Run
 
@@ -64,6 +69,9 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Debate and contradiction panels do not assert that a scholarly debate exists unless the retrieved metadata contains explicit textual or methodological signals.
 - Publication targeting does not guarantee acceptance and does not verify SSCI/SCI/Scopus status automatically.
 - Dataset recommendations are candidates with official source links and variable-coverage caveats; researchers must verify codebooks and access conditions.
+- Multi-agent outputs are structured rule-based workflow traces, not autonomous external browsing agents or hidden LLM claims.
+- Forecasts are search-result heuristics based on retrieved metadata, topic frequency, and recentness; they are not predictions of field-level certainty.
+- Research memory is stored locally in the browser. It should not be treated as cloud collaboration or shared access control.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

@@ -33,6 +33,13 @@ import {
   orderGapsByStrategy,
   tuneTopicForStrategy
 } from "./strategy";
+import {
+  buildAutonomousExploration,
+  buildDeepResearchSynthesis,
+  buildMultiAgentWorkflow,
+  buildResearchForecast,
+  buildResearchMemorySeed
+} from "./agents";
 
 const broadConcepts = new Set([
   "psychology",
@@ -424,6 +431,22 @@ export function buildResearchIntelligenceResult(
   const longTermResearchRoadmap = buildLongTermRoadmap(topics, synthesis, strategy);
   const competitionIntelligence = buildCompetitionIntelligence(synthesis, trendAnalysis, bibliometricAnalysis);
   const exportBundle = buildExportBundle(topics, papers, publicationIntelligence);
+  const multiAgentWorkflow = buildMultiAgentWorkflow(
+    papers,
+    synthesis,
+    citationIntelligence,
+    gaps,
+    topics,
+    debateAnalysis,
+    researchRoadmap,
+    discipline,
+    methodology,
+    strategy
+  );
+  const autonomousExploration = buildAutonomousExploration(synthesis, theoryGraph, literatureMap, gaps, topics, discipline);
+  const deepResearchSynthesis = buildDeepResearchSynthesis(synthesis, literatureMap, debateAnalysis, topics);
+  const researchForecast = buildResearchForecast(competitionIntelligence, trendAnalysis, researchRoadmap, bibliometricAnalysis);
+  const researchMemorySeed = buildResearchMemorySeed(topics, theoryGraph, literatureMap, strategy);
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -444,6 +467,11 @@ export function buildResearchIntelligenceResult(
     longTermResearchRoadmap,
     competitionIntelligence,
     exportBundle,
+    multiAgentWorkflow,
+    autonomousExploration,
+    deepResearchSynthesis,
+    researchForecast,
+    researchMemorySeed,
     copilot,
     domainIntelligence,
     gaps,

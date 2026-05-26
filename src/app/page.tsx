@@ -52,6 +52,10 @@ type SavedWorkspace = {
   createdAt: string;
   topicCount: number;
   bookmarkedTopicTitles: string[];
+  theoryGraphNodeCount?: number;
+  literatureMapItems?: number;
+  evolvingAgenda?: string[];
+  collaborators?: string[];
 };
 
 const scoreLabels: Record<string, string> = {
@@ -371,7 +375,11 @@ export default function Home() {
             strategy: submittedStrategy,
             createdAt: typedPayload.diagnostics.generatedAt,
             topicCount: typedPayload.topics.length,
-            bookmarkedTopicTitles: []
+            bookmarkedTopicTitles: [],
+            theoryGraphNodeCount: typedPayload.researchMemorySeed.savedTheoryGraphNodeCount,
+            literatureMapItems: typedPayload.researchMemorySeed.savedLiteratureMapItems,
+            evolvingAgenda: typedPayload.researchMemorySeed.evolvingResearchAgenda,
+            collaborators: ["사용자", "Retrieval Agent", "Synthesis Agent", "Roadmap Agent"]
           },
           ...current
         ].slice(0, 8);
@@ -398,7 +406,11 @@ export default function Home() {
       strategy: result.query.strategy,
       createdAt: new Date().toISOString(),
       topicCount: result.topics.length,
-      bookmarkedTopicTitles: bookmarkedTopics
+      bookmarkedTopicTitles: bookmarkedTopics,
+      theoryGraphNodeCount: result.researchMemorySeed.savedTheoryGraphNodeCount,
+      literatureMapItems: result.researchMemorySeed.savedLiteratureMapItems,
+      evolvingAgenda: result.researchMemorySeed.evolvingResearchAgenda,
+      collaborators: ["사용자", "Retrieval Agent", "Synthesis Agent", "Roadmap Agent"]
     };
     setSavedWorkspaces((current) => {
       const next = [saved, ...current].slice(0, 8);
@@ -553,6 +565,134 @@ export default function Home() {
                   <span>리뷰 섹션</span>
                   <strong>{result.literatureReviewDraft.thematicGrouping.length + 6}</strong>
                 </div>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Multi-Agent Workflow</p>
+                      <h2>에이전트 활동 패널</h2>
+                    </div>
+                    <Network size={22} />
+                  </div>
+                  <div className="agent-timeline">
+                    {result.multiAgentWorkflow.pipeline.map((agent, index) => (
+                      <article key={agent.role}>
+                        <span>{index + 1}</span>
+                        <div>
+                          <strong>{agent.name}</strong>
+                          <p>{agent.outputSummary}</p>
+                          <em>{agent.evidence}</em>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.multiAgentWorkflow.evidenceBoundary}</p>
+                </section>
+                <section className="panel">
+                  <p className="tag">Autonomous Exploration</p>
+                  <h2>자율 탐색 경로</h2>
+                  <div className="rank-list">
+                    {[...result.autonomousExploration.adjacentTheoryPaths, ...result.autonomousExploration.emergingConceptPaths, ...result.autonomousExploration.weakDomainExpansionPaths].slice(0, 5).map((path) => (
+                      <article key={`${path.seed}-${path.path.join("-")}`}>
+                        <strong>{path.path.join(" → ")}</strong>
+                        <p>{path.rationale}</p>
+                        <span>{path.evidence} · 신뢰도 {confidenceLabels[path.confidence]}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <p className="tag">Deep Research Synthesis</p>
+                  <h2>딥 연구 합성</h2>
+                  <div className="map-grid">
+                    <div>
+                      <h3>이론 종합</h3>
+                      <ul className="plain-list">
+                        {result.deepResearchSynthesis.structuredTheorySynthesis.slice(0, 3).map((item, index) => (
+                          <li key={`theory-synth-${index}-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>경쟁 프레임워크</h3>
+                      <ul className="plain-list">
+                        {result.deepResearchSynthesis.competingFrameworkAnalysis.slice(0, 3).map((item, index) => (
+                          <li key={`competing-${index}-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>개념 통합 제안</h3>
+                      <ul className="plain-list">
+                        {result.deepResearchSynthesis.conceptualIntegrationProposals.slice(0, 3).map((item, index) => (
+                          <li key={`integration-${index}-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.deepResearchSynthesis.evidenceBoundary}</p>
+                </section>
+                <section className="panel">
+                  <p className="tag">Forecast Dashboard</p>
+                  <h2>연구 예측 대시보드</h2>
+                  <div className="rank-list">
+                    {result.researchForecast.likelyFutureResearchTrends.slice(0, 4).map((item) => (
+                      <article key={`forecast-${item.title}`}>
+                        <strong>{item.title}</strong>
+                        <p>{item.rationale}</p>
+                        <span>{item.evidence}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.researchForecast.forecastBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <p className="tag">Research Memory</p>
+                  <h2>연구 메모리 / 진화 아젠다</h2>
+                  <div className="domain-grid">
+                    <div>
+                      <span>세션</span>
+                      <strong>{result.researchMemorySeed.sessionId}</strong>
+                    </div>
+                    <div>
+                      <span>저장 그래프 노드</span>
+                      <strong>{result.researchMemorySeed.savedTheoryGraphNodeCount}</strong>
+                    </div>
+                    <div>
+                      <span>문헌지도 항목</span>
+                      <strong>{result.researchMemorySeed.savedLiteratureMapItems}</strong>
+                    </div>
+                    <div>
+                      <span>비교 스냅샷</span>
+                      <strong>{result.researchMemorySeed.comparisonSnapshot.length}</strong>
+                    </div>
+                  </div>
+                  <ul className="plain-list">
+                    {result.researchMemorySeed.evolvingResearchAgenda.slice(0, 4).map((item) => (
+                      <li key={`agenda-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="panel">
+                  <p className="tag">Collaborative Workspace</p>
+                  <h2>협업 연구 세션</h2>
+                  <div className="rank-list compact">
+                    {savedWorkspaces.slice(0, 4).map((item) => (
+                      <article key={`collab-${item.id}`}>
+                        <strong>{item.title}</strong>
+                        <span>{(item.collaborators ?? ["사용자"]).join(", ")} · 그래프 {item.theoryGraphNodeCount ?? 0} · 지도 {item.literatureMapItems ?? 0}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
               </section>
 
               <section className="split">
