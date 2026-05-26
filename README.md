@@ -35,6 +35,12 @@ npm run build
 
 The API route is `POST /api/research`.
 
+## Update and publish workflow
+
+When the app is updated in this workspace, changes should be validated with the available checks, committed intentionally, and pushed to `origin/main` on `AKA-SF/Resarch-Maker`.
+
+Before publishing, keep generated build output, dependencies, local environment files, API keys, and secrets out of Git. The repository `.gitignore` excludes `node_modules/`, `.next/`, `coverage/`, `*.tsbuildinfo`, and `.env*`.
+
 ## Data and safety notes
 
 - Primary data source: OpenAlex Works API.
