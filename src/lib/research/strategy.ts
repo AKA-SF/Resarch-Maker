@@ -99,6 +99,41 @@ const datasetCatalog: Partial<Record<Discipline, DatasetRecommendation[]>> = {
       ethicalNotes: "검색식과 필터를 기록하고 API 정책을 준수해야 합니다.",
       evidence: "현재 검색 문헌과 같은 OpenAlex 계열 데이터입니다."
     }
+  ],
+  musicology: [
+    {
+      name: "MusicBrainz",
+      sourceUrl: "https://musicbrainz.org/",
+      type: "public dataset",
+      suitability: "음반, 아티스트, 작품, 녹음 메타데이터를 활용한 음악 생태계·장르·네트워크 연구에 적합합니다.",
+      sampleType: "음악 메타데이터 레코드",
+      estimatedSampleSizeGuidance: "연구 범위를 장르, 시대, 지역, 아티스트 유형으로 제한하고 중복/식별자 정리를 먼저 수행해야 합니다.",
+      difficulty: "medium",
+      ethicalNotes: "공개 메타데이터라도 라이선스와 재사용 조건을 확인해야 합니다.",
+      evidence: "MusicBrainz 공개 음악 메타데이터 소스 후보입니다."
+    },
+    {
+      name: "IMSLP / Petrucci Music Library",
+      sourceUrl: "https://imslp.org/",
+      type: "public dataset",
+      suitability: "악보·작곡가·작품 메타데이터를 활용한 레퍼토리, 양식, 역사 음악학 연구 후보입니다.",
+      sampleType: "악보/작품/작곡가 아카이브 자료",
+      estimatedSampleSizeGuidance: "작곡가, 시대, 장르, 악기 편성 기준으로 코퍼스를 좁히고 저작권 상태를 먼저 확인해야 합니다.",
+      difficulty: "medium",
+      ethicalNotes: "국가별 저작권 상태와 다운로드/재사용 조건을 반드시 확인해야 합니다.",
+      evidence: "IMSLP 공개 악보 아카이브 후보입니다."
+    },
+    {
+      name: "OpenAlex Works API",
+      sourceUrl: "https://docs.openalex.org/",
+      type: "public dataset",
+      suitability: "음악학 문헌 지형, 인용, 연구동향, 저널/키워드 분석에 적합합니다.",
+      sampleType: "학술 메타데이터/API 레코드",
+      estimatedSampleSizeGuidance: "musicology, ethnomusicology, music cognition 등 검색식을 분리해 재현 가능한 문헌 코퍼스를 구성해야 합니다.",
+      difficulty: "medium",
+      ethicalNotes: "API 정책과 검색식 기록을 유지해야 합니다.",
+      evidence: "현재 앱이 사용하는 OpenAlex 기반 자료 수집 경로입니다."
+    }
   ]
 };
 
@@ -216,9 +251,10 @@ export function buildPublicationIntelligence(
 }
 
 export function buildDatasetIntelligence(discipline: Discipline, methodology: Methodology, strategy: ResearchStrategy, papers: RetrievedPaper[]): DatasetIntelligence {
+  const disciplineCatalog = datasetCatalog[discipline] ?? [];
   const base = [
-    ...(datasetCatalog[discipline] ?? []),
-    ...(discipline === "education" ? [] : datasetCatalog.education ?? []),
+    ...disciplineCatalog,
+    ...(disciplineCatalog.length === 0 && discipline !== "education" ? datasetCatalog.education ?? [] : []),
     ...(datasetCatalog["AI/data science"] ?? [])
   ];
   const deduped = [...new Map(base.map((item) => [item.name, item])).values()].slice(0, 6);

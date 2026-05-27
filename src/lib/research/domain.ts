@@ -11,6 +11,7 @@ export const disciplineLabels: Record<Discipline, string> = {
   "political science": "정치학",
   "public policy": "공공정책",
   "communication/media": "커뮤니케이션/미디어",
+  musicology: "음악학",
   HCI: "HCI",
   "computer science": "컴퓨터과학",
   "information systems": "정보시스템",
@@ -118,7 +119,12 @@ export const theorySignals = [
   "social capital",
   "policy feedback",
   "behavioral economics",
-  "socio-technical systems"
+  "socio-technical systems",
+  "music cognition",
+  "music semiotics",
+  "performance studies",
+  "cultural musicology",
+  "music information retrieval"
 ];
 
 const defaultProfile: Omit<DomainIntelligence, "discipline"> = {
@@ -266,6 +272,15 @@ const profiles: Partial<Record<Discipline, Omit<DomainIntelligence, "discipline"
     commonVariableStructures: ["미디어 노출 -> 인식/태도 -> 행동", "프레임 -> 해석 -> 여론"],
     typicalDatasetsSamples: ["뉴스/소셜미디어 텍스트", "수용자 설문", "실험 참가자", "플랫폼 네트워크"],
     methodologicalExpectations: ["코딩 신뢰도", "플랫폼 맥락", "노출 측정 타당도"]
+  },
+  musicology: {
+    label: "음악학",
+    preferredMethodologies: ["case study", "content analysis", "thematic analysis", "ethnography", "bibliometric analysis"],
+    dominantTheories: ["music cognition", "music semiotics", "performance studies", "cultural musicology", "music information retrieval"],
+    publicationTendencies: ["작품/레퍼토리 맥락", "분석 근거의 투명성", "역사·문화·기술 맥락 연결"],
+    commonVariableStructures: ["음악적 특성 -> 지각/해석 -> 청취자 반응", "사회문화 맥락 -> 음악 실천 -> 의미 형성"],
+    typicalDatasetsSamples: ["악보/음원 코퍼스", "공연 기록", "음악가/청취자 인터뷰", "아카이브 자료", "스트리밍/메타데이터"],
+    methodologicalExpectations: ["작품·자료 선정 기준", "분석 단위 명확화", "해석과 근거의 구분", "저작권/아카이브 접근 조건"]
   },
   nursing: {
     label: "간호학",

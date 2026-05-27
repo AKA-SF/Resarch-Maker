@@ -5,6 +5,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 ## What it does
 
 - Accepts multiple keywords, a discipline, and a methodology.
+- Includes expanded discipline support, now including musicology alongside education, psychology, business, HCI, CS, health, law, environment, and interdisciplinary research.
 - Retrieves scholarly metadata from the live OpenAlex Works API through the app server route, with no mock paper fallback.
 - Extracts theory/framework, trend, limitation, related concept, and emerging-topic signals from retrieved titles, abstracts, and concepts.
 - Builds a lightweight in-memory theory graph from co-occurring theories, concepts, variables, and methodology signals.

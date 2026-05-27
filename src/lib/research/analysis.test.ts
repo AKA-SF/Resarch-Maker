@@ -88,6 +88,7 @@ describe("research analysis", () => {
     expect(disciplines).toContain("marketing");
     expect(disciplines).toContain("healthcare/public health");
     expect(disciplines).toContain("AI/data science");
+    expect(disciplines).toContain("musicology");
     expect(methodologies).toContain("PLS-SEM");
     expect(methodologies).toContain("causal inference");
     expect(methodologies).toContain("bibliometric analysis");
@@ -96,6 +97,14 @@ describe("research analysis", () => {
     expect(result.domainIntelligence.label).toBe("마케팅");
     expect(result.topics[0].researchDesignGuidance.suggestedAnalysisMethod).toContain("PLS-SEM");
     expect(result.topics[0].methodologyRecommendations.some((item) => item.method === "PLS-SEM")).toBe(true);
+
+    const musicologyResult = buildResearchIntelligenceResult(["AI", "music", "listening"], "musicology", "qualitative", papers);
+    expect(musicologyResult.domainIntelligence.label).toBe("음악학");
+    expect(musicologyResult.domainIntelligence.dominantTheories).toContain("music cognition");
+    expect(musicologyResult.datasetIntelligence.recommendations.map((item) => item.name)).toEqual(
+      expect.arrayContaining(["MusicBrainz", "IMSLP / Petrucci Music Library"])
+    );
+    expect(musicologyResult.datasetIntelligence.recommendations.map((item) => item.name)).not.toContain("OECD PISA Database");
   });
 
   it("builds citation, bibliometric, literature map, debate, review, and roadmap intelligence", () => {

@@ -9,6 +9,7 @@ export const disciplines = [
   "political science",
   "public policy",
   "communication/media",
+  "musicology",
   "HCI",
   "computer science",
   "information systems",
