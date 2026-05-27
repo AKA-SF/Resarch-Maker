@@ -855,6 +855,79 @@ export type SelfImprovingAcademicIntelligence = {
   scenarioAnalysis: ResearchSimulationAnalysis;
 };
 
+export type TopicCritiqueType =
+  | "weak_theory_grounding"
+  | "low_novelty"
+  | "oversaturation"
+  | "weak_methodology_fit"
+  | "poor_data_feasibility"
+  | "unclear_contribution";
+
+export type TopicCritique = {
+  type: TopicCritiqueType;
+  severity: "low" | "medium" | "high";
+  critique: string;
+  evidence: string;
+  generatedInference: string;
+};
+
+export type TopicImprovementAction = {
+  action:
+    | "strengthen_theory_combination"
+    | "refine_research_question"
+    | "improve_methodology_fit"
+    | "reduce_oversaturated_framing"
+    | "add_mediator_moderator"
+    | "propose_variant";
+  recommendation: string;
+  rationale: string;
+  evidence: string;
+};
+
+export type RefinedTopicScores = {
+  novelty: number;
+  feasibility: number;
+  publishability: number;
+  theoryCoherence: number;
+  evidenceSupport: number;
+};
+
+export type TopicRefinementIteration = {
+  iteration: number;
+  stage: "generate" | "critique" | "improve" | "rescore" | "compare";
+  summary: string;
+  evidenceBoundary: string;
+};
+
+export type TopicRefinementResult = {
+  topicId: string;
+  initialTopic: Topic;
+  critiques: TopicCritique[];
+  improvementActions: TopicImprovementAction[];
+  improvedTopic: Topic;
+  initialScores: RefinedTopicScores;
+  refinedScores: RefinedTopicScores;
+  scoreDelta: RefinedTopicScores;
+  comparisonSummary: string;
+  saferVariant: string;
+  novelVariant: string;
+  iterationHistory: TopicRefinementIteration[];
+  evidencePaperIds: string[];
+};
+
+export type AgenticResearchLoop = {
+  loopId: string;
+  workflow: TopicRefinementIteration[];
+  topicRefinements: TopicRefinementResult[];
+  rerankedTopics: Array<{
+    title: string;
+    overallScore: number;
+    rank: number;
+    rationale: string;
+  }>;
+  loopBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -937,6 +1010,7 @@ export type ResearchIntelligenceResult = {
   researchMemorySeed: ResearchMemorySeed;
   academicResearchOS: AcademicResearchOS;
   selfImprovingIntelligence: SelfImprovingAcademicIntelligence;
+  agenticResearchLoop: AgenticResearchLoop;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

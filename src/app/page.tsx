@@ -44,7 +44,8 @@ import {
   type ResearcherProfile,
   type ResearchStrategy,
   type ResearchIntelligenceResult,
-  type Topic
+  type Topic,
+  type TopicCritiqueType
 } from "@/lib/research/types";
 import { disciplineLabels, methodologyLabels } from "@/lib/research/domain";
 import { strategyLabels } from "@/lib/research/strategy";
@@ -63,6 +64,14 @@ type SavedWorkspace = {
   literatureMapItems?: number;
   evolvingAgenda?: string[];
   collaborators?: string[];
+};
+
+type RefinementHistoryRecord = {
+  id: string;
+  loopId: string;
+  topicTitle: string;
+  createdAt: string;
+  summary: string;
 };
 
 const scoreLabels: Record<string, string> = {
@@ -122,6 +131,23 @@ const evaluationLabels: Record<string, string> = {
   theoretical_coherence: "이론 정합성",
   empirical_testability: "실증 검증성",
   replication_potential: "재현 가능성"
+};
+
+const critiqueLabels: Record<TopicCritiqueType, string> = {
+  weak_theory_grounding: "약한 이론 기반",
+  low_novelty: "낮은 참신성",
+  oversaturation: "과포화 위험",
+  weak_methodology_fit: "취약한 방법론 적합도",
+  poor_data_feasibility: "낮은 데이터 실행가능성",
+  unclear_contribution: "불명확한 기여"
+};
+
+const refinedScoreLabels: Record<string, string> = {
+  novelty: "참신성",
+  feasibility: "실행가능성",
+  publishability: "출판가능성",
+  theoryCoherence: "이론 정합성",
+  evidenceSupport: "근거 지지"
 };
 
 const nodeColors: Record<GraphNode["type"], string> = {
@@ -358,6 +384,7 @@ export default function Home() {
   const [copilotMessages, setCopilotMessages] = useState<CopilotMessage[]>([]);
   const [savedWorkspaces, setSavedWorkspaces] = useState<SavedWorkspace[]>([]);
   const [bookmarkedTopics, setBookmarkedTopics] = useState<string[]>([]);
+  const [refinementHistory, setRefinementHistory] = useState<RefinementHistoryRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -368,8 +395,10 @@ export default function Home() {
   useEffect(() => {
     const saved = window.localStorage.getItem("ris-workspaces");
     const bookmarks = window.localStorage.getItem("ris-bookmarks");
+    const refinements = window.localStorage.getItem("ris-refinement-history");
     if (saved) setSavedWorkspaces(JSON.parse(saved) as SavedWorkspace[]);
     if (bookmarks) setBookmarkedTopics(JSON.parse(bookmarks) as string[]);
+    if (refinements) setRefinementHistory(JSON.parse(refinements) as RefinementHistoryRecord[]);
   }, []);
 
   async function runAnalysis(event?: FormEvent<HTMLFormElement>) {
@@ -483,6 +512,22 @@ export default function Home() {
     setBookmarkedTopics((current) => {
       const next = current.includes(topicTitle) ? current.filter((title) => title !== topicTitle) : [topicTitle, ...current].slice(0, 20);
       window.localStorage.setItem("ris-bookmarks", JSON.stringify(next));
+      return next;
+    });
+  }
+
+  function refineAgain(topicTitle: string, summary: string) {
+    if (!result) return;
+    const record: RefinementHistoryRecord = {
+      id: `${result.agenticResearchLoop.loopId}-${Date.now()}`,
+      loopId: result.agenticResearchLoop.loopId,
+      topicTitle,
+      createdAt: new Date().toISOString(),
+      summary
+    };
+    setRefinementHistory((current) => {
+      const next = [record, ...current].slice(0, 18);
+      window.localStorage.setItem("ris-refinement-history", JSON.stringify(next));
       return next;
     });
   }
@@ -667,6 +712,131 @@ export default function Home() {
                   <FileText size={22} />
                   <span>리뷰 섹션</span>
                   <strong>{result.literatureReviewDraft.thematicGrouping.length + 6}</strong>
+                </div>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel refinement-loop-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Agentic Self-Improving Loop</p>
+                      <h2>토픽 비평 → 개선 → 재점수화</h2>
+                    </div>
+                    <Wand2 size={22} />
+                  </div>
+                  <div className="loop-steps">
+                    {result.agenticResearchLoop.workflow.map((step) => (
+                      <article key={`loop-step-${step.iteration}-${step.stage}`}>
+                        <span>{step.iteration}</span>
+                        <strong>{step.stage}</strong>
+                        <p>{step.summary}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.agenticResearchLoop.loopBoundary}</p>
+                </section>
+                <section className="panel rerank-panel">
+                  <p className="tag">Re-ranked Topics</p>
+                  <h2>개선 후 재정렬</h2>
+                  <div className="rank-list compact">
+                    {result.agenticResearchLoop.rerankedTopics.map((item) => (
+                      <article key={`rerank-${item.rank}-${item.title}`}>
+                        <strong>{item.rank}. {topicShortTitle(item.title)}</strong>
+                        <span>종합 {item.overallScore}/10</span>
+                        <p>{item.rationale}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="panel topic-refinement-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Before / After Comparison</p>
+                    <h2>토픽 개선 비교</h2>
+                  </div>
+                  <Scale size={22} />
+                </div>
+                <div className="refinement-grid">
+                  {result.agenticResearchLoop.topicRefinements.map((item) => (
+                    <article key={item.topicId}>
+                      <div className="before-after">
+                        <div>
+                          <span>Before</span>
+                          <strong>{topicShortTitle(item.initialTopic.title)}</strong>
+                          <p>{item.initialTopic.researchQuestion}</p>
+                        </div>
+                        <div>
+                          <span>After</span>
+                          <strong>{topicShortTitle(item.improvedTopic.title)}</strong>
+                          <p>{item.improvedTopic.researchQuestion}</p>
+                        </div>
+                      </div>
+                      <div className="critique-list">
+                        {item.critiques.map((critique) => (
+                          <div key={`${item.topicId}-${critique.type}`}>
+                            <strong>{critiqueLabels[critique.type]} · {confidenceLabels[critique.severity]}</strong>
+                            <p>{critique.critique}</p>
+                            <span>{critique.evidence}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="score-compare">
+                        {Object.entries(item.refinedScores).map(([label, value]) => (
+                          <div key={`${item.topicId}-${label}`}>
+                            <span>{refinedScoreLabels[label] ?? label}</span>
+                            <strong>{item.initialScores[label as keyof typeof item.initialScores]} → {value}</strong>
+                            <em>{item.scoreDelta[label as keyof typeof item.scoreDelta] >= 0 ? "+" : ""}{item.scoreDelta[label as keyof typeof item.scoreDelta]}</em>
+                          </div>
+                        ))}
+                      </div>
+                      <details>
+                        <summary>개선 근거와 변형 보기</summary>
+                        <div className="improvement-list">
+                          {item.improvementActions.map((action) => (
+                            <article key={`${item.topicId}-${action.action}`}>
+                              <strong>{action.recommendation}</strong>
+                              <p>{action.rationale}</p>
+                              <span>{action.evidence}</span>
+                            </article>
+                          ))}
+                        </div>
+                        <p><strong>안전형:</strong> {item.saferVariant}</p>
+                        <p><strong>참신형:</strong> {item.novelVariant}</p>
+                      </details>
+                      <button type="button" onClick={() => refineAgain(item.improvedTopic.title, item.comparisonSummary)}>
+                        <Wand2 size={16} /> 다시 정제
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="panel iteration-history-panel">
+                <p className="tag">Iteration History</p>
+                <h2>반복 개선 히스토리</h2>
+                <div className="timeline-list">
+                  {[
+                    ...result.agenticResearchLoop.topicRefinements.flatMap((item) => item.iterationHistory.slice(0, 5).map((history) => ({
+                      id: `${item.topicId}-${history.iteration}-${history.stage}`,
+                      title: `${history.iteration}. ${history.stage}`,
+                      summary: history.summary,
+                      evidence: history.evidenceBoundary
+                    }))),
+                    ...refinementHistory.filter((record) => record.loopId === result.agenticResearchLoop.loopId).map((record) => ({
+                      id: record.id,
+                      title: `refine again · ${new Date(record.createdAt).toLocaleString()}`,
+                      summary: record.topicTitle,
+                      evidence: record.summary
+                    }))
+                  ].slice(0, 14).map((item) => (
+                    <article key={`iteration-${item.id}`}>
+                      <strong>{item.title}</strong>
+                      <span>{item.summary}</span>
+                      <p>{item.evidence}</p>
+                    </article>
+                  ))}
                 </div>
               </section>
 

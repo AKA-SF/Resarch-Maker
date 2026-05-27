@@ -43,6 +43,7 @@ import {
 } from "./agents";
 import { buildAcademicResearchOS } from "./operating-system";
 import { buildSelfImprovingAcademicIntelligence } from "./self-improving";
+import { buildAgenticResearchLoop } from "./refinement-loop";
 
 const broadConcepts = new Set([
   "psychology",
@@ -490,6 +491,16 @@ export function buildResearchIntelligenceResult(
       ...autonomousExploration.weakDomainExpansionPaths
     ]
   });
+  const agenticResearchLoop = buildAgenticResearchLoop({
+    topics,
+    graph: theoryGraph,
+    synthesis,
+    bibliometricAnalysis,
+    gaps,
+    methodology,
+    discipline,
+    researcherProfile
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -517,6 +528,7 @@ export function buildResearchIntelligenceResult(
     researchMemorySeed,
     academicResearchOS,
     selfImprovingIntelligence,
+    agenticResearchLoop,
     copilot,
     domainIntelligence,
     gaps,

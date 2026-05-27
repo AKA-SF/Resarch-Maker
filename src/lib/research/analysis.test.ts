@@ -198,4 +198,29 @@ describe("research analysis", () => {
     expect(result.selfImprovingIntelligence.scenarioAnalysis.preferredScenario).toBe("safe publishable path");
     expect(result.selfImprovingIntelligence.continuousIntelligence.updateBoundary).toContain("스냅샷");
   });
+
+  it("runs an agentic self-improving topic refinement loop", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "beginner-safe research",
+      {
+        preferredMethodologies: ["quantitative", "regression"],
+        noveltyTolerance: "medium",
+        careerStage: "student"
+      }
+    );
+    const refinement = result.agenticResearchLoop.topicRefinements[0];
+    expect(result.agenticResearchLoop.workflow.map((step) => step.stage)).toEqual(["generate", "critique", "improve", "rescore", "compare"]);
+    expect(refinement.initialTopic.title).not.toBe(refinement.improvedTopic.title);
+    expect(refinement.critiques.length).toBeGreaterThan(0);
+    expect(refinement.improvementActions.length).toBeGreaterThanOrEqual(6);
+    expect(refinement.refinedScores.theoryCoherence).toBeGreaterThanOrEqual(refinement.initialScores.theoryCoherence);
+    expect(refinement.refinedScores.evidenceSupport).toBeGreaterThanOrEqual(refinement.initialScores.evidenceSupport);
+    expect(refinement.iterationHistory.length).toBe(5);
+    expect(result.agenticResearchLoop.rerankedTopics[0].rank).toBe(1);
+    expect(result.agenticResearchLoop.loopBoundary).toContain("원문에 없는 논문");
+  });
 });

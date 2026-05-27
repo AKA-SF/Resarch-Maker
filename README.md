@@ -31,6 +31,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds forecast dashboards for high-growth areas, likely future trends, saturated areas, declining themes, and interdisciplinary opportunity zones.
 - Generates complete research proposal drafts, conceptual frameworks, variable relationship maps, reasoning workflows, refinement actions, literature review workspaces, academic writing suggestions, and thesis/conference/journal workflow plans.
 - Adds self-improving intelligence views for researcher profiles, continuous trend snapshots, transparent topic/proposal evaluation, AI mentor critique, institutional mapping, expanded knowledge graph signals, and research scenario simulation.
+- Adds an agentic self-improving research loop that critiques each generated topic, proposes evidence-bound improvements, re-scores refined topics, compares before/after versions, re-ranks candidates, and stores local refine-again history.
 
 ## Run
 
@@ -77,6 +78,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Proposal, conceptual framework, and writing outputs are generated planning drafts. They do not establish causal relationships or scholarly claims without later human review and source verification.
 - Continuous intelligence is a current-session OpenAlex snapshot, not a background monitor. Institutional, author, and collaboration panels only display metadata returned by retrieved papers.
 - Evaluation, mentor, and scenario outputs are transparent heuristics based on retrieved evidence, profile settings, and existing app scores. They do not guarantee research quality, funding, publication, or future field movement.
+- Topic refinement loops use existing retrieved evidence, topic scores, graph signals, and methodology fit. Score increases describe improved planning assumptions, not proven scholarly superiority.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits
