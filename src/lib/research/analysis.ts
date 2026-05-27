@@ -660,6 +660,14 @@ export function buildResearchIntelligenceResult(
     diagnostics: {
       retrievedCount: papers.length,
       source: "OpenAlex",
+      liveConnection: false,
+      retrievalMode: "provided_papers",
+      apiUrl: null,
+      apiStatus: null,
+      apiResponseCount: papers.length,
+      apiDbResponseTimeMs: null,
+      retrievedAt: null,
+      searchQuery: keywords.join(" "),
       generatedAt: new Date().toISOString(),
       warnings: papers.length === 0 ? ["이 질의로 OpenAlex에서 검색된 논문이 없습니다."] : []
     }

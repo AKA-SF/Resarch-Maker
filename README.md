@@ -5,7 +5,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 ## What it does
 
 - Accepts multiple keywords, a discipline, and a methodology.
-- Retrieves scholarly metadata from OpenAlex.
+- Retrieves scholarly metadata from the live OpenAlex Works API through the app server route, with no mock paper fallback.
 - Extracts theory/framework, trend, limitation, related concept, and emerging-topic signals from retrieved titles, abstracts, and concepts.
 - Builds a lightweight in-memory theory graph from co-occurring theories, concepts, variables, and methodology signals.
 - Surfaces relationship intelligence for co-occurring theories, adjacent frameworks, weak concept links, emerging combinations, relative citation weakness, and methodology diversity.
@@ -71,6 +71,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 ## Data and safety notes
 
 - Primary data source: OpenAlex Works API.
+- The app may run at `localhost`, but paper retrieval is a live server-side HTTPS request to `api.openalex.org`; the UI shows retrieval mode, API status, response count, response time, and the exact OpenAlex request URL.
 - No Google Scholar scraping is used.
 - Papers are not fabricated; topic cards link back to retrieved OpenAlex metadata URLs or landing pages.
 - Generated topics and gaps are labeled as inference.

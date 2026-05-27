@@ -885,6 +885,44 @@ export default function Home() {
                 </div>
               </section>
 
+              <section className="panel retrieval-status-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Live Scholarly Retrieval</p>
+                    <h2>실제 인터넷 논문 검색 상태</h2>
+                  </div>
+                  <Search size={22} />
+                </div>
+                <div className="retrieval-status-grid">
+                  <article>
+                    <span>연결 상태</span>
+                    <strong>{result.diagnostics.liveConnection ? "Live OpenAlex" : "Local input"}</strong>
+                    <p>{result.diagnostics.liveConnection ? "서버가 OpenAlex Works API에 직접 접속했습니다." : "테스트/로컬 입력 논문으로 분석했습니다."}</p>
+                  </article>
+                  <article>
+                    <span>API 응답</span>
+                    <strong>{result.diagnostics.apiStatus ?? "n/a"}</strong>
+                    <p>OpenAlex 후보 {result.diagnostics.apiResponseCount ?? result.diagnostics.retrievedCount}건 중 정규화된 {result.diagnostics.retrievedCount}건 사용</p>
+                  </article>
+                  <article>
+                    <span>검색어</span>
+                    <strong>{result.diagnostics.searchQuery}</strong>
+                    <p>{result.diagnostics.retrievedAt ? new Date(result.diagnostics.retrievedAt).toLocaleString("ko-KR") : "실시간 호출 기록 없음"}</p>
+                  </article>
+                  <article>
+                    <span>응답 시간</span>
+                    <strong>{result.diagnostics.apiDbResponseTimeMs !== null ? `${result.diagnostics.apiDbResponseTimeMs}ms` : "n/a"}</strong>
+                    <p>OpenAlex DB 응답 시간 메타데이터</p>
+                  </article>
+                </div>
+                {result.diagnostics.apiUrl && (
+                  <a className="source-link" href={result.diagnostics.apiUrl} target="_blank" rel="noreferrer">
+                    OpenAlex API 요청 직접 열기
+                  </a>
+                )}
+                <p className="muted">브라우저는 로컬 앱을 보여주지만, 논문 검색은 서버 라우트에서 외부 OpenAlex API로 live 요청합니다. Google Scholar는 스크래핑하지 않습니다.</p>
+              </section>
+
               <section className="split wide-left">
                 <section className="panel autonomous-os-panel">
                   <div className="panel-head">

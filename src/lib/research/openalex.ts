@@ -28,10 +28,30 @@ type OpenAlexWork = {
 };
 
 type OpenAlexResponse = {
+  meta?: {
+    count?: number;
+    db_response_time_ms?: number;
+  };
   results?: OpenAlexWork[];
 };
 
 const OPENALEX_WORKS_URL = "https://api.openalex.org/works";
+
+export type OpenAlexRetrievalDiagnostics = {
+  liveConnection: boolean;
+  retrievalMode: "live_openalex_api";
+  apiUrl: string;
+  apiStatus: number;
+  apiResponseCount: number;
+  apiDbResponseTimeMs: number | null;
+  retrievedAt: string;
+  query: string;
+};
+
+export type OpenAlexRetrievalResult = {
+  papers: RetrievedPaper[];
+  diagnostics: OpenAlexRetrievalDiagnostics;
+};
 
 function restoreAbstract(index?: Record<string, number[]>): string {
   if (!index) return "";
@@ -90,20 +110,21 @@ function normalizeWork(work: OpenAlexWork): RetrievedPaper | null {
   };
 }
 
-export async function fetchOpenAlexWorks(keywords: string[], perPage = 25): Promise<RetrievedPaper[]> {
+export async function retrieveOpenAlexWorks(keywords: string[], perPage = 50): Promise<OpenAlexRetrievalResult> {
   const search = keywords.join(" ");
   const params = new URLSearchParams({
     search,
     per_page: String(perPage),
     sort: "relevance_score:desc"
   });
+  const apiUrl = `${OPENALEX_WORKS_URL}?${params.toString()}`;
 
-  const response = await fetch(`${OPENALEX_WORKS_URL}?${params.toString()}`, {
+  const response = await fetch(apiUrl, {
+    cache: "no-store",
     headers: {
       Accept: "application/json",
       "User-Agent": "Research Intelligence MVP (mailto:example@example.com)"
-    },
-    next: { revalidate: 3600 }
+    }
   });
 
   if (!response.ok) {
@@ -111,5 +132,22 @@ export async function fetchOpenAlexWorks(keywords: string[], perPage = 25): Prom
   }
 
   const payload = (await response.json()) as OpenAlexResponse;
-  return (payload.results ?? []).map(normalizeWork).filter((work): work is RetrievedPaper => Boolean(work));
+  return {
+    papers: (payload.results ?? []).map(normalizeWork).filter((work): work is RetrievedPaper => Boolean(work)),
+    diagnostics: {
+      liveConnection: true,
+      retrievalMode: "live_openalex_api",
+      apiUrl,
+      apiStatus: response.status,
+      apiResponseCount: payload.meta?.count ?? payload.results?.length ?? 0,
+      apiDbResponseTimeMs: payload.meta?.db_response_time_ms ?? null,
+      retrievedAt: new Date().toISOString(),
+      query: search
+    }
+  };
+}
+
+export async function fetchOpenAlexWorks(keywords: string[], perPage = 50): Promise<RetrievedPaper[]> {
+  const result = await retrieveOpenAlexWorks(keywords, perPage);
+  return result.papers;
 }

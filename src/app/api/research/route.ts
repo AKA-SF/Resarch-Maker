@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { buildResearchIntelligenceResult } from "@/lib/research/analysis";
-import { fetchOpenAlexWorks } from "@/lib/research/openalex";
+import { retrieveOpenAlexWorks } from "@/lib/research/openalex";
 import { loadScholarlyMemoryRecords, saveScholarlyMemoryRecord } from "@/lib/research/scholarly-memory";
 import {
   careerStages,
@@ -98,8 +98,16 @@ export async function POST(request: Request) {
 
   try {
     const priorMemoryRecords = await loadScholarlyMemoryRecords();
-    const papers = await fetchOpenAlexWorks(keywords);
-    const result = buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy, researcherProfile, priorMemoryRecords);
+    const retrieval = await retrieveOpenAlexWorks(keywords);
+    const result = buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, retrieval.papers, strategy, researcherProfile, priorMemoryRecords);
+    result.diagnostics.liveConnection = retrieval.diagnostics.liveConnection;
+    result.diagnostics.retrievalMode = retrieval.diagnostics.retrievalMode;
+    result.diagnostics.apiUrl = retrieval.diagnostics.apiUrl;
+    result.diagnostics.apiStatus = retrieval.diagnostics.apiStatus;
+    result.diagnostics.apiResponseCount = retrieval.diagnostics.apiResponseCount;
+    result.diagnostics.apiDbResponseTimeMs = retrieval.diagnostics.apiDbResponseTimeMs;
+    result.diagnostics.retrievedAt = retrieval.diagnostics.retrievedAt;
+    result.diagnostics.searchQuery = retrieval.diagnostics.query;
     const savedAt = await saveScholarlyMemoryRecord(result.persistentScholarlyMemory.currentSession);
     result.persistentScholarlyMemory.persistence.enabled = true;
     result.persistentScholarlyMemory.persistence.lastSavedAt = savedAt;

@@ -873,6 +873,11 @@ button:disabled {
   gap: 14px;
 }
 
+.retrieval-status-panel {
+  display: grid;
+  gap: 14px;
+}
+
 .autonomous-os-panel > p,
 .production-pipeline-panel p,
 .planner-panel p,
@@ -921,6 +926,13 @@ button:disabled {
   margin: 0;
 }
 
+.retrieval-status-panel p {
+  color: #34413a;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .progress-grid,
 .autonomous-stage-grid,
 .production-draft-grid,
@@ -952,6 +964,11 @@ button:disabled {
 .role-grid,
 .lifecycle-list,
 .benchmark-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.retrieval-status-grid {
   display: grid;
   gap: 10px;
 }
@@ -999,6 +1016,15 @@ button:disabled {
   padding: 12px;
 }
 
+.retrieval-status-grid article {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
 .progress-grid span,
 .autonomous-stage-grid span,
 .os-control-grid span,
@@ -1020,6 +1046,13 @@ button:disabled {
 .reviewer-grid span,
 .lifecycle-list span,
 .benchmark-grid span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.retrieval-status-grid span {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 850;
@@ -1086,6 +1119,12 @@ button:disabled {
   line-height: 1.35;
 }
 
+.retrieval-status-grid strong {
+  color: var(--accent);
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
 .autonomous-stage-grid small,
 .os-control-grid small,
 .ecosystem-feed-list small,
@@ -1140,6 +1179,10 @@ button:disabled {
 }
 
 .workflow-metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.retrieval-status-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
@@ -2060,7 +2103,8 @@ details ul {
   .publication-fit-list,
   .role-grid,
   .lifecycle-list,
-  .benchmark-grid {
+  .benchmark-grid,
+  .retrieval-status-grid {
     grid-template-columns: 1fr;
   }
 

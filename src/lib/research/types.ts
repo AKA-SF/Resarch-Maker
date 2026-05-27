@@ -2028,6 +2028,14 @@ export type ResearchIntelligenceResult = {
   diagnostics: {
     retrievedCount: number;
     source: "OpenAlex";
+    liveConnection: boolean;
+    retrievalMode: "provided_papers" | "live_openalex_api";
+    apiUrl: string | null;
+    apiStatus: number | null;
+    apiResponseCount: number | null;
+    apiDbResponseTimeMs: number | null;
+    retrievedAt: string | null;
+    searchQuery: string;
     generatedAt: string;
     warnings: string[];
   };
