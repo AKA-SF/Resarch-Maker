@@ -49,6 +49,7 @@ import { buildPersistentScholarlyMemory } from "./scholarly-memory";
 import { buildPredictiveAcademicIntelligence } from "./predictive-intelligence";
 import { buildAutonomousAcademicOS } from "./autonomous-os";
 import { buildSelfEvolvingAcademicEcosystem } from "./self-evolving-ecosystem";
+import { buildGlobalAutonomousScholarlyNetwork } from "./global-scholarly-network";
 
 const broadConcepts = new Set([
   "psychology",
@@ -568,6 +569,20 @@ export function buildResearchIntelligenceResult(
     autonomousOS: autonomousAcademicOS,
     strategy
   });
+  const globalAutonomousScholarlyNetwork = buildGlobalAutonomousScholarlyNetwork({
+    topics,
+    papers,
+    synthesis,
+    graph: theoryGraph,
+    debates: debateAnalysis,
+    bibliometric: bibliometricAnalysis,
+    publication: publicationIntelligence,
+    selfImproving: selfImprovingIntelligence,
+    ecosystem: selfEvolvingAcademicEcosystem,
+    autonomousOS: autonomousAcademicOS,
+    discipline,
+    methodology
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -600,6 +615,7 @@ export function buildResearchIntelligenceResult(
     predictiveAcademicIntelligence,
     autonomousAcademicOS,
     selfEvolvingAcademicEcosystem,
+    globalAutonomousScholarlyNetwork,
     copilot,
     domainIntelligence,
     gaps,

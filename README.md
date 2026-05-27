@@ -36,6 +36,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds predictive academic intelligence for trend forecasting, publication outcome estimates, advanced topic evaluation, autonomous strategy optimization, scenario simulation, and research impact pathway analysis.
 - Adds a fully autonomous academic operating layer that coordinates topic-to-proposal workflows, research production drafts, dependency-aware planning, scholarly reasoning panels, monitoring alerts, optimization controls, and versioned research workspace outputs.
 - Adds a self-evolving academic ecosystem layer for snapshot-based continuous learning, dynamic knowledge graph updates, autonomous monitoring feeds, research benchmarking, adaptive agent coordination, institutional/team intelligence, workspace hubs, and long-term research trajectories.
+- Adds a global autonomous scholarly network layer for self-evaluation, QA/confidence checks, weak-signal detection, global ecosystem summaries, adaptive strategy generation, and long-term scholarly evolution planning.
 
 ## Run
 
@@ -88,6 +89,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Predictive intelligence is heuristic and evidence-bound. It estimates strategic likelihoods from retrieved metadata, graph signals, memory, and existing scores; it does not guarantee publication, citations, hot-topic status, or scholarly impact.
 - The autonomous academic operating layer coordinates workflows and drafts dossiers from existing evidence-bound modules. It does not run real experiments, submit IRB, manage real-time collaboration permissions, verify final citations, or guarantee publication outcomes.
 - The self-evolving ecosystem layer compares the current OpenAlex search snapshot with local memory and graph signals. It does not run a hidden background crawler, verify funding alignment from external grant databases, or guarantee forecasting accuracy.
+- The global scholarly network layer is a heuristic strategy and QA layer. It does not audit full-text citations, connect to private institutional systems, validate real funding calls, or claim global academic coverage.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

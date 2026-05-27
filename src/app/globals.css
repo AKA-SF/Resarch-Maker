@@ -775,7 +775,13 @@ button:disabled {
 .benchmark-panel,
 .agent-coordination-panel,
 .ecosystem-workspace-panel,
-.institutional-ecosystem-panel {
+.institutional-ecosystem-panel,
+.global-network-panel,
+.research-qa-panel,
+.self-evaluation-panel,
+.signal-map-panel,
+.strategy-network-panel,
+.evolution-network-panel {
   display: grid;
   gap: 14px;
 }
@@ -792,7 +798,13 @@ button:disabled {
 .benchmark-panel p,
 .agent-coordination-panel p,
 .ecosystem-workspace-panel p,
-.institutional-ecosystem-panel p {
+.institutional-ecosystem-panel p,
+.global-network-panel p,
+.research-qa-panel p,
+.self-evaluation-panel p,
+.signal-map-panel p,
+.strategy-network-panel p,
+.evolution-network-panel p {
   color: #34413a;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -809,7 +821,12 @@ button:disabled {
 .learning-workflow-grid,
 .ecosystem-feed-list,
 .relationship-update-grid,
-.benchmark-list {
+.benchmark-list,
+.global-ecosystem-grid,
+.qa-list,
+.self-eval-grid,
+.signal-list,
+.strategy-card-grid {
   display: grid;
   gap: 10px;
 }
@@ -828,7 +845,12 @@ button:disabled {
 .learning-workflow-grid article,
 .ecosystem-feed-list article,
 .relationship-update-grid article,
-.benchmark-list article {
+.benchmark-list article,
+.global-ecosystem-grid article,
+.qa-list article,
+.self-eval-grid article,
+.signal-list article,
+.strategy-card-grid article {
   background: #f8faf9;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -845,7 +867,11 @@ button:disabled {
 .learning-workflow-grid span,
 .ecosystem-feed-list span,
 .relationship-update-grid span,
-.benchmark-list span {
+.benchmark-list span,
+.qa-list span,
+.self-eval-grid span,
+.signal-list span,
+.strategy-card-grid span {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 850;
@@ -886,7 +912,12 @@ button:disabled {
 .learning-workflow-grid strong,
 .ecosystem-feed-list strong,
 .relationship-update-grid strong,
-.benchmark-list strong {
+.benchmark-list strong,
+.global-ecosystem-grid strong,
+.qa-list strong,
+.self-eval-grid strong,
+.signal-list strong,
+.strategy-card-grid strong {
   color: var(--ink);
   font-size: 0.9rem;
   line-height: 1.35;
@@ -895,7 +926,10 @@ button:disabled {
 .autonomous-stage-grid small,
 .os-control-grid small,
 .ecosystem-feed-list small,
-.benchmark-list small {
+.benchmark-list small,
+.global-ecosystem-grid small,
+.signal-list small,
+.strategy-card-grid small {
   color: var(--muted);
   font-size: 0.77rem;
   line-height: 1.4;
@@ -925,8 +959,19 @@ button:disabled {
 }
 
 .relationship-update-grid,
-.benchmark-list {
+.benchmark-list,
+.self-eval-grid,
+.strategy-card-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.global-ecosystem-grid,
+.signal-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.qa-list.compact article {
+  background: #fffaf2;
 }
 
 .benchmark-list article > div {
@@ -1713,7 +1758,11 @@ details ul {
   .version-list,
   .learning-workflow-grid,
   .relationship-update-grid,
-  .benchmark-list {
+  .benchmark-list,
+  .global-ecosystem-grid,
+  .self-eval-grid,
+  .signal-list,
+  .strategy-card-grid {
     grid-template-columns: 1fr;
   }
 

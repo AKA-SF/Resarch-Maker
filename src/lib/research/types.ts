@@ -1438,6 +1438,92 @@ export type SelfEvolvingAcademicEcosystem = {
   ecosystemBoundary: string;
 };
 
+export type SelfEvaluationWorkflow = {
+  topicTitle: string;
+  qualityScore: number;
+  evidenceCoverage: number;
+  weakReasoningChains: string[];
+  unsupportedTheoreticalAssumptions: string[];
+  methodologyCritique: string;
+  autonomousImprovementActions: string[];
+  evaluationBoundary: string;
+};
+
+export type AutonomousScholarlyEvolution = {
+  theoryRelationshipRefinements: ContinuousScholarlyLearning["theoryRelationshipUpdates"];
+  topicScoringModelUpdates: ContinuousScholarlyLearning["topicScoringEvolution"];
+  forecastingLogicAdaptations: string[];
+  gapDetectionImprovements: ContinuousScholarlyLearning["gapRefinements"];
+  priorOutcomeLearning: string[];
+  longTermRecommendationOptimizations: string[];
+  evolutionBoundary: string;
+};
+
+export type GlobalAcademicEcosystemIntelligence = {
+  disciplineEcosystems: Array<{
+    discipline: string;
+    signal: string;
+    evidence: string;
+  }>;
+  institutionEcosystems: InstitutionalTeamIntelligence["facultyExpertiseAlignment"];
+  journalConferenceEcosystems: Array<{
+    venue: string;
+    fitSignal: string;
+    evidence: string;
+  }>;
+  fundingTrendProxies: EcosystemMonitoringFeed[];
+  collaborationNetworkSignals: InstitutionalTeamIntelligence["collaborationOpportunityDiscovery"];
+  emergingInterdisciplinaryEcosystems: EcosystemMonitoringFeed[];
+  ecosystemBoundary: string;
+};
+
+export type AdvancedScholarlySignalDetection = {
+  weakSignals: EcosystemMonitoringFeed[];
+  earlyInterdisciplinaryConvergence: MultiHopDiscoveryPath[];
+  acceleratingMethodologies: EcosystemMonitoringFeed[];
+  hiddenConceptRelationships: MultiHopDiscoveryPath[];
+  underRecognizedOpportunities: string[];
+  futureHighImpactDomains: EcosystemMonitoringFeed[];
+  signalBoundary: string;
+};
+
+export type AudienceResearchStrategy = {
+  audience: "graduate_student" | "professor" | "research_lab" | "institution" | "interdisciplinary_team" | "publication_agenda" | "funding_aligned_direction";
+  strategyTitle: string;
+  recommendedMoves: string[];
+  riskControls: string[];
+  evidence: string;
+};
+
+export type ResearchQualityAssuranceLayer = {
+  evidenceConfidenceEstimates: Array<{
+    target: string;
+    confidence: "low" | "medium" | "high";
+    evidence: string;
+  }>;
+  hallucinationRiskFlags: Array<{
+    target: string;
+    risk: "low" | "medium" | "high";
+    reason: string;
+  }>;
+  unsupportedClaimChecks: string[];
+  citationConsistencyChecks: string[];
+  reasoningChainValidation: string[];
+  methodologicalPlausibilityValidation: string[];
+  qaBoundary: string;
+};
+
+export type GlobalAutonomousScholarlyNetwork = {
+  networkRunId: string;
+  selfEvaluationWorkflows: SelfEvaluationWorkflow[];
+  autonomousScholarlyEvolution: AutonomousScholarlyEvolution;
+  globalAcademicEcosystemIntelligence: GlobalAcademicEcosystemIntelligence;
+  advancedSignalDetection: AdvancedScholarlySignalDetection;
+  autonomousResearchStrategies: AudienceResearchStrategy[];
+  researchQualityAssurance: ResearchQualityAssuranceLayer;
+  networkBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1525,6 +1611,7 @@ export type ResearchIntelligenceResult = {
   predictiveAcademicIntelligence: PredictiveAcademicIntelligence;
   autonomousAcademicOS: AutonomousAcademicOperatingSystem;
   selfEvolvingAcademicEcosystem: SelfEvolvingAcademicEcosystem;
+  globalAutonomousScholarlyNetwork: GlobalAutonomousScholarlyNetwork;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

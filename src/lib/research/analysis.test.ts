@@ -353,4 +353,29 @@ describe("research analysis", () => {
     expect(result.selfEvolvingAcademicEcosystem.advancedWorkspaceEcosystem.exportableInstitutionalDossier).toContain("Institutional trend profile");
     expect(result.selfEvolvingAcademicEcosystem.ecosystemBoundary).toContain("보장하지 않습니다");
   });
+
+  it("builds global scholarly network self-evaluation, signal detection, strategy, and QA outputs", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "interdisciplinary innovation",
+      {
+        interests: ["AI education"],
+        preferredMethodologies: ["quantitative", "SEM"],
+        noveltyTolerance: "high",
+        careerStage: "researcher"
+      }
+    );
+
+    expect(result.globalAutonomousScholarlyNetwork.selfEvaluationWorkflows.length).toBeGreaterThan(0);
+    expect(result.globalAutonomousScholarlyNetwork.selfEvaluationWorkflows[0].qualityScore).toBeGreaterThanOrEqual(1);
+    expect(result.globalAutonomousScholarlyNetwork.autonomousScholarlyEvolution.topicScoringModelUpdates.length).toBeGreaterThan(0);
+    expect(result.globalAutonomousScholarlyNetwork.globalAcademicEcosystemIntelligence.disciplineEcosystems.length).toBeGreaterThan(0);
+    expect(result.globalAutonomousScholarlyNetwork.advancedSignalDetection.underRecognizedOpportunities.length).toBeGreaterThan(0);
+    expect(result.globalAutonomousScholarlyNetwork.autonomousResearchStrategies.map((strategy) => strategy.audience)).toContain("graduate_student");
+    expect(result.globalAutonomousScholarlyNetwork.researchQualityAssurance.citationConsistencyChecks.length).toBeGreaterThan(0);
+    expect(result.globalAutonomousScholarlyNetwork.networkBoundary).toContain("보장하지 않습니다");
+  });
 });

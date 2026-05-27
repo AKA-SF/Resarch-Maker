@@ -1145,6 +1145,176 @@ export default function Home() {
               </section>
 
               <section className="split wide-left">
+                <section className="panel global-network-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Global Scholarly Network</p>
+                      <h2>글로벌 학술 생태계 인텔리전스</h2>
+                    </div>
+                    <Network size={22} />
+                  </div>
+                  <div className="domain-grid">
+                    <div>
+                      <span>자기평가</span>
+                      <strong>{result.globalAutonomousScholarlyNetwork.selfEvaluationWorkflows.length}</strong>
+                    </div>
+                    <div>
+                      <span>약신호</span>
+                      <strong>{result.globalAutonomousScholarlyNetwork.advancedSignalDetection.weakSignals.length}</strong>
+                    </div>
+                    <div>
+                      <span>전략</span>
+                      <strong>{result.globalAutonomousScholarlyNetwork.autonomousResearchStrategies.length}</strong>
+                    </div>
+                    <div>
+                      <span>QA 체크</span>
+                      <strong>{result.globalAutonomousScholarlyNetwork.researchQualityAssurance.citationConsistencyChecks.length}</strong>
+                    </div>
+                  </div>
+                  <div className="global-ecosystem-grid">
+                    {result.globalAutonomousScholarlyNetwork.globalAcademicEcosystemIntelligence.disciplineEcosystems.slice(0, 5).map((item) => (
+                      <article key={`global-discipline-${item.discipline}`}>
+                        <strong>{item.discipline}</strong>
+                        <p>{item.signal}</p>
+                        <small>{item.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.globalAutonomousScholarlyNetwork.networkBoundary}</p>
+                </section>
+
+                <section className="panel research-qa-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Research QA</p>
+                      <h2>품질 / 신뢰도 패널</h2>
+                    </div>
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div className="qa-list">
+                    {result.globalAutonomousScholarlyNetwork.researchQualityAssurance.evidenceConfidenceEstimates.slice(0, 4).map((item) => (
+                      <article key={`qa-confidence-${item.target}`}>
+                        <span>{confidenceLabels[item.confidence]}</span>
+                        <strong>{topicShortTitle(item.target)}</strong>
+                        <p>{item.evidence}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">환각/비근거 위험</h3>
+                  <div className="qa-list compact">
+                    {result.globalAutonomousScholarlyNetwork.researchQualityAssurance.hallucinationRiskFlags.slice(0, 4).map((item) => (
+                      <article key={`qa-risk-${item.target}`}>
+                        <span>{item.risk}</span>
+                        <strong>{topicShortTitle(item.target)}</strong>
+                        <p>{item.reason}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.globalAutonomousScholarlyNetwork.researchQualityAssurance.qaBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel self-evaluation-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Self-Evaluating Intelligence</p>
+                      <h2>연구 아이디어 자기평가</h2>
+                    </div>
+                    <Target size={22} />
+                  </div>
+                  <div className="self-eval-grid">
+                    {result.globalAutonomousScholarlyNetwork.selfEvaluationWorkflows.slice(0, 3).map((evaluation) => (
+                      <article key={`self-eval-${evaluation.topicTitle}`}>
+                        <div>
+                          <strong>{topicShortTitle(evaluation.topicTitle)}</strong>
+                          <span>품질 {evaluation.qualityScore}/10 · 근거 {evaluation.evidenceCoverage}/10</span>
+                        </div>
+                        <p>{evaluation.methodologyCritique}</p>
+                        <ul className="plain-list">
+                          {evaluation.autonomousImprovementActions.slice(0, 3).map((action) => (
+                            <li key={`self-eval-action-${evaluation.topicTitle}-${action}`}>{action}</li>
+                          ))}
+                        </ul>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="panel signal-map-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Scholarly Signal Map</p>
+                      <h2>약신호 / 미래 기회 탐지</h2>
+                    </div>
+                    <Sparkles size={22} />
+                  </div>
+                  <div className="signal-list">
+                    {[
+                      ...result.globalAutonomousScholarlyNetwork.advancedSignalDetection.weakSignals,
+                      ...result.globalAutonomousScholarlyNetwork.advancedSignalDetection.futureHighImpactDomains
+                    ].slice(0, 8).map((signal) => (
+                      <article key={`signal-${signal.type}-${signal.label}`}>
+                        <span>{signal.type.replaceAll("_", " ")}</span>
+                        <strong>{signal.label}</strong>
+                        <p>{signal.generatedInterpretation}</p>
+                        <small>{signal.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.globalAutonomousScholarlyNetwork.advancedSignalDetection.signalBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel strategy-network-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Strategy Engine</p>
+                      <h2>대상별 연구 전략</h2>
+                    </div>
+                    <Rocket size={22} />
+                  </div>
+                  <div className="strategy-card-grid">
+                    {result.globalAutonomousScholarlyNetwork.autonomousResearchStrategies.map((strategy) => (
+                      <article key={`global-strategy-${strategy.audience}`}>
+                        <span>{strategy.audience.replaceAll("_", " ")}</span>
+                        <strong>{strategy.strategyTitle}</strong>
+                        <ul className="plain-list">
+                          {strategy.recommendedMoves.slice(0, 3).map((move) => (
+                            <li key={`strategy-move-${strategy.audience}-${move}`}>{move}</li>
+                          ))}
+                        </ul>
+                        <small>{strategy.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="panel evolution-network-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Scholarly Evolution</p>
+                      <h2>장기 연구 진화 타임라인</h2>
+                    </div>
+                    <GitFork size={22} />
+                  </div>
+                  <div className="timeline-list">
+                    {[
+                      ...result.globalAutonomousScholarlyNetwork.autonomousScholarlyEvolution.forecastingLogicAdaptations,
+                      ...result.globalAutonomousScholarlyNetwork.autonomousScholarlyEvolution.longTermRecommendationOptimizations
+                    ].slice(0, 8).map((item, index) => (
+                      <article key={`network-evolution-${index}-${item.slice(0, 28)}`}>
+                        <strong>{index + 1}. evolution update</strong>
+                        <span>{item}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.globalAutonomousScholarlyNetwork.autonomousScholarlyEvolution.evolutionBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">
                     <div>
