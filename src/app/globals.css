@@ -123,6 +123,21 @@ h3 {
   top: 18px;
 }
 
+.profile-editor {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.profile-editor-head {
+  align-items: center;
+  color: var(--accent);
+  display: flex;
+  font-size: 0.9rem;
+  gap: 8px;
+}
+
 label {
   display: grid;
   gap: 7px;
@@ -717,10 +732,142 @@ button:disabled {
 }
 
 .proposal-panel p,
-.framework-panel p {
+.framework-panel p,
+.profile-dashboard p,
+.mentor-panel p {
   color: #34413a;
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+.profile-dashboard,
+.monitor-panel,
+.evaluation-panel,
+.mentor-panel,
+.institutional-panel,
+.ecosystem-panel,
+.simulation-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.evaluation-list {
+  display: grid;
+  gap: 12px;
+}
+
+.evaluation-list article,
+.scenario-grid article {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.evaluation-list article > div:first-child {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.evaluation-list article > div:first-child span {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.evaluation-bars {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0;
+}
+
+.evaluation-bars p {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(118px, 0.9fr) 1fr 28px;
+  margin: 0;
+}
+
+.evaluation-bars span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.evaluation-bars i {
+  background: linear-gradient(90deg, var(--accent), var(--accent-3));
+  border-radius: 999px;
+  display: block;
+  height: 8px;
+}
+
+.evaluation-bars strong {
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.mentor-columns {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mentor-columns > div,
+.step-list {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.step-list {
+  color: #34413a;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 28px;
+}
+
+.scenario-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.scenario-grid article {
+  border-left: 4px solid var(--line);
+  display: grid;
+  gap: 7px;
+}
+
+.scenario-grid article.preferred {
+  border-left-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(23, 107, 95, 0.12);
+}
+
+.scenario-grid span {
+  color: var(--accent-3);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.scenario-grid strong {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.scenario-grid p,
+.scenario-grid em {
+  color: #34413a;
+  font-size: 0.82rem;
+  font-style: normal;
+  line-height: 1.45;
+  margin: 0;
 }
 
 .proposal-grid,
@@ -1103,7 +1250,9 @@ details ul {
   .map-grid,
   .review-section-grid,
   .proposal-grid,
-  .workflow-grid {
+  .workflow-grid,
+  .mentor-columns,
+  .scenario-grid {
     grid-template-columns: 1fr;
   }
 

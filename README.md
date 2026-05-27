@@ -30,6 +30,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Persists local research memory seeds, evolving agendas, comparison snapshots, and collaborative workspace history in the browser.
 - Adds forecast dashboards for high-growth areas, likely future trends, saturated areas, declining themes, and interdisciplinary opportunity zones.
 - Generates complete research proposal drafts, conceptual frameworks, variable relationship maps, reasoning workflows, refinement actions, literature review workspaces, academic writing suggestions, and thesis/conference/journal workflow plans.
+- Adds self-improving intelligence views for researcher profiles, continuous trend snapshots, transparent topic/proposal evaluation, AI mentor critique, institutional mapping, expanded knowledge graph signals, and research scenario simulation.
 
 ## Run
 
@@ -74,6 +75,8 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Forecasts are search-result heuristics based on retrieved metadata, topic frequency, and recentness; they are not predictions of field-level certainty.
 - Research memory is stored locally in the browser. It should not be treated as cloud collaboration or shared access control.
 - Proposal, conceptual framework, and writing outputs are generated planning drafts. They do not establish causal relationships or scholarly claims without later human review and source verification.
+- Continuous intelligence is a current-session OpenAlex snapshot, not a background monitor. Institutional, author, and collaboration panels only display metadata returned by retrieved papers.
+- Evaluation, mentor, and scenario outputs are transparent heuristics based on retrieved evidence, profile settings, and existing app scores. They do not guarantee research quality, funding, publication, or future field movement.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

@@ -171,4 +171,31 @@ describe("research analysis", () => {
     expect(result.academicResearchOS.writingIntelligence.contributionStatements.length).toBeGreaterThan(0);
     expect(result.academicResearchOS.workflowAutomation.thesisDissertationPlan.length).toBeGreaterThan(0);
   });
+
+  it("personalizes evaluation, mentor, institutional, graph, and simulation intelligence", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "fast publishable topics",
+      {
+        interests: ["AI education", "self-efficacy"],
+        preferredMethodologies: ["quantitative", "regression"],
+        publicationGoals: ["journal article"],
+        targetVenues: ["Computers & Education"],
+        theoreticalOrientation: "social cognitive theory",
+        noveltyTolerance: "low",
+        careerStage: "student"
+      }
+    );
+    expect(result.selfImprovingIntelligence.researcherProfile.careerStage).toBe("student");
+    expect(result.selfImprovingIntelligence.personalizedRecommendationSummary).toContain("학생 연구자");
+    expect(result.selfImprovingIntelligence.evaluationEngine.evaluatedTopics[0].scores.length).toBe(8);
+    expect(result.selfImprovingIntelligence.mentorMode.beginnerGuidanceSteps.length).toBeGreaterThan(0);
+    expect(result.selfImprovingIntelligence.institutionalIntelligence.facultyExpertiseMatches.length).toBeGreaterThan(0);
+    expect(result.selfImprovingIntelligence.advancedKnowledgeGraph.theoryEvolutionChains.length).toBeGreaterThan(0);
+    expect(result.selfImprovingIntelligence.scenarioAnalysis.preferredScenario).toBe("safe publishable path");
+    expect(result.selfImprovingIntelligence.continuousIntelligence.updateBoundary).toContain("스냅샷");
+  });
 });

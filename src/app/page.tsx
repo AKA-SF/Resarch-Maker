@@ -5,11 +5,14 @@ import {
   BarChart3,
   BookOpen,
   Brain,
+  Building2,
   CheckCircle2,
   ClipboardList,
+  Compass,
   Download,
   FileText,
   GitFork,
+  GraduationCap,
   Layers3,
   Loader2,
   MapIcon,
@@ -22,7 +25,9 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
+  Target,
   TriangleAlert,
+  UserRound,
   Users,
   Wand2
 } from "lucide-react";
@@ -31,10 +36,12 @@ import {
   disciplines,
   methodologies,
   researchStrategies,
+  type CareerStage,
   type CopilotMessage,
   type Discipline,
   type GraphNode,
   type Methodology,
+  type ResearcherProfile,
   type ResearchStrategy,
   type ResearchIntelligenceResult,
   type Topic
@@ -92,6 +99,29 @@ const comparisonLabels: Record<string, string> = {
   safer: "안전한 방향",
   balanced: "균형형",
   high_novelty: "고참신성"
+};
+
+const careerStageLabels: Record<CareerStage, string> = {
+  student: "학생 연구자",
+  researcher: "연구자",
+  professor: "교수 / PI"
+};
+
+const noveltyToleranceLabels: Record<ResearcherProfile["noveltyTolerance"], string> = {
+  low: "낮음",
+  medium: "중간",
+  high: "높음"
+};
+
+const evaluationLabels: Record<string, string> = {
+  novelty: "참신성",
+  feasibility: "실행가능성",
+  methodological_rigor: "방법론 엄밀성",
+  publication_potential: "출판 잠재력",
+  interdisciplinary_strength: "융합 강도",
+  theoretical_coherence: "이론 정합성",
+  empirical_testability: "실증 검증성",
+  replication_potential: "재현 가능성"
 };
 
 const nodeColors: Record<GraphNode["type"], string> = {
@@ -307,12 +337,23 @@ function buildImproveMessage(topic: Topic, mode: "improve" | "safe" | "novel" | 
   };
 }
 
+function splitProfileList(value: string): string[] {
+  return value.split(",").map((item) => item.trim()).filter(Boolean).slice(0, 12);
+}
+
 export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
   const [keywords, setKeywords] = useState(initialKeywords);
   const [discipline, setDiscipline] = useState<Discipline>("education");
   const [methodology, setMethodology] = useState<Methodology>("quantitative");
   const [strategy, setStrategy] = useState<ResearchStrategy>("beginner-safe research");
+  const [profileInterests, setProfileInterests] = useState("AI education, self-efficacy, learning analytics");
+  const [profilePreferredMethods, setProfilePreferredMethods] = useState("quantitative, SEM, regression");
+  const [profileGoals, setProfileGoals] = useState("journal article, dissertation chapter");
+  const [profileTargetVenues, setProfileTargetVenues] = useState("Computers & Education, Education and Information Technologies");
+  const [theoreticalOrientation, setTheoreticalOrientation] = useState("social cognitive theory with practical education impact");
+  const [noveltyTolerance, setNoveltyTolerance] = useState<ResearcherProfile["noveltyTolerance"]>("medium");
+  const [careerStage, setCareerStage] = useState<CareerStage>("student");
   const [result, setResult] = useState<ResearchIntelligenceResult | null>(null);
   const [copilotMessages, setCopilotMessages] = useState<CopilotMessage[]>([]);
   const [savedWorkspaces, setSavedWorkspaces] = useState<SavedWorkspace[]>([]);
@@ -339,10 +380,28 @@ export default function Home() {
     const submittedDiscipline = String(formData?.get("discipline") ?? discipline) as Discipline;
     const submittedMethodology = String(formData?.get("methodology") ?? methodology) as Methodology;
     const submittedStrategy = String(formData?.get("strategy") ?? strategy) as ResearchStrategy;
+    const submittedProfile: Partial<ResearcherProfile> = {
+      interests: splitProfileList(String(formData?.get("profileInterests") ?? profileInterests)),
+      preferredMethodologies: splitProfileList(String(formData?.get("profilePreferredMethods") ?? profilePreferredMethods)).filter((item): item is Methodology =>
+        methodologies.includes(item as Methodology)
+      ),
+      publicationGoals: splitProfileList(String(formData?.get("profileGoals") ?? profileGoals)),
+      targetVenues: splitProfileList(String(formData?.get("profileTargetVenues") ?? profileTargetVenues)),
+      theoreticalOrientation: String(formData?.get("theoreticalOrientation") ?? theoreticalOrientation),
+      noveltyTolerance: String(formData?.get("noveltyTolerance") ?? noveltyTolerance) as ResearcherProfile["noveltyTolerance"],
+      careerStage: String(formData?.get("careerStage") ?? careerStage) as CareerStage
+    };
     setKeywords(submittedKeywords);
     setDiscipline(submittedDiscipline);
     setMethodology(submittedMethodology);
     setStrategy(submittedStrategy);
+    setProfileInterests(submittedProfile.interests?.join(", ") ?? "");
+    setProfilePreferredMethods(submittedProfile.preferredMethodologies?.join(", ") ?? "");
+    setProfileGoals(submittedProfile.publicationGoals?.join(", ") ?? "");
+    setProfileTargetVenues(submittedProfile.targetVenues?.join(", ") ?? "");
+    setTheoreticalOrientation(submittedProfile.theoreticalOrientation ?? "");
+    setNoveltyTolerance(submittedProfile.noveltyTolerance ?? "medium");
+    setCareerStage(submittedProfile.careerStage ?? "student");
     setLoading(true);
     setError(null);
     setResult(null);
@@ -356,7 +415,8 @@ export default function Home() {
           keywords: submittedKeywords,
           discipline: submittedDiscipline,
           methodology: submittedMethodology,
-          strategy: submittedStrategy
+          strategy: submittedStrategy,
+          researcherProfile: submittedProfile
         })
       });
       const payload = await response.json();
@@ -489,6 +549,49 @@ export default function Home() {
             </select>
           </label>
 
+          <div className="profile-editor">
+            <div className="profile-editor-head">
+              <UserRound size={17} />
+              <strong>연구자 프로필</strong>
+            </div>
+            <label>
+              <span>관심 주제</span>
+              <textarea name="profileInterests" value={profileInterests} onChange={(event) => setProfileInterests(event.target.value)} rows={2} />
+            </label>
+            <label>
+              <span>선호 방법론</span>
+              <textarea name="profilePreferredMethods" value={profilePreferredMethods} onChange={(event) => setProfilePreferredMethods(event.target.value)} rows={2} />
+            </label>
+            <label>
+              <span>출판 목표</span>
+              <textarea name="profileGoals" value={profileGoals} onChange={(event) => setProfileGoals(event.target.value)} rows={2} />
+            </label>
+            <label>
+              <span>목표 저널/학회</span>
+              <textarea name="profileTargetVenues" value={profileTargetVenues} onChange={(event) => setProfileTargetVenues(event.target.value)} rows={2} />
+            </label>
+            <label>
+              <span>이론 성향</span>
+              <textarea name="theoreticalOrientation" value={theoreticalOrientation} onChange={(event) => setTheoreticalOrientation(event.target.value)} rows={2} />
+            </label>
+            <label>
+              <span>참신성 허용도</span>
+              <select name="noveltyTolerance" value={noveltyTolerance} onChange={(event) => setNoveltyTolerance(event.target.value as ResearcherProfile["noveltyTolerance"])}>
+                <option value="low">낮음</option>
+                <option value="medium">중간</option>
+                <option value="high">높음</option>
+              </select>
+            </label>
+            <label>
+              <span>경력 단계</span>
+              <select name="careerStage" value={careerStage} onChange={(event) => setCareerStage(event.target.value as CareerStage)}>
+                <option value="student">학생 연구자</option>
+                <option value="researcher">연구자</option>
+                <option value="professor">교수 / PI</option>
+              </select>
+            </label>
+          </div>
+
           <button type="button" disabled={loading} onClick={() => void runAnalysis()}>
             {loading ? <Loader2 className="spin" size={18} /> : <Search size={18} />}
             연구주제 생성
@@ -565,6 +668,217 @@ export default function Home() {
                   <span>리뷰 섹션</span>
                   <strong>{result.literatureReviewDraft.thematicGrouping.length + 6}</strong>
                 </div>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel profile-dashboard">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Researcher Profile</p>
+                      <h2>개인화 연구자 대시보드</h2>
+                    </div>
+                    <UserRound size={22} />
+                  </div>
+                  <p>{result.selfImprovingIntelligence.personalizedRecommendationSummary}</p>
+                  <div className="domain-grid">
+                    <div>
+                      <span>경력 단계</span>
+                      <strong>{careerStageLabels[result.selfImprovingIntelligence.researcherProfile.careerStage]}</strong>
+                    </div>
+                    <div>
+                      <span>참신성 허용도</span>
+                      <strong>{noveltyToleranceLabels[result.selfImprovingIntelligence.researcherProfile.noveltyTolerance]}</strong>
+                    </div>
+                    <div>
+                      <span>선호 방법론</span>
+                      <strong>{result.selfImprovingIntelligence.researcherProfile.preferredMethodologies.join(", ") || methodologyLabels[result.query.methodology]}</strong>
+                    </div>
+                    <div>
+                      <span>목표 venue</span>
+                      <strong>{result.selfImprovingIntelligence.researcherProfile.targetVenues.slice(0, 2).join(", ") || "미설정"}</strong>
+                    </div>
+                  </div>
+                  <div className="chips">
+                    {result.selfImprovingIntelligence.researcherProfile.interests.slice(0, 8).map((interest) => (
+                      <span key={`profile-interest-${interest}`}>{interest}</span>
+                    ))}
+                  </div>
+                </section>
+                <section className="panel monitor-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Continuous Intelligence</p>
+                      <h2>연속 트렌드 모니터링</h2>
+                    </div>
+                    <Compass size={22} />
+                  </div>
+                  <div className="rank-list compact">
+                    {result.selfImprovingIntelligence.continuousIntelligence.newlyRisingTheoriesTopics.slice(0, 5).map((item) => (
+                      <article key={`continuous-${item.label}`}>
+                        <strong>{item.label}</strong>
+                        <span>최근/부상 신호 {item.support} · 근거 {item.paperIds.length}편</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfImprovingIntelligence.continuousIntelligence.updateBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel evaluation-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Evaluation Engine</p>
+                      <h2>지능형 연구 평가</h2>
+                    </div>
+                    <Target size={22} />
+                  </div>
+                  <div className="evaluation-list">
+                    {result.selfImprovingIntelligence.evaluationEngine.evaluatedTopics.slice(0, 3).map((evaluation) => (
+                      <article key={`evaluation-${evaluation.topicTitle}`}>
+                        <div>
+                          <strong>{topicShortTitle(evaluation.topicTitle)}</strong>
+                          <span>종합 {evaluation.overall}/10</span>
+                        </div>
+                        <div className="evaluation-bars">
+                          {evaluation.scores.slice(0, 4).map((score) => (
+                            <p key={`${evaluation.topicTitle}-${score.criterion}`}>
+                              <span>{evaluationLabels[score.criterion]}</span>
+                              <i style={{ width: `${score.score * 10}%` }} />
+                              <strong>{score.score}</strong>
+                            </p>
+                          ))}
+                        </div>
+                        <p>{evaluation.recommendation}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfImprovingIntelligence.evaluationEngine.evaluationBoundary}</p>
+                </section>
+                <section className="panel mentor-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">AI Research Mentor</p>
+                      <h2>연구 멘토 피드백</h2>
+                    </div>
+                    <GraduationCap size={22} />
+                  </div>
+                  <div className="mentor-columns">
+                    <div>
+                      <h3>비평</h3>
+                      <ul className="plain-list">
+                        {result.selfImprovingIntelligence.mentorMode.critique.map((item) => (
+                          <li key={`critique-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>숨은 가정</h3>
+                      <ul className="plain-list">
+                        {result.selfImprovingIntelligence.mentorMode.hiddenAssumptions.slice(0, 3).map((item) => (
+                          <li key={`assumption-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <h3 className="subsection-title">초보자 단계별 가이드</h3>
+                  <ol className="step-list">
+                    {result.selfImprovingIntelligence.mentorMode.beginnerGuidanceSteps.map((item) => (
+                      <li key={`mentor-step-${item}`}>{item}</li>
+                    ))}
+                  </ol>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel institutional-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Institutional Intelligence</p>
+                      <h2>기관·학과 연구 지능</h2>
+                    </div>
+                    <Building2 size={22} />
+                  </div>
+                  <div className="map-grid">
+                    <div>
+                      <h3>학과 연구맵</h3>
+                      <ul className="plain-list">
+                        {result.selfImprovingIntelligence.institutionalIntelligence.departmentResearchMap.slice(0, 5).map((item) => (
+                          <li key={`dept-${item.area}`}>{item.area} · {item.paperCount}편</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>전문가 매칭</h3>
+                      <ul className="plain-list">
+                        {result.selfImprovingIntelligence.institutionalIntelligence.facultyExpertiseMatches.slice(0, 5).map((item) => (
+                          <li key={`faculty-${item.author}`}>{item.author} · {item.paperCount}편 · 인용 {item.totalCitations}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>협업 기회</h3>
+                      <ul className="plain-list">
+                        {result.selfImprovingIntelligence.institutionalIntelligence.collaborationOpportunities.slice(0, 4).map((item) => (
+                          <li key={`collab-op-${item.source}-${item.target}`}>{item.source} ↔ {item.target}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.selfImprovingIntelligence.institutionalIntelligence.evidenceBoundary}</p>
+                </section>
+                <section className="panel ecosystem-panel">
+                  <p className="tag">Scholarly Ecosystem Map</p>
+                  <h2>확장 지식 그래프</h2>
+                  <div className="timeline-list">
+                    {result.selfImprovingIntelligence.advancedKnowledgeGraph.theoryEvolutionChains.slice(0, 5).map((chain) => (
+                      <article key={`theory-chain-${chain.theory}`}>
+                        <strong>{chain.theory}</strong>
+                        <span>{chain.chain.join(" → ")}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">기관 연결</h3>
+                  <div className="rank-list compact">
+                    {result.selfImprovingIntelligence.advancedKnowledgeGraph.institutionRelationships.slice(0, 4).map((edge) => (
+                      <article key={`inst-edge-${edge.source}-${edge.target}`}>
+                        <strong>{edge.source} ↔ {edge.target}</strong>
+                        <span>{edge.weight}편에서 동시 등장</span>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">저자 연결</h3>
+                  <div className="rank-list compact">
+                    {result.selfImprovingIntelligence.advancedKnowledgeGraph.authorRelationships.slice(0, 4).map((edge) => (
+                      <article key={`author-edge-${edge.source}-${edge.target}`}>
+                        <strong>{edge.source} ↔ {edge.target}</strong>
+                        <span>{edge.weight}편 공동 저자 신호</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfImprovingIntelligence.advancedKnowledgeGraph.graphBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel simulation-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Scenario Simulation</p>
+                    <h2>연구 시뮬레이션 / 시나리오 분석</h2>
+                  </div>
+                  <Rocket size={22} />
+                </div>
+                <div className="scenario-grid">
+                  {result.selfImprovingIntelligence.scenarioAnalysis.scenarios.map((scenario) => (
+                    <article className={scenario.scenario === result.selfImprovingIntelligence.scenarioAnalysis.preferredScenario ? "preferred" : ""} key={`scenario-${scenario.scenario}`}>
+                      <span>{scenario.scenario}</span>
+                      <strong>{scenario.recommendation}</strong>
+                      <p>{scenario.expectedUpside}</p>
+                      <em>{scenario.evidence}</em>
+                    </article>
+                  ))}
+                </div>
+                <p className="muted">{result.selfImprovingIntelligence.scenarioAnalysis.simulationBoundary}</p>
               </section>
 
               <section className="split wide-left">

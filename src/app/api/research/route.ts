@@ -1,13 +1,24 @@
 import { NextResponse } from "next/server";
 import { buildResearchIntelligenceResult } from "@/lib/research/analysis";
 import { fetchOpenAlexWorks } from "@/lib/research/openalex";
-import { disciplines, methodologies, researchStrategies, type Discipline, type Methodology, type ResearchStrategy } from "@/lib/research/types";
+import {
+  careerStages,
+  disciplines,
+  methodologies,
+  researchStrategies,
+  type CareerStage,
+  type Discipline,
+  type Methodology,
+  type ResearcherProfile,
+  type ResearchStrategy
+} from "@/lib/research/types";
 
 type RequestBody = {
   keywords?: unknown;
   discipline?: unknown;
   methodology?: unknown;
   strategy?: unknown;
+  researcherProfile?: unknown;
 };
 
 function parseKeywords(value: unknown): string[] {
@@ -32,6 +43,34 @@ function isResearchStrategy(value: unknown): value is ResearchStrategy {
   return typeof value === "string" && researchStrategies.includes(value as ResearchStrategy);
 }
 
+function parseStringList(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String).map((item) => item.trim()).filter(Boolean).slice(0, 12);
+  if (typeof value === "string") return value.split(",").map((item) => item.trim()).filter(Boolean).slice(0, 12);
+  return [];
+}
+
+function parseResearcherProfile(value: unknown): Partial<ResearcherProfile> | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const profile = value as Record<string, unknown>;
+  const preferredMethodologies = parseStringList(profile.preferredMethodologies).filter((item): item is Methodology =>
+    methodologies.includes(item as Methodology)
+  );
+  const noveltyTolerance =
+    profile.noveltyTolerance === "low" || profile.noveltyTolerance === "medium" || profile.noveltyTolerance === "high"
+      ? profile.noveltyTolerance
+      : undefined;
+  const careerStage = careerStages.includes(profile.careerStage as CareerStage) ? profile.careerStage as CareerStage : undefined;
+  return {
+    interests: parseStringList(profile.interests),
+    preferredMethodologies,
+    publicationGoals: parseStringList(profile.publicationGoals),
+    targetVenues: parseStringList(profile.targetVenues),
+    theoreticalOrientation: typeof profile.theoreticalOrientation === "string" ? profile.theoreticalOrientation.slice(0, 160) : undefined,
+    noveltyTolerance,
+    careerStage
+  };
+}
+
 export async function POST(request: Request) {
   let body: RequestBody;
   try {
@@ -54,10 +93,11 @@ export async function POST(request: Request) {
   }
 
   const strategy = isResearchStrategy(body.strategy) ? body.strategy : "beginner-safe research";
+  const researcherProfile = parseResearcherProfile(body.researcherProfile);
 
   try {
     const papers = await fetchOpenAlexWorks(keywords);
-    return NextResponse.json(buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy));
+    return NextResponse.json(buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy, researcherProfile));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown retrieval error";
     return NextResponse.json(

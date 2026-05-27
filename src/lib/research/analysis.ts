@@ -3,6 +3,7 @@ import type {
   EvidenceItem,
   Gap,
   Methodology,
+  ResearcherProfile,
   ResearchStrategy,
   ResearchIntelligenceResult,
   RetrievedPaper,
@@ -41,6 +42,7 @@ import {
   buildResearchMemorySeed
 } from "./agents";
 import { buildAcademicResearchOS } from "./operating-system";
+import { buildSelfImprovingAcademicIntelligence } from "./self-improving";
 
 const broadConcepts = new Set([
   "psychology",
@@ -412,7 +414,8 @@ export function buildResearchIntelligenceResult(
   discipline: Discipline,
   methodology: Methodology,
   papers: RetrievedPaper[],
-  strategy: ResearchStrategy = "beginner-safe research"
+  strategy: ResearchStrategy = "beginner-safe research",
+  researcherProfile?: Partial<ResearcherProfile>
 ): ResearchIntelligenceResult {
   const synthesis = synthesizeLiterature(papers);
   const theoryGraph = buildTheoryGraph(papers, keywords);
@@ -463,6 +466,30 @@ export function buildResearchIntelligenceResult(
     methodology,
     strategy
   );
+  const selfImprovingIntelligence = buildSelfImprovingAcademicIntelligence({
+    profile: researcherProfile,
+    discipline,
+    methodology,
+    strategy,
+    papers,
+    synthesis,
+    graph: theoryGraph,
+    trendAnalysis,
+    gaps,
+    topics,
+    bibliometricAnalysis,
+    competitionIntelligence,
+    researchForecast,
+    researchRoadmap,
+    academicResearchOS,
+    authorInfluence: citationIntelligence.authorInfluence,
+    interdisciplinaryBridges: literatureMap.interdisciplinaryBridges,
+    longRangeConceptDiscovery: [
+      ...autonomousExploration.adjacentTheoryPaths,
+      ...autonomousExploration.emergingConceptPaths,
+      ...autonomousExploration.weakDomainExpansionPaths
+    ]
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -489,6 +516,7 @@ export function buildResearchIntelligenceResult(
     researchForecast,
     researchMemorySeed,
     academicResearchOS,
+    selfImprovingIntelligence,
     copilot,
     domainIntelligence,
     gaps,

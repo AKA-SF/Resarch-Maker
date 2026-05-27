@@ -71,6 +71,19 @@ export const researchStrategies = [
 
 export type ResearchStrategy = (typeof researchStrategies)[number];
 
+export const careerStages = ["student", "researcher", "professor"] as const;
+export type CareerStage = (typeof careerStages)[number];
+
+export type ResearcherProfile = {
+  interests: string[];
+  preferredMethodologies: Methodology[];
+  publicationGoals: string[];
+  targetVenues: string[];
+  theoreticalOrientation: string;
+  noveltyTolerance: "low" | "medium" | "high";
+  careerStage: CareerStage;
+};
+
 export type RetrievedPaper = {
   id: string;
   title: string;
@@ -712,6 +725,136 @@ export type AcademicResearchOS = {
   workflowAutomation: ResearchWorkflowAutomation;
 };
 
+export type ContinuousResearchIntelligence = {
+  monitoringMode: "current-session snapshot";
+  emergingScholarlyTrends: RoadmapItem[];
+  newlyRisingTheoriesTopics: EvidenceItem[];
+  acceleratingDomains: CompetitionSignal[];
+  dynamicTheoryRelationshipUpdates: Array<{
+    source: string;
+    target: string;
+    update: string;
+    evidence: string;
+    paperIds: string[];
+  }>;
+  gapRefinementLog: string[];
+  updateBoundary: string;
+};
+
+export type ResearchEvaluationScore = {
+  criterion:
+    | "novelty"
+    | "feasibility"
+    | "methodological_rigor"
+    | "publication_potential"
+    | "interdisciplinary_strength"
+    | "theoretical_coherence"
+    | "empirical_testability"
+    | "replication_potential";
+  score: number;
+  reasoning: string;
+  evidence: string;
+};
+
+export type EvaluatedResearchIdea = {
+  topicTitle: string;
+  scores: ResearchEvaluationScore[];
+  overall: number;
+  recommendation: string;
+  transparencyNote: string;
+};
+
+export type IntelligentResearchEvaluation = {
+  evaluatedTopics: EvaluatedResearchIdea[];
+  proposalEvaluation: ResearchEvaluationScore[];
+  evaluationBoundary: string;
+};
+
+export type InstitutionalIntelligence = {
+  departmentResearchMap: Array<{
+    area: string;
+    paperCount: number;
+    evidencePaperIds: string[];
+  }>;
+  labGroupAlignment: Array<{
+    group: string;
+    alignment: string;
+    evidence: string;
+    paperIds: string[];
+  }>;
+  institutionalTrends: InstitutionTrend[];
+  facultyExpertiseMatches: AuthorInfluence[];
+  collaborationOpportunities: Array<{
+    source: string;
+    target: string;
+    opportunity: string;
+    evidence: string;
+    paperIds: string[];
+  }>;
+  strategicPlanningDashboard: string[];
+  evidenceBoundary: string;
+};
+
+export type AIResearchMentor = {
+  critique: string[];
+  strongerTheoreticalGrounding: string[];
+  hiddenAssumptions: string[];
+  methodologicalImprovements: string[];
+  oversaturationWarnings: string[];
+  beginnerGuidanceSteps: string[];
+  mentorBoundary: string;
+};
+
+export type AdvancedScholarlyKnowledgeGraph = {
+  authorRelationships: CollaborationEdge[];
+  institutionRelationships: CollaborationEdge[];
+  theoryEvolutionChains: Array<{
+    theory: string;
+    chain: string[];
+    evidence: string;
+    paperIds: string[];
+  }>;
+  methodologyLineage: Array<{
+    method: string;
+    lineage: string[];
+    evidence: string;
+  }>;
+  interdisciplinaryBridges: InterdisciplinaryBridge[];
+  longRangeConceptDiscovery: ExplorationPath[];
+  graphBoundary: string;
+};
+
+export type ResearchScenario = {
+  scenario:
+    | "high-risk/high-reward"
+    | "safe publishable path"
+    | "long-term research agenda"
+    | "dissertation roadmap"
+    | "interdisciplinary expansion";
+  recommendation: string;
+  expectedUpside: string;
+  risks: string[];
+  nextSteps: string[];
+  evidence: string;
+};
+
+export type ResearchSimulationAnalysis = {
+  scenarios: ResearchScenario[];
+  preferredScenario: string;
+  simulationBoundary: string;
+};
+
+export type SelfImprovingAcademicIntelligence = {
+  researcherProfile: ResearcherProfile;
+  personalizedRecommendationSummary: string;
+  continuousIntelligence: ContinuousResearchIntelligence;
+  evaluationEngine: IntelligentResearchEvaluation;
+  institutionalIntelligence: InstitutionalIntelligence;
+  mentorMode: AIResearchMentor;
+  advancedKnowledgeGraph: AdvancedScholarlyKnowledgeGraph;
+  scenarioAnalysis: ResearchSimulationAnalysis;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -793,6 +936,7 @@ export type ResearchIntelligenceResult = {
   researchForecast: ResearchForecast;
   researchMemorySeed: ResearchMemorySeed;
   academicResearchOS: AcademicResearchOS;
+  selfImprovingIntelligence: SelfImprovingAcademicIntelligence;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];
