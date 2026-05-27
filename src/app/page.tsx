@@ -50,6 +50,7 @@ import {
 } from "@/lib/research/types";
 import { disciplineLabels, methodologyLabels } from "@/lib/research/domain";
 import { strategyLabels } from "@/lib/research/strategy";
+import { buildZoteroEvidenceMatches } from "@/lib/research/zotero";
 
 const initialKeywords = "AI, education, self-efficacy";
 
@@ -353,6 +354,33 @@ function topicShortTitle(title: string): string {
   return title.length > 72 ? `${title.slice(0, 71)}...` : title;
 }
 
+function termsForZoteroEvidence(keywords: string, topic: Topic | null): string[] {
+  const keywordTerms = keywords
+    .split(/[,\n]/)
+    .map((term) => term.trim())
+    .filter(Boolean);
+  const topicTerms = topic
+    ? [
+        topic.coreTheory,
+        topic.recommendedMethodology,
+        ...topic.variables,
+        ...topic.adjacentTheories,
+        ...topic.mediatorsModerators,
+        ...topic.title.split(/[:;,\-–—]/).map((term) => term.trim())
+      ]
+    : [];
+  const seen = new Set<string>();
+  return [...keywordTerms, ...topicTerms]
+    .filter((term) => term.length >= 2)
+    .filter((term) => {
+      const key = term.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 24);
+}
+
 function buildImproveMessage(topic: Topic, mode: "improve" | "safe" | "novel" | "methods"): CopilotMessage {
   if (mode === "safe") {
     return {
@@ -418,6 +446,11 @@ export default function Home() {
   const selectedTopic = result?.topics[selectedTopicIndex] ?? result?.topics[0] ?? null;
   const recommendedMethodology = selectedTopic?.methodologyRecommendations[0] ?? result?.copilot.methodologyAlternatives[0] ?? null;
   const showAdvancedResearch = experienceMode === "advanced" || deepAnalysisOpen;
+  const zoteroEvidenceTerms = useMemo(() => termsForZoteroEvidence(keywords, selectedTopic), [keywords, selectedTopic]);
+  const selectedTopicZoteroEvidence = useMemo(
+    () => zoteroResult?.status.state === "connected" ? buildZoteroEvidenceMatches(zoteroResult.items, zoteroResult.pdfInsights, zoteroEvidenceTerms, 6) : [],
+    [zoteroResult, zoteroEvidenceTerms]
+  );
   const maxTrend = Math.max(1, ...(result?.synthesis.trends.map((trend) => trend.support) ?? [1]));
   const relatedAndEmerging = uniqueEvidence([...(result?.synthesis.relatedTheories ?? []), ...(result?.synthesis.emergingTopics ?? [])]).slice(0, 8);
 
@@ -1054,6 +1087,19 @@ export default function Home() {
                         <span key={`simple-variable-${variable}`}>{variable}</span>
                       ))}
                     </div>
+                    {zoteroResult?.status.state === "connected" && (
+                      <div className="zotero-evidence-strip">
+                        <div>
+                          <span>개인 Zotero 근거</span>
+                          <strong>{selectedTopicZoteroEvidence.length > 0 ? `${selectedTopicZoteroEvidence.length}개 항목 매칭` : "직접 매칭 없음"}</strong>
+                        </div>
+                        <p>
+                          {selectedTopicZoteroEvidence[0]
+                            ? `${topicShortTitle(selectedTopicZoteroEvidence[0].title)} · ${selectedTopicZoteroEvidence[0].matchedTerms.slice(0, 3).join(", ")}`
+                            : "현재 선택 주제와 개인 라이브러리 메타데이터의 직접 용어 매칭을 찾지 못했습니다."}
+                        </p>
+                      </div>
+                    )}
                     <div className="simple-actions">
                       <button type="button" onClick={() => {
                         if (showAdvancedResearch) {
@@ -4002,6 +4048,8 @@ export default function Home() {
 
               <section className="panel">
                 <h2>근거 패널</h2>
+                <p className="muted">OpenAlex 검색 근거와 개인 Zotero 라이브러리 근거를 분리해서 표시합니다. Zotero 항목은 토픽/키워드 용어가 실제 라이브러리 메타데이터 또는 허용된 indexed PDF 신호와 매칭될 때만 나타납니다.</p>
+                <h3>OpenAlex 검색 근거</h3>
                 <div className="evidence-panel-grid">
                   {result.papers.slice(0, 6).map((paper) => (
                     <article key={paper.id}>
@@ -4015,6 +4063,57 @@ export default function Home() {
                     </article>
                   ))}
                 </div>
+                <section className="zotero-evidence-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Personal Library Evidence</p>
+                      <h3>개인 Zotero 근거</h3>
+                    </div>
+                    <BookOpen size={20} />
+                  </div>
+                  {zoteroResult?.status.state === "connected" ? (
+                    <>
+                      <div className="zotero-evidence-summary">
+                        <div>
+                          <span>검색 기준</span>
+                          <strong>{zoteroEvidenceTerms.slice(0, 5).join(", ") || "선택 주제"}</strong>
+                        </div>
+                        <div>
+                          <span>매칭 항목</span>
+                          <strong>{selectedTopicZoteroEvidence.length}</strong>
+                        </div>
+                        <div>
+                          <span>PDF 신호</span>
+                          <strong>{selectedTopicZoteroEvidence.filter((item) => item.source === "zotero-indexed-fulltext").length}</strong>
+                        </div>
+                      </div>
+                      {selectedTopicZoteroEvidence.length > 0 ? (
+                        <div className="evidence-panel-grid">
+                          {selectedTopicZoteroEvidence.map((item) => (
+                            <article key={`zotero-evidence-${item.itemKey}`}>
+                              {item.url ? (
+                                <a href={item.url} target="_blank" rel="noreferrer">{item.title}</a>
+                              ) : (
+                                <strong>{item.title}</strong>
+                              )}
+                              <p>{item.year ?? "연도 미상"} · {item.publicationTitle} · {item.source === "zotero-indexed-fulltext" ? "indexed PDF 신호" : "메타데이터"}</p>
+                              <div className="chips">
+                                {item.matchedTerms.slice(0, 5).map((term) => (
+                                  <span key={`${item.itemKey}-${term}`}>{term}</span>
+                                ))}
+                              </div>
+                              <p className="muted">{item.citationKey ? `Citation key: ${item.citationKey}. ` : ""}{item.evidenceBoundary}</p>
+                            </article>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="muted">연결된 Zotero 라이브러리에서 현재 선택 주제와 직접 매칭되는 항목을 찾지 못했습니다. 이는 근거 없음이 아니라, 현재 토픽 용어와 라이브러리 메타데이터의 직접 매칭이 없다는 뜻입니다.</p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="muted">{zoteroResult ? zoteroResult.status.message : "Zotero 동기화를 실행하면 개인 라이브러리 항목이 이 근거 패널에도 함께 표시됩니다."}</p>
+                  )}
+                </section>
               </section>
             </div>
           )}

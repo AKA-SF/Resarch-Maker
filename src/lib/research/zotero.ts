@@ -9,6 +9,19 @@ import type {
   ZoteroSyncResult
 } from "./types";
 
+export type ZoteroEvidenceMatch = {
+  itemKey: string;
+  title: string;
+  year: number | null;
+  publicationTitle: string;
+  url: string | null;
+  citationKey: string | null;
+  matchedTerms: string[];
+  support: number;
+  source: "zotero-indexed-fulltext" | "metadata-only";
+  evidenceBoundary: string;
+};
+
 const theoryTerms = [
   "self-efficacy",
   "technology acceptance model",
@@ -62,9 +75,59 @@ function itemText(item: ZoteroLibraryItem, pdfText = ""): string {
   return normalize([item.title, item.abstractNote, item.tags.join(" "), item.publicationTitle, pdfText].join(" "));
 }
 
+function uniqueTerms(terms: string[]): string[] {
+  const seen = new Set<string>();
+  return terms
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 2)
+    .filter((term) => {
+      const key = term.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
 function findTerms(text: string, terms: string[]): string[] {
   const lower = normalize(text);
   return terms.filter((term) => lower.includes(term.toLowerCase()));
+}
+
+export function buildZoteroEvidenceMatches(items: ZoteroLibraryItem[], pdfInsights: ZoteroPdfInsight[], terms: string[], limit = 6): ZoteroEvidenceMatch[] {
+  const evidenceTerms = uniqueTerms(terms);
+  return items
+    .map((item) => {
+      const pdfInsight = pdfInsights.find((insight) => insight.itemKey === item.key);
+      const pdfSignalText = pdfInsight
+        ? [
+            pdfInsight.theoriesFrameworks.join(" "),
+            pdfInsight.methodologies.join(" "),
+            pdfInsight.variablesConcepts.join(" "),
+            pdfInsight.limitations.join(" "),
+            pdfInsight.futureWork.join(" "),
+            pdfInsight.datasetsSamples.join(" "),
+            pdfInsight.contradictionSignals.join(" ")
+          ].join(" ")
+        : "";
+      const text = itemText(item, pdfSignalText);
+      const matchedTerms = evidenceTerms.filter((term) => text.includes(term.toLowerCase()));
+      const support = matchedTerms.length + (pdfInsight?.source === "zotero-indexed-fulltext" ? 1 : 0);
+      return {
+        itemKey: item.key,
+        title: item.title,
+        year: item.year,
+        publicationTitle: item.publicationTitle || item.itemType,
+        url: item.url,
+        citationKey: item.citationKey,
+        matchedTerms,
+        support,
+        source: pdfInsight?.source ?? "metadata-only",
+        evidenceBoundary: pdfInsight?.evidenceBoundary ?? "Zotero 메타데이터의 제목, 초록, 태그, 출판원만 사용했습니다."
+      };
+    })
+    .filter((match) => match.matchedTerms.length > 0)
+    .sort((a, b) => b.support - a.support || (b.year ?? 0) - (a.year ?? 0) || a.title.localeCompare(b.title))
+    .slice(0, limit);
 }
 
 function evidenceItems(items: ZoteroLibraryItem[], terms: string[], textForItem: (item: ZoteroLibraryItem) => string): EvidenceItem[] {

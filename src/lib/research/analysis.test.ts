@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildResearchIntelligenceResult, detectGaps, synthesizeLiterature } from "./analysis";
 import { disciplines, methodologies, type RetrievedPaper } from "./types";
-import { analyzeZoteroPdfText, buildUnavailableZoteroResult, buildZoteroPersonalIntelligence } from "./zotero";
+import { analyzeZoteroPdfText, buildUnavailableZoteroResult, buildZoteroEvidenceMatches, buildZoteroPersonalIntelligence } from "./zotero";
 
 const papers: RetrievedPaper[] = [
   {
@@ -483,6 +483,10 @@ describe("research analysis", () => {
     expect(intelligence.dominantTheories.map((item) => item.label)).toContain("self-efficacy");
     expect(intelligence.dominantMethodologies.map((item) => item.label)).toContain("regression");
     expect(intelligence.readingQueueRecommendations[0].itemKey).toBe("ABC123");
+    const matches = buildZoteroEvidenceMatches(zoteroItems, [pdfInsight], ["AI", "education", "self-efficacy", "regression"]);
+    expect(matches[0].itemKey).toBe("ABC123");
+    expect(matches[0].matchedTerms).toEqual(expect.arrayContaining(["AI", "education", "self-efficacy", "regression"]));
+    expect(matches[0].source).toBe("zotero-indexed-fulltext");
 
     const unavailable = buildUnavailableZoteroResult("Zotero Local API에 연결할 수 없습니다.");
     expect(unavailable.items).toHaveLength(0);
