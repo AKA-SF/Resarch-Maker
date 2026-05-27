@@ -860,7 +860,15 @@ button:disabled {
 .execution-plan-panel,
 .writing-workflow-panel,
 .reproducibility-panel,
-.external-integration-panel {
+.external-integration-panel,
+.scholarly-collaboration-panel,
+.peer-review-panel,
+.publication-optimization-panel,
+.collaborative-workspace-panel,
+.revision-intelligence-panel,
+.lifecycle-panel,
+.benchmarking-panel,
+.academic-connectivity-panel {
   display: grid;
   gap: 14px;
 }
@@ -898,7 +906,15 @@ button:disabled {
 .execution-plan-panel p,
 .writing-workflow-panel p,
 .reproducibility-panel p,
-.external-integration-panel p {
+.external-integration-panel p,
+.scholarly-collaboration-panel p,
+.peer-review-panel p,
+.publication-optimization-panel p,
+.collaborative-workspace-panel p,
+.revision-intelligence-panel p,
+.lifecycle-panel p,
+.benchmarking-panel p,
+.academic-connectivity-panel p {
   color: #34413a;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -930,7 +946,12 @@ button:disabled {
 .protocol-grid,
 .variable-grid,
 .code-template-list,
-.integration-grid {
+.integration-grid,
+.reviewer-grid,
+.publication-fit-list,
+.role-grid,
+.lifecycle-list,
+.benchmark-grid {
   display: grid;
   gap: 10px;
 }
@@ -963,7 +984,13 @@ button:disabled {
 .instrument-grid article,
 .variable-grid article,
 .integration-grid article,
-.code-template-list details {
+.code-template-list details,
+.reviewer-grid article,
+.publication-fit-list article,
+.role-grid article,
+.lifecycle-list article,
+.benchmark-grid article,
+.draft-box {
   background: #f8faf9;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -989,7 +1016,10 @@ button:disabled {
 .lineage-list span,
 .decision-list span,
 .workflow-metric-grid span,
-.instrument-grid span {
+.instrument-grid span,
+.reviewer-grid span,
+.lifecycle-list span,
+.benchmark-grid span {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 850;
@@ -1044,7 +1074,13 @@ button:disabled {
 .instrument-grid strong,
 .variable-grid strong,
 .integration-grid strong,
-.code-template-list summary {
+.code-template-list summary,
+.reviewer-grid strong,
+.publication-fit-list strong,
+.role-grid strong,
+.lifecycle-list strong,
+.benchmark-grid strong,
+.draft-box strong {
   color: var(--ink);
   font-size: 0.9rem;
   line-height: 1.35;
@@ -1114,8 +1150,16 @@ button:disabled {
 
 .instrument-grid,
 .variable-grid,
-.integration-grid {
+.integration-grid,
+.reviewer-grid,
+.benchmark-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.publication-fit-list,
+.role-grid,
+.lifecycle-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .protocol-grid {
@@ -2011,7 +2055,12 @@ details ul {
   .instrument-grid,
   .protocol-grid,
   .variable-grid,
-  .integration-grid {
+  .integration-grid,
+  .reviewer-grid,
+  .publication-fit-list,
+  .role-grid,
+  .lifecycle-list,
+  .benchmark-grid {
     grid-template-columns: 1fr;
   }
 

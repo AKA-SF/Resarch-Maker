@@ -40,6 +40,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds a trusted academic intelligence infrastructure layer with evidence-linked reasoning traces, evidence lineage views, transparent decision explanations, governance checks, research audits, human review workflows, and scalable infrastructure plans.
 - Adds Zotero Local API integration for read-only library synchronization, collections, saved-paper metadata, PDF indexed-text signals where available, personal literature maps, reading queues, and library-grounded literature review drafts.
 - Adds a full research workflow copilot for survey/interview/focus-group/observation/experiment instrument drafts, statistical analysis workflows, R/Python/SPSS/Stata/Quarto starter code, execution plans, writing support, reproducibility checks, and external workflow planning.
+- Adds a scholarly collaboration and publication platform layer with AI peer-review simulation, publication optimization, collaborative manuscript workspace planning, revision intelligence, lifecycle timelines, academic benchmarking, and Zotero/Overleaf/Notion/GitHub/Google Docs/Jupyter/CSV workflow connectivity plans.
 
 ## Run
 
@@ -97,6 +98,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Zotero integration is read-only in this MVP. It uses the local Zotero Desktop API, does not require API keys, does not write to Zotero collections, and does not return PDF file paths or full PDF text.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 - Research workflow code and statistical plans are starter templates only. They do not generate empirical results, validate statistical assumptions, prove model correctness, or replace data inspection and expert review.
+- Peer-review simulations are AI-generated critique templates, not real reviewer feedback, editorial decisions, journal authority, or publication guarantees. Publication optimization uses retrieved venue/source proxies and must be checked against official author guidelines.
 
 ## Known MVP limits
 

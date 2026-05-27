@@ -1899,6 +1899,215 @@ export default function Home() {
                 </section>
               </section>
 
+              <section className="panel scholarly-collaboration-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Scholarly Collaboration Platform</p>
+                    <h2>협업 / 심사 / 출판 준비 대시보드</h2>
+                  </div>
+                  <Users size={22} />
+                </div>
+                <div className="workflow-metric-grid">
+                  <article>
+                    <span>피어리뷰 시뮬레이션</span>
+                    <strong>{result.scholarlyCollaborationPlatform.peerReviewSimulations.length}</strong>
+                    <p>harsh / constructive / journal style</p>
+                  </article>
+                  <article>
+                    <span>출판 최적화</span>
+                    <strong>{result.scholarlyCollaborationPlatform.publicationOptimization.length}</strong>
+                    <p>검색 출처 기반 후보</p>
+                  </article>
+                  <article>
+                    <span>협업 역할</span>
+                    <strong>{result.scholarlyCollaborationPlatform.collaborativeWorkspace.projectRoles.length}</strong>
+                    <p>학생 / 지도교수 / 공저자 등</p>
+                  </article>
+                  <article>
+                    <span>라이프사이클</span>
+                    <strong>{result.scholarlyCollaborationPlatform.lifecycleManagement.stages.length}</strong>
+                    <p>아이디어부터 수정까지</p>
+                  </article>
+                </div>
+                <p className="muted">{result.scholarlyCollaborationPlatform.platformBoundary}</p>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel peer-review-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">AI Peer Review Simulation</p>
+                      <h2>피어리뷰 시뮬레이션</h2>
+                    </div>
+                    <MessageSquare size={22} />
+                  </div>
+                  <div className="reviewer-grid">
+                    {result.scholarlyCollaborationPlatform.peerReviewSimulations.slice(0, 6).map((review) => (
+                      <article key={`peer-review-${review.reviewerMode}-${review.targetTitle}`}>
+                        <span>{review.reviewerMode.replaceAll("_", " ")} · readiness {review.publicationReadinessScore}/10</span>
+                        <strong>{topicShortTitle(review.targetTitle)}</strong>
+                        <p>{review.noveltyContributionAssessment}</p>
+                        <ul className="plain-list">
+                          {review.reviewerStyleFeedback.slice(0, 2).map((item) => (
+                            <li key={`review-feedback-${review.reviewerMode}-${item}`}>{item}</li>
+                          ))}
+                        </ul>
+                        <small>{review.simulationBoundary}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="panel publication-optimization-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Publication Optimization</p>
+                      <h2>출판 최적화 엔진</h2>
+                    </div>
+                    <Rocket size={22} />
+                  </div>
+                  <div className="publication-fit-list">
+                    {result.scholarlyCollaborationPlatform.publicationOptimization.map((plan) => (
+                      <article key={`pub-opt-${plan.targetVenue}`}>
+                        <strong>{plan.targetVenue}</strong>
+                        <p>{plan.venueEvidence}</p>
+                        <ul className="plain-list">
+                          {[...plan.methodologicalAlignment.slice(0, 2), ...plan.contributionFraming.slice(0, 2)].map((item) => (
+                            <li key={`pub-opt-item-${plan.targetVenue}-${item}`}>{item}</li>
+                          ))}
+                        </ul>
+                        <small>{plan.optimizationBoundary}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel collaborative-workspace-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Collaborative Workspace</p>
+                      <h2>공동 원고 워크스페이스</h2>
+                    </div>
+                    <Users size={22} />
+                  </div>
+                  <div className="role-grid">
+                    {result.scholarlyCollaborationPlatform.collaborativeWorkspace.projectRoles.map((role) => (
+                      <article key={`collab-role-${role.role}`}>
+                        <strong>{role.role}</strong>
+                        <p>{role.permissions.slice(0, 3).join(" · ")}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="timeline-list compact">
+                    {result.scholarlyCollaborationPlatform.collaborativeWorkspace.versionComparison.map((version) => (
+                      <article key={`version-${version.version}`}>
+                        <strong>{version.version}</strong>
+                        <span>{version.reviewStatus.replaceAll("_", " ")}</span>
+                        <p>{version.changeSummary}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.scholarlyCollaborationPlatform.collaborativeWorkspace.collaborationBoundary}</p>
+                </section>
+
+                <section className="panel revision-intelligence-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Writing & Revision</p>
+                      <h2>수정 / 답변 지능</h2>
+                    </div>
+                    <FileText size={22} />
+                  </div>
+                  <ul className="plain-list">
+                    {[
+                      ...result.scholarlyCollaborationPlatform.revisionIntelligence.revisionSuggestions.slice(0, 3),
+                      ...result.scholarlyCollaborationPlatform.revisionIntelligence.clarityImprovements.slice(0, 3)
+                    ].map((item) => (
+                      <li key={`revision-item-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <div className="draft-box">
+                    <strong>Rebuttal draft boundary</strong>
+                    <p>{result.scholarlyCollaborationPlatform.revisionIntelligence.rebuttalLetterDraft}</p>
+                  </div>
+                  <p className="muted">{result.scholarlyCollaborationPlatform.revisionIntelligence.writingBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel lifecycle-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Lifecycle Management</p>
+                      <h2>연구 생애주기 타임라인</h2>
+                    </div>
+                    <ClipboardList size={22} />
+                  </div>
+                  <div className="lifecycle-list">
+                    {result.scholarlyCollaborationPlatform.lifecycleManagement.stages.map((stage) => (
+                      <article key={`lifecycle-${stage.stage}`}>
+                        <span>{stage.status.replaceAll("_", " ")}</span>
+                        <strong>{stage.stage.replaceAll("_", " ")}</strong>
+                        <p>{stage.milestone}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.scholarlyCollaborationPlatform.lifecycleManagement.lifecycleBoundary}</p>
+                </section>
+
+                <section className="panel benchmarking-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Academic Benchmarking</p>
+                      <h2>벤치마킹 비교</h2>
+                    </div>
+                    <Scale size={22} />
+                  </div>
+                  <div className="benchmark-grid">
+                    {result.scholarlyCollaborationPlatform.benchmarkingIntelligence.topPaperComparisons.slice(0, 4).map((item) => (
+                      <article key={`benchmark-paper-${item.retrievedPaperTitle}`}>
+                        <strong>{topicShortTitle(item.retrievedPaperTitle)}</strong>
+                        <span>{item.comparisonSignal}</span>
+                        <p>{item.evidence}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <ul className="plain-list">
+                    {result.scholarlyCollaborationPlatform.benchmarkingIntelligence.methodologicalNorms.slice(0, 4).map((item) => (
+                      <li key={`method-norm-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <p className="muted">{result.scholarlyCollaborationPlatform.benchmarkingIntelligence.benchmarkBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel academic-connectivity-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Academic Workflow Integrations</p>
+                    <h2>외부 학술 워크플로 연결</h2>
+                  </div>
+                  <Download size={22} />
+                </div>
+                <div className="integration-grid">
+                  {Object.entries(result.scholarlyCollaborationPlatform.workflowConnectivity)
+                    .filter(([key]) => key !== "connectivityBoundary")
+                    .map(([key, items]) => (
+                      <article key={`academic-connectivity-${key}`}>
+                        <strong>{key}</strong>
+                        <ul className="plain-list">
+                          {(items as string[]).slice(0, 3).map((item) => (
+                            <li key={`academic-connectivity-${key}-${item}`}>{item}</li>
+                          ))}
+                        </ul>
+                      </article>
+                    ))}
+                </div>
+                <p className="muted">{result.scholarlyCollaborationPlatform.workflowConnectivity.connectivityBoundary}</p>
+              </section>
+
               <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">

@@ -426,6 +426,29 @@ describe("research analysis", () => {
     expect(result.researchWorkflowCopilot.workflowBoundary).toContain("실증 결과");
   });
 
+  it("builds scholarly collaboration, simulated peer review, publication optimization, and lifecycle outputs", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "fast publishable topics"
+    );
+
+    expect(result.scholarlyCollaborationPlatform.peerReviewSimulations.map((review) => review.reviewerMode)).toEqual(
+      expect.arrayContaining(["harsh", "constructive", "journal_specific"])
+    );
+    expect(result.scholarlyCollaborationPlatform.peerReviewSimulations[0].simulationBoundary).toContain("AI 피어리뷰 시뮬레이션");
+    expect(result.scholarlyCollaborationPlatform.publicationOptimization.length).toBeGreaterThan(0);
+    expect(result.scholarlyCollaborationPlatform.publicationOptimization[0].optimizationBoundary).toContain("보장하지 않습니다");
+    expect(result.scholarlyCollaborationPlatform.collaborativeWorkspace.projectRoles.map((role) => role.role)).toContain("supervisor");
+    expect(result.scholarlyCollaborationPlatform.revisionIntelligence.reviewerResponseDrafts.length).toBeGreaterThan(0);
+    expect(result.scholarlyCollaborationPlatform.lifecycleManagement.stages.map((stage) => stage.stage)).toContain("submission_revision");
+    expect(result.scholarlyCollaborationPlatform.benchmarkingIntelligence.topPaperComparisons.length).toBeGreaterThan(0);
+    expect(result.scholarlyCollaborationPlatform.workflowConnectivity.github.length).toBeGreaterThan(0);
+    expect(result.scholarlyCollaborationPlatform.platformBoundary).toContain("실제 심사자 권위");
+  });
+
   it("analyzes Zotero metadata and indexed PDF signals without fabricating library items", () => {
     const zoteroItems = [
       {

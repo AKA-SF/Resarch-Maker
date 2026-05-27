@@ -1827,6 +1827,109 @@ export type FullResearchWorkflowCopilot = {
   workflowBoundary: string;
 };
 
+export type SimulatedPeerReview = {
+  reviewerMode: "harsh" | "constructive" | "journal_specific";
+  journalStyle: string;
+  targetTitle: string;
+  methodologyRigorCritique: string[];
+  weakArguments: string[];
+  unsupportedClaims: string[];
+  noveltyContributionAssessment: string;
+  publicationReadinessScore: number;
+  reviewerStyleFeedback: string[];
+  revisionStrategies: string[];
+  evidencePaperIds: string[];
+  simulationBoundary: string;
+};
+
+export type PublicationOptimizationPlan = {
+  targetVenue: string;
+  venueEvidence: string;
+  formattingStyleExpectations: string[];
+  methodologicalAlignment: string[];
+  contributionFraming: string[];
+  noveltyPositioning: string[];
+  interdisciplinaryRelevance: string[];
+  reviewerExpectationAlignment: string[];
+  optimizationBoundary: string;
+};
+
+export type CollaborativeAcademicWorkspace = {
+  projectRoles: Array<{
+    role: "student" | "supervisor" | "coauthor" | "methodologist" | "librarian";
+    permissions: string[];
+  }>;
+  sharedLiteratureMaps: string[];
+  collaborativeAnnotations: string[];
+  proposalCoEditingPlan: string[];
+  versionComparison: Array<{
+    version: string;
+    changeSummary: string;
+    reviewStatus: "draft" | "needs_review" | "ready_for_supervisor" | "revision_required";
+  }>;
+  supervisorStudentWorkflow: string[];
+  collaborationBoundary: string;
+};
+
+export type AdvancedRevisionIntelligence = {
+  revisionSuggestions: string[];
+  clarityImprovements: string[];
+  academicToneRefinements: string[];
+  contributionStrengthening: string[];
+  reviewerResponseDrafts: string[];
+  rebuttalLetterDraft: string;
+  publicationCoverLetterDraft: string;
+  writingBoundary: string;
+};
+
+export type ResearchLifecycleManagement = {
+  stages: Array<{
+    stage: "topic_ideation" | "proposal_evolution" | "literature_review" | "data_collection" | "analysis" | "manuscript_drafting" | "submission_revision";
+    status: "not_started" | "in_progress" | "needs_review" | "ready";
+    milestone: string;
+    evidence: string;
+  }>;
+  timelineSummary: string[];
+  lifecycleBoundary: string;
+};
+
+export type AcademicBenchmarkingIntelligence = {
+  topPaperComparisons: Array<{
+    retrievedPaperTitle: string;
+    comparisonSignal: string;
+    evidence: string;
+  }>;
+  journalStandardProxies: string[];
+  methodologicalNorms: string[];
+  citationExpectationSignals: string[];
+  contributionDepthAssessment: string[];
+  interdisciplinaryCompetitiveness: string[];
+  benchmarkBoundary: string;
+};
+
+export type AcademicWorkflowConnectivity = {
+  zotero: string[];
+  overleaf: string[];
+  notion: string[];
+  github: string[];
+  googleDocs: string[];
+  jupyterQuarto: string[];
+  csvExcel: string[];
+  connectivityBoundary: string;
+};
+
+export type FullAutonomousScholarlyCollaborationPlatform = {
+  collaborationRunId: string;
+  peerReviewSimulations: SimulatedPeerReview[];
+  publicationOptimization: PublicationOptimizationPlan[];
+  collaborativeWorkspace: CollaborativeAcademicWorkspace;
+  revisionIntelligence: AdvancedRevisionIntelligence;
+  lifecycleManagement: ResearchLifecycleManagement;
+  benchmarkingIntelligence: AcademicBenchmarkingIntelligence;
+  workflowConnectivity: AcademicWorkflowConnectivity;
+  platformBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1917,6 +2020,7 @@ export type ResearchIntelligenceResult = {
   globalAutonomousScholarlyNetwork: GlobalAutonomousScholarlyNetwork;
   trustedAcademicIntelligenceInfrastructure: TrustedAcademicIntelligenceInfrastructure;
   researchWorkflowCopilot: FullResearchWorkflowCopilot;
+  scholarlyCollaborationPlatform: FullAutonomousScholarlyCollaborationPlatform;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];
