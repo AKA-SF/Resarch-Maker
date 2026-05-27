@@ -75,6 +75,9 @@ type RefinementHistoryRecord = {
   summary: string;
 };
 
+type ExperienceMode = "simple" | "advanced";
+type MethodologyMode = "selected" | "auto";
+
 const scoreLabels: Record<string, string> = {
   novelty: "참신성",
   feasibility: "실행가능성",
@@ -388,6 +391,10 @@ export default function Home() {
   const [keywords, setKeywords] = useState(initialKeywords);
   const [discipline, setDiscipline] = useState<Discipline>("education");
   const [methodology, setMethodology] = useState<Methodology>("quantitative");
+  const [experienceMode, setExperienceMode] = useState<ExperienceMode>("simple");
+  const [methodologyMode, setMethodologyMode] = useState<MethodologyMode>("selected");
+  const [selectedTopicIndex, setSelectedTopicIndex] = useState(0);
+  const [deepAnalysisOpen, setDeepAnalysisOpen] = useState(false);
   const [strategy, setStrategy] = useState<ResearchStrategy>("beginner-safe research");
   const [profileInterests, setProfileInterests] = useState("AI education, self-efficacy, learning analytics");
   const [profilePreferredMethods, setProfilePreferredMethods] = useState("quantitative, SEM, regression");
@@ -408,6 +415,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const paperMap = useMemo(() => new Map(result?.papers.map((paper) => [paper.id, paper]) ?? []), [result]);
+  const selectedTopic = result?.topics[selectedTopicIndex] ?? result?.topics[0] ?? null;
+  const recommendedMethodology = selectedTopic?.methodologyRecommendations[0] ?? result?.copilot.methodologyAlternatives[0] ?? null;
+  const showAdvancedResearch = experienceMode === "advanced" || deepAnalysisOpen;
   const maxTrend = Math.max(1, ...(result?.synthesis.trends.map((trend) => trend.support) ?? [1]));
   const relatedAndEmerging = uniqueEvidence([...(result?.synthesis.relatedTheories ?? []), ...(result?.synthesis.emergingTopics ?? [])]).slice(0, 8);
 
@@ -473,6 +483,8 @@ export default function Home() {
       }
       const typedPayload = payload as ResearchIntelligenceResult;
       setResult(typedPayload);
+      setSelectedTopicIndex(0);
+      setDeepAnalysisOpen(experienceMode === "advanced");
       setCopilotMessages(typedPayload.copilot.starterMessages);
       setSavedWorkspaces((current) => {
         const next = [
@@ -619,6 +631,27 @@ export default function Home() {
             </select>
           </label>
 
+          <div className="segmented-control" aria-label="방법론 모드">
+            <button type="button" className={methodologyMode === "selected" ? "active" : ""} onClick={() => setMethodologyMode("selected")}>
+              직접 선택
+            </button>
+            <button type="button" className={methodologyMode === "auto" ? "active" : ""} onClick={() => setMethodologyMode("auto")}>
+              자동 추천
+            </button>
+          </div>
+          <p className="control-hint">
+            {methodologyMode === "selected" ? "선택한 방법론을 기준으로 토픽을 생성합니다." : "토픽 생성 후 가장 적합한 방법론을 카드에서 추천합니다."}
+          </p>
+
+          <div className="segmented-control" aria-label="표시 모드">
+            <button type="button" className={experienceMode === "simple" ? "active" : ""} onClick={() => setExperienceMode("simple")}>
+              간단 모드
+            </button>
+            <button type="button" className={experienceMode === "advanced" ? "active" : ""} onClick={() => setExperienceMode("advanced")}>
+              고급 연구자 모드
+            </button>
+          </div>
+
           <label>
             <span>연구 전략</span>
             <select name="strategy" value={strategy} onChange={(event) => setStrategy(event.target.value as ResearchStrategy)}>
@@ -630,11 +663,11 @@ export default function Home() {
             </select>
           </label>
 
-          <div className="profile-editor">
-            <div className="profile-editor-head">
+          <details className="profile-editor" open={experienceMode === "advanced"}>
+            <summary className="profile-editor-head">
               <UserRound size={17} />
               <strong>연구자 프로필</strong>
-            </div>
+            </summary>
             <label>
               <span>관심 주제</span>
               <textarea name="profileInterests" value={profileInterests} onChange={(event) => setProfileInterests(event.target.value)} rows={2} />
@@ -671,7 +704,7 @@ export default function Home() {
                 <option value="professor">교수 / PI</option>
               </select>
             </label>
-          </div>
+          </details>
 
           <button type="button" disabled={loading} onClick={() => void runAnalysis()}>
             {loading ? <Loader2 className="spin" size={18} /> : <Search size={18} />}
@@ -922,6 +955,138 @@ export default function Home() {
                 )}
                 <p className="muted">브라우저는 로컬 앱을 보여주지만, 논문 검색은 서버 라우트에서 외부 OpenAlex API로 live 요청합니다. Google Scholar는 스크래핑하지 않습니다.</p>
               </section>
+
+              <section className="panel progressive-workflow-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Progressive Research Workflow</p>
+                    <h2>먼저 주제를 고르고, 필요할 때 깊게 들어가기</h2>
+                  </div>
+                  <Compass size={22} />
+                </div>
+                <div className="workflow-progress">
+                  <span className="done">1 키워드</span>
+                  <span className="done">2 주제 생성</span>
+                  <span className={selectedTopic ? "done" : ""}>3 주제 선택</span>
+                  <span className={selectedTopic ? "done" : ""}>4 방법론 추천</span>
+                  <span className={showAdvancedResearch ? "done" : ""}>5 심화 분석</span>
+                </div>
+                <div className="mode-summary">
+                  <div>
+                    <span>보기 모드</span>
+                    <strong>{experienceMode === "simple" ? "간단 모드" : "고급 연구자 모드"}</strong>
+                  </div>
+                  <div>
+                    <span>방법론 모드</span>
+                    <strong>{methodologyMode === "selected" ? `직접 선택: ${methodologyLabels[result.query.methodology]}` : `자동 추천: ${recommendedMethodology?.method ?? methodologyLabels[result.query.methodology]}`}</strong>
+                  </div>
+                  <div>
+                    <span>선택 주제</span>
+                    <strong>{selectedTopic ? topicShortTitle(selectedTopic.title) : "선택 대기"}</strong>
+                  </div>
+                </div>
+              </section>
+
+              <section className="panel concise-topic-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Topic Discovery</p>
+                    <h2>추천 연구주제</h2>
+                  </div>
+                  <Sparkles size={22} />
+                </div>
+                <div className="concise-topic-grid">
+                  {result.topics.map((topic, index) => {
+                    const method = methodologyMode === "auto" ? topic.methodologyRecommendations[0]?.method ?? topic.recommendedMethodology : topic.recommendedMethodology;
+                    return (
+                      <article className={selectedTopicIndex === index ? "selected" : ""} key={`concise-topic-${topic.title}-${index}`}>
+                        <div>
+                          <span>Topic {index + 1}</span>
+                          <strong>{topic.title}</strong>
+                        </div>
+                        <p>{topic.rationale}</p>
+                        <div className="topic-card-footer">
+                          <em className={scoreColor(topic.scores.novelty)}>참신성 {topic.scores.novelty}/10</em>
+                          <em className="method-badge">{method}</em>
+                        </div>
+                        <button type="button" onClick={() => setSelectedTopicIndex(index)}>
+                          <Target size={16} /> {selectedTopicIndex === index ? "선택됨" : "이 주제 보기"}
+                        </button>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {selectedTopic && (
+                <section className="split">
+                  <section className="panel methodology-next-panel">
+                    <div className="panel-head">
+                      <div>
+                        <p className="tag">Methodology Recommendation</p>
+                        <h2>다음 방법론 선택</h2>
+                      </div>
+                      <ClipboardList size={22} />
+                    </div>
+                    <div className="method-focus">
+                      <span>{methodologyMode === "auto" ? "자동 추천" : "사용자 선택"}</span>
+                      <strong>{methodologyMode === "auto" ? recommendedMethodology?.method ?? selectedTopic.recommendedMethodology : methodologyLabels[result.query.methodology]}</strong>
+                      <p>{methodologyMode === "auto" ? recommendedMethodology?.rationale ?? "토픽 기반 방법론 추천을 확인하세요." : "현재 선택한 방법론을 기준으로 분석 결과를 해석합니다."}</p>
+                    </div>
+                    <div className="method-chip-list">
+                      {selectedTopic.methodologyRecommendations.slice(0, 4).map((method) => (
+                        <span key={`simple-method-${selectedTopic.title}-${method.method}`}>{method.method} · {method.fit}/10</span>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="panel selected-topic-brief">
+                    <div className="panel-head">
+                      <div>
+                        <p className="tag">Selected Topic</p>
+                        <h2>선택한 주제 요약</h2>
+                      </div>
+                      <BookOpen size={22} />
+                    </div>
+                    <p>{selectedTopic.researchQuestion}</p>
+                    <div className="chips">
+                      {selectedTopic.variables.slice(0, 5).map((variable) => (
+                        <span key={`simple-variable-${variable}`}>{variable}</span>
+                      ))}
+                    </div>
+                    <div className="simple-actions">
+                      <button type="button" onClick={() => {
+                        if (showAdvancedResearch) {
+                          setExperienceMode("simple");
+                          setDeepAnalysisOpen(false);
+                        } else {
+                          setDeepAnalysisOpen(true);
+                        }
+                      }}>
+                        <Layers3 size={16} /> {showAdvancedResearch ? "심화 분석 닫기" : "심화 분석 열기"}
+                      </button>
+                      <button type="button" onClick={() => addCopilotMessage(selectedTopic, "improve")}>
+                        <Wand2 size={16} /> 개선 제안
+                      </button>
+                    </div>
+                  </section>
+                </section>
+              )}
+
+              <div className={showAdvancedResearch ? "advanced-research-stack" : "advanced-research-stack is-collapsed"}>
+                <div className="advanced-stack-head">
+                  <div>
+                    <p className="tag">Advanced Researcher Mode</p>
+                    <h2>심화 학술 인텔리전스</h2>
+                    <p>이론 그래프, 인용 분석, 계량서지, 제안서, 예측, 감사/거버넌스 자료는 필요할 때만 펼쳐서 봅니다.</p>
+                  </div>
+                  <button type="button" onClick={() => {
+                    setExperienceMode("simple");
+                    setDeepAnalysisOpen(false);
+                  }}>
+                    접기
+                  </button>
+                </div>
 
               <section className="split wide-left">
                 <section className="panel autonomous-os-panel">
@@ -3833,6 +3998,7 @@ export default function Home() {
                   </article>
                 ))}
               </section>
+              </div>
 
               <section className="panel">
                 <h2>근거 패널</h2>

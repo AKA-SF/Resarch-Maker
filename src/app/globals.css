@@ -133,9 +133,45 @@ h3 {
 .profile-editor-head {
   align-items: center;
   color: var(--accent);
+  cursor: pointer;
   display: flex;
   font-size: 0.9rem;
   gap: 8px;
+  list-style: none;
+}
+
+.profile-editor-head::-webkit-details-marker {
+  display: none;
+}
+
+.segmented-control {
+  background: #eef5f2;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 4px;
+}
+
+.segmented-control button {
+  background: transparent;
+  color: #34413a;
+  min-height: 36px;
+  padding: 8px;
+}
+
+.segmented-control button.active {
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(33, 45, 39, 0.08);
+  color: var(--accent);
+}
+
+.control-hint {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: -8px 0 0;
 }
 
 .zotero-connector {
@@ -1186,6 +1222,166 @@ button:disabled {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.progressive-workflow-panel,
+.concise-topic-panel,
+.methodology-next-panel,
+.selected-topic-brief {
+  display: grid;
+  gap: 14px;
+}
+
+.workflow-progress {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.workflow-progress span {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.workflow-progress span.done {
+  background: #eef8f4;
+  border-color: rgba(23, 107, 95, 0.28);
+  color: var(--accent);
+}
+
+.mode-summary,
+.concise-topic-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.mode-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mode-summary div,
+.concise-topic-grid article,
+.method-focus {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 13px;
+}
+
+.mode-summary span,
+.concise-topic-grid span,
+.method-focus span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.mode-summary strong,
+.concise-topic-grid strong,
+.method-focus strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.concise-topic-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.concise-topic-grid article {
+  border-left: 4px solid transparent;
+}
+
+.concise-topic-grid article.selected {
+  border-color: var(--accent);
+  background: #f0f8f5;
+}
+
+.concise-topic-grid p {
+  color: #34413a;
+  display: -webkit-box;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  margin: 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.topic-card-footer,
+.simple-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.topic-card-footer em {
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 850;
+  padding: 6px 9px;
+}
+
+.topic-card-footer .score.high {
+  background: #eef8f4;
+  color: var(--accent);
+}
+
+.topic-card-footer .score.medium {
+  background: #fff8ed;
+  color: #946200;
+}
+
+.topic-card-footer .score.low {
+  background: #fff1ee;
+  color: var(--danger);
+}
+
+.method-badge {
+  background: #eef3f8;
+  color: #29445d;
+}
+
+.advanced-research-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.advanced-research-stack.is-collapsed {
+  display: none;
+}
+
+.advanced-stack-head {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.advanced-stack-head p {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  margin: 4px 0 0;
+}
+
+.advanced-stack-head button {
+  min-width: 92px;
+}
+
 .workflow-metric-grid strong {
   color: var(--accent);
   font-size: 1.55rem;
@@ -2104,8 +2300,16 @@ details ul {
   .role-grid,
   .lifecycle-list,
   .benchmark-grid,
-  .retrieval-status-grid {
+  .retrieval-status-grid,
+  .workflow-progress,
+  .mode-summary,
+  .concise-topic-grid {
     grid-template-columns: 1fr;
+  }
+
+  .advanced-stack-head {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .version-list article p {
