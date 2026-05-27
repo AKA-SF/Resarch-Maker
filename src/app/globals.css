@@ -852,7 +852,15 @@ button:disabled {
 .transparent-decision-panel,
 .audit-panel,
 .human-review-panel,
-.infrastructure-panel {
+.infrastructure-panel,
+.workflow-copilot-panel,
+.instrument-builder-panel,
+.stat-workflow-panel,
+.code-workspace-panel,
+.execution-plan-panel,
+.writing-workflow-panel,
+.reproducibility-panel,
+.external-integration-panel {
   display: grid;
   gap: 14px;
 }
@@ -882,7 +890,15 @@ button:disabled {
 .transparent-decision-panel p,
 .audit-panel p,
 .human-review-panel p,
-.infrastructure-panel p {
+.infrastructure-panel p,
+.workflow-copilot-panel p,
+.instrument-builder-panel p,
+.stat-workflow-panel p,
+.code-workspace-panel p,
+.execution-plan-panel p,
+.writing-workflow-panel p,
+.reproducibility-panel p,
+.external-integration-panel p {
   color: #34413a;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -908,7 +924,13 @@ button:disabled {
 .trace-grid,
 .lineage-list,
 .decision-list,
-.audit-grid {
+.audit-grid,
+.workflow-metric-grid,
+.instrument-grid,
+.protocol-grid,
+.variable-grid,
+.code-template-list,
+.integration-grid {
   display: grid;
   gap: 10px;
 }
@@ -936,7 +958,12 @@ button:disabled {
 .trace-grid article,
 .lineage-list article,
 .decision-list article,
-.audit-grid article {
+.audit-grid article,
+.workflow-metric-grid article,
+.instrument-grid article,
+.variable-grid article,
+.integration-grid article,
+.code-template-list details {
   background: #f8faf9;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -960,7 +987,9 @@ button:disabled {
 .strategy-card-grid span,
 .trace-grid span,
 .lineage-list span,
-.decision-list span {
+.decision-list span,
+.workflow-metric-grid span,
+.instrument-grid span {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 850;
@@ -1010,7 +1039,12 @@ button:disabled {
 .trace-grid strong,
 .lineage-list strong,
 .decision-list strong,
-.audit-grid strong {
+.audit-grid strong,
+.workflow-metric-grid strong,
+.instrument-grid strong,
+.variable-grid strong,
+.integration-grid strong,
+.code-template-list summary {
   color: var(--ink);
   font-size: 0.9rem;
   line-height: 1.35;
@@ -1023,7 +1057,9 @@ button:disabled {
 .global-ecosystem-grid small,
 .signal-list small,
 .strategy-card-grid small,
-.decision-list small {
+.decision-list small,
+.instrument-grid small,
+.variable-grid small {
   color: var(--muted);
   font-size: 0.77rem;
   line-height: 1.4;
@@ -1062,8 +1098,86 @@ button:disabled {
 }
 
 .global-ecosystem-grid,
-.signal-list {
+.signal-list,
+.workflow-metric-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workflow-metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workflow-metric-grid strong {
+  color: var(--accent);
+  font-size: 1.55rem;
+}
+
+.instrument-grid,
+.variable-grid,
+.integration-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.protocol-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.protocol-grid > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.method-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.method-chip-list span {
+  background: #eef5f2;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #34413a;
+  font-size: 0.78rem;
+  font-weight: 850;
+  padding: 7px 10px;
+}
+
+.workflow-step-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.workflow-step-list li {
+  color: #34413a;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.code-template-list details {
+  overflow: hidden;
+}
+
+.code-template-list summary {
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.code-template-list pre {
+  background: #111814;
+  border-radius: 8px;
+  color: #edf5f1;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 10px 0;
+  max-height: 260px;
+  overflow: auto;
+  padding: 12px;
+  white-space: pre;
 }
 
 .qa-list.compact article {
@@ -1892,7 +2006,12 @@ details ul {
   .strategy-card-grid,
   .trace-grid,
   .audit-grid,
-  .governance-grid {
+  .governance-grid,
+  .workflow-metric-grid,
+  .instrument-grid,
+  .protocol-grid,
+  .variable-grid,
+  .integration-grid {
     grid-template-columns: 1fr;
   }
 

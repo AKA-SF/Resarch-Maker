@@ -1731,6 +1731,102 @@ export type TrustedAcademicIntelligenceInfrastructure = {
   trustBoundary: string;
 };
 
+export type ResearchInstrumentPackage = {
+  surveyQuestionnaireDraft: Array<{
+    construct: string;
+    items: string[];
+    responseScale: string;
+    evidence: string;
+  }>;
+  interviewProtocol: string[];
+  focusGroupGuide: string[];
+  observationFramework: string[];
+  experimentalProcedureOutline: string[];
+  measurementScaleSuggestions: Array<{
+    construct: string;
+    scaleType: string;
+    adaptationNote: string;
+  }>;
+  instrumentBoundary: string;
+};
+
+export type StatisticalWorkflowIntelligence = {
+  recommendedStatisticalMethods: string[];
+  analysisPipeline: string[];
+  variableOperationalization: Array<{
+    variable: string;
+    operationalDefinition: string;
+    measurementSuggestion: string;
+  }>;
+  dataPreprocessingWorkflow: string[];
+  reliabilityValidityChecks: string[];
+  modelSelectionSuggestions: string[];
+  qualitativeCodingWorkflow: string[];
+  workflowBoundary: string;
+};
+
+export type ResearchCodeTemplate = {
+  language: "R" | "Python" | "SPSS" | "Stata" | "RMarkdown/Quarto" | "Jupyter";
+  workflow: "regression" | "SEM/PLS-SEM" | "multilevel" | "Bayesian" | "thematic_analysis" | "bibliometric" | "visualization";
+  title: string;
+  code: string;
+  notes: string[];
+};
+
+export type ResearchExecutionPlan = {
+  stepByStepPlan: string[];
+  dataCollectionTimeline: Array<{
+    phase: string;
+    duration: string;
+    deliverable: string;
+  }>;
+  milestoneSchedule: string[];
+  publicationRoadmap: string[];
+  dissertationWorkflow: string[];
+  replicationChecklist: string[];
+};
+
+export type AcademicWritingWorkflow = {
+  publicationReadyOutline: string[];
+  journalStyleFormattingGuidance: string[];
+  discussionConclusionDraft: string;
+  contributionFraming: string[];
+  reviewerResponseSuggestions: string[];
+  revisionStrategyRecommendations: string[];
+  writingBoundary: string;
+};
+
+export type ResearchReproducibilityLayer = {
+  reproducibilityChecklist: string[];
+  methodologyCompletenessValidation: string[];
+  missingVariableDetection: string[];
+  citationConsistencyChecks: string[];
+  workflowAuditTrail: string[];
+  reproducibilityBoundary: string;
+};
+
+export type ExternalWorkflowIntegrationPlan = {
+  zotero: string[];
+  overleaf: string[];
+  notion: string[];
+  csvExcelDatasets: string[];
+  jupyterNotebooks: string[];
+  rmarkdownQuartoExports: string[];
+  integrationBoundary: string;
+};
+
+export type FullResearchWorkflowCopilot = {
+  workflowRunId: string;
+  instrumentPackage: ResearchInstrumentPackage;
+  statisticalWorkflow: StatisticalWorkflowIntelligence;
+  codeTemplates: ResearchCodeTemplate[];
+  executionPlan: ResearchExecutionPlan;
+  academicWritingWorkflow: AcademicWritingWorkflow;
+  reproducibilityLayer: ResearchReproducibilityLayer;
+  externalIntegrations: ExternalWorkflowIntegrationPlan;
+  workflowBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1820,6 +1916,7 @@ export type ResearchIntelligenceResult = {
   selfEvolvingAcademicEcosystem: SelfEvolvingAcademicEcosystem;
   globalAutonomousScholarlyNetwork: GlobalAutonomousScholarlyNetwork;
   trustedAcademicIntelligenceInfrastructure: TrustedAcademicIntelligenceInfrastructure;
+  researchWorkflowCopilot: FullResearchWorkflowCopilot;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

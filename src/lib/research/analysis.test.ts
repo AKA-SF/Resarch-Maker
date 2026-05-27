@@ -400,6 +400,32 @@ describe("research analysis", () => {
     expect(result.trustedAcademicIntelligenceInfrastructure.trustBoundary).toContain("보장");
   });
 
+  it("builds full research workflow copilot instruments, analysis templates, code, and reproducibility outputs", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "fast publishable topics"
+    );
+
+    expect(result.researchWorkflowCopilot.instrumentPackage.surveyQuestionnaireDraft.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.instrumentPackage.interviewProtocol.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.statisticalWorkflow.recommendedStatisticalMethods.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.statisticalWorkflow.variableOperationalization.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.codeTemplates.map((template) => template.workflow)).toEqual(
+      expect.arrayContaining(["regression", "SEM/PLS-SEM", "multilevel", "Bayesian", "thematic_analysis", "bibliometric", "visualization"])
+    );
+    expect(result.researchWorkflowCopilot.codeTemplates.map((template) => template.language)).toEqual(
+      expect.arrayContaining(["R", "Python", "SPSS", "Stata", "RMarkdown/Quarto"])
+    );
+    expect(result.researchWorkflowCopilot.executionPlan.stepByStepPlan.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.academicWritingWorkflow.writingBoundary).toContain("실제 결과");
+    expect(result.researchWorkflowCopilot.reproducibilityLayer.citationConsistencyChecks.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.externalIntegrations.zotero.length).toBeGreaterThan(0);
+    expect(result.researchWorkflowCopilot.workflowBoundary).toContain("실증 결과");
+  });
+
   it("analyzes Zotero metadata and indexed PDF signals without fabricating library items", () => {
     const zoteroItems = [
       {

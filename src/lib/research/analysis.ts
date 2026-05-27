@@ -51,6 +51,7 @@ import { buildAutonomousAcademicOS } from "./autonomous-os";
 import { buildSelfEvolvingAcademicEcosystem } from "./self-evolving-ecosystem";
 import { buildGlobalAutonomousScholarlyNetwork } from "./global-scholarly-network";
 import { buildTrustedAcademicIntelligenceInfrastructure } from "./trusted-infrastructure";
+import { buildFullResearchWorkflowCopilot } from "./workflow-copilot";
 
 const broadConcepts = new Set([
   "psychology",
@@ -595,6 +596,15 @@ export function buildResearchIntelligenceResult(
     autonomousOS: autonomousAcademicOS,
     global: globalAutonomousScholarlyNetwork
   });
+  const researchWorkflowCopilot = buildFullResearchWorkflowCopilot({
+    topics,
+    papers,
+    synthesis,
+    methodology,
+    discipline,
+    researcherProfile,
+    trusted: trustedAcademicIntelligenceInfrastructure
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -629,6 +639,7 @@ export function buildResearchIntelligenceResult(
     selfEvolvingAcademicEcosystem,
     globalAutonomousScholarlyNetwork,
     trustedAcademicIntelligenceInfrastructure,
+    researchWorkflowCopilot,
     copilot,
     domainIntelligence,
     gaps,

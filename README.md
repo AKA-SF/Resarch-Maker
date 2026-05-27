@@ -39,6 +39,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds a global autonomous scholarly network layer for self-evaluation, QA/confidence checks, weak-signal detection, global ecosystem summaries, adaptive strategy generation, and long-term scholarly evolution planning.
 - Adds a trusted academic intelligence infrastructure layer with evidence-linked reasoning traces, evidence lineage views, transparent decision explanations, governance checks, research audits, human review workflows, and scalable infrastructure plans.
 - Adds Zotero Local API integration for read-only library synchronization, collections, saved-paper metadata, PDF indexed-text signals where available, personal literature maps, reading queues, and library-grounded literature review drafts.
+- Adds a full research workflow copilot for survey/interview/focus-group/observation/experiment instrument drafts, statistical analysis workflows, R/Python/SPSS/Stata/Quarto starter code, execution plans, writing support, reproducibility checks, and external workflow planning.
 
 ## Run
 
@@ -95,6 +96,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Trusted infrastructure traces link generated decisions back to retrieved paper IDs and heuristic reasoning steps. They do not replace full-text source verification, institutional governance systems, expert peer review, or secure multi-tenant access control.
 - Zotero integration is read-only in this MVP. It uses the local Zotero Desktop API, does not require API keys, does not write to Zotero collections, and does not return PDF file paths or full PDF text.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
+- Research workflow code and statistical plans are starter templates only. They do not generate empirical results, validate statistical assumptions, prove model correctness, or replace data inspection and expert review.
 
 ## Known MVP limits
 

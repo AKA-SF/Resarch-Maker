@@ -1661,6 +1661,244 @@ export default function Home() {
                 <p className="muted">{result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.infrastructureBoundary}</p>
               </section>
 
+              <section className="panel workflow-copilot-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Full Research Workflow Copilot</p>
+                    <h2>연구 실행 대시보드</h2>
+                  </div>
+                  <ClipboardList size={22} />
+                </div>
+                <div className="workflow-metric-grid">
+                  <article>
+                    <span>도구 초안</span>
+                    <strong>{result.researchWorkflowCopilot.instrumentPackage.surveyQuestionnaireDraft.length}</strong>
+                    <p>설문 구성개념</p>
+                  </article>
+                  <article>
+                    <span>분석 코드</span>
+                    <strong>{result.researchWorkflowCopilot.codeTemplates.length}</strong>
+                    <p>재사용 템플릿</p>
+                  </article>
+                  <article>
+                    <span>재현성</span>
+                    <strong>{result.researchWorkflowCopilot.reproducibilityLayer.reproducibilityChecklist.length}</strong>
+                    <p>체크 항목</p>
+                  </article>
+                  <article>
+                    <span>연동</span>
+                    <strong>6</strong>
+                    <p>Zotero / Overleaf / Notion 등</p>
+                  </article>
+                </div>
+                <p className="muted">{result.researchWorkflowCopilot.workflowBoundary}</p>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel instrument-builder-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Instrument Builder</p>
+                      <h2>연구도구 생성기</h2>
+                    </div>
+                    <FileText size={22} />
+                  </div>
+                  <div className="instrument-grid">
+                    {result.researchWorkflowCopilot.instrumentPackage.surveyQuestionnaireDraft.slice(0, 4).map((instrument) => (
+                      <article key={`survey-${instrument.construct}`}>
+                        <span>{instrument.responseScale}</span>
+                        <strong>{instrument.construct}</strong>
+                        <ul className="plain-list">
+                          {instrument.items.map((item) => (
+                            <li key={`survey-item-${instrument.construct}-${item}`}>{item}</li>
+                          ))}
+                        </ul>
+                        <small>{instrument.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="protocol-grid">
+                    <div>
+                      <h3>인터뷰 프로토콜</h3>
+                      <ul className="plain-list">
+                        {result.researchWorkflowCopilot.instrumentPackage.interviewProtocol.map((item) => (
+                          <li key={`interview-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>포커스 그룹 / 관찰</h3>
+                      <ul className="plain-list">
+                        {[...result.researchWorkflowCopilot.instrumentPackage.focusGroupGuide.slice(0, 3), ...result.researchWorkflowCopilot.instrumentPackage.observationFramework.slice(0, 3)].map((item) => (
+                          <li key={`field-guide-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.researchWorkflowCopilot.instrumentPackage.instrumentBoundary}</p>
+                </section>
+
+                <section className="panel stat-workflow-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Statistical Workflow</p>
+                      <h2>통계 / 분석 워크플로</h2>
+                    </div>
+                    <BarChart3 size={22} />
+                  </div>
+                  <div className="method-chip-list">
+                    {result.researchWorkflowCopilot.statisticalWorkflow.recommendedStatisticalMethods.map((method) => (
+                      <span key={`workflow-method-${method}`}>{method}</span>
+                    ))}
+                  </div>
+                  <ol className="workflow-step-list">
+                    {result.researchWorkflowCopilot.statisticalWorkflow.analysisPipeline.map((step) => (
+                      <li key={`analysis-step-${step}`}>{step}</li>
+                    ))}
+                  </ol>
+                  <div className="variable-grid">
+                    {result.researchWorkflowCopilot.statisticalWorkflow.variableOperationalization.slice(0, 4).map((item) => (
+                      <article key={`operational-${item.variable}`}>
+                        <strong>{item.variable}</strong>
+                        <p>{item.operationalDefinition}</p>
+                        <small>{item.measurementSuggestion}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.researchWorkflowCopilot.statisticalWorkflow.workflowBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel code-workspace-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Code Generation Workspace</p>
+                    <h2>분석 코드 생성 워크스페이스</h2>
+                  </div>
+                  <FileText size={22} />
+                </div>
+                <div className="code-template-list">
+                  {result.researchWorkflowCopilot.codeTemplates.map((template) => (
+                    <details key={`code-template-${template.language}-${template.workflow}-${template.title}`}>
+                      <summary>{template.language} · {template.workflow} · {template.title}</summary>
+                      <pre>{template.code}</pre>
+                      <ul className="plain-list">
+                        {template.notes.map((note) => (
+                          <li key={`code-note-${template.title}-${note}`}>{note}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  ))}
+                </div>
+              </section>
+
+              <section className="split">
+                <section className="panel execution-plan-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Execution Planning</p>
+                      <h2>실행 계획 / 일정</h2>
+                    </div>
+                    <Target size={22} />
+                  </div>
+                  <ol className="workflow-step-list">
+                    {result.researchWorkflowCopilot.executionPlan.stepByStepPlan.slice(0, 8).map((step) => (
+                      <li key={`execution-step-${step}`}>{step}</li>
+                    ))}
+                  </ol>
+                  <div className="timeline-list compact">
+                    {result.researchWorkflowCopilot.executionPlan.dataCollectionTimeline.map((phase) => (
+                      <article key={`timeline-${phase.phase}`}>
+                        <strong>{phase.phase}</strong>
+                        <span>{phase.duration}</span>
+                        <p>{phase.deliverable}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="panel writing-workflow-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Academic Writing</p>
+                      <h2>논문 작성 보조</h2>
+                    </div>
+                    <BookOpen size={22} />
+                  </div>
+                  <ul className="plain-list">
+                    {result.researchWorkflowCopilot.academicWritingWorkflow.publicationReadyOutline.slice(0, 7).map((item) => (
+                      <li key={`writing-outline-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <p>{result.researchWorkflowCopilot.academicWritingWorkflow.discussionConclusionDraft}</p>
+                  <p className="muted">{result.researchWorkflowCopilot.academicWritingWorkflow.writingBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel reproducibility-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Reproducibility Layer</p>
+                      <h2>재현성 / 감사 패널</h2>
+                    </div>
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div className="governance-grid">
+                    <div>
+                      <h3>체크리스트</h3>
+                      <ul className="plain-list">
+                        {result.researchWorkflowCopilot.reproducibilityLayer.reproducibilityChecklist.slice(0, 6).map((item) => (
+                          <li key={`repro-check-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>누락 변수 점검</h3>
+                      <ul className="plain-list">
+                        {result.researchWorkflowCopilot.reproducibilityLayer.missingVariableDetection.slice(0, 5).map((item) => (
+                          <li key={`missing-variable-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>감사 경로</h3>
+                      <ul className="plain-list">
+                        {result.researchWorkflowCopilot.reproducibilityLayer.workflowAuditTrail.map((item) => (
+                          <li key={`audit-trail-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.researchWorkflowCopilot.reproducibilityLayer.reproducibilityBoundary}</p>
+                </section>
+
+                <section className="panel external-integration-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Workflow Connectivity</p>
+                      <h2>외부 워크플로 연동</h2>
+                    </div>
+                    <Download size={22} />
+                  </div>
+                  <div className="integration-grid">
+                    {Object.entries(result.researchWorkflowCopilot.externalIntegrations)
+                      .filter(([key]) => key !== "integrationBoundary")
+                      .map(([key, items]) => (
+                        <article key={`integration-${key}`}>
+                          <strong>{key}</strong>
+                          <ul className="plain-list">
+                            {(items as string[]).slice(0, 3).map((item) => (
+                              <li key={`integration-${key}-${item}`}>{item}</li>
+                            ))}
+                          </ul>
+                        </article>
+                      ))}
+                  </div>
+                  <p className="muted">{result.researchWorkflowCopilot.externalIntegrations.integrationBoundary}</p>
+                </section>
+              </section>
+
               <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">
