@@ -34,6 +34,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds an agentic self-improving research loop that critiques each generated topic, proposes evidence-bound improvements, re-scores refined topics, compares before/after versions, re-ranks candidates, and stores local refine-again history.
 - Adds persistent scholarly memory with local JSON session storage, local hashing-based vector retrieval, cross-session recall, and a unified scholarly knowledge graph spanning papers, authors, theories, concepts, methodologies, datasets, venues, institutions, disciplines, and generated topics.
 - Adds predictive academic intelligence for trend forecasting, publication outcome estimates, advanced topic evaluation, autonomous strategy optimization, scenario simulation, and research impact pathway analysis.
+- Adds a fully autonomous academic operating layer that coordinates topic-to-proposal workflows, research production drafts, dependency-aware planning, scholarly reasoning panels, monitoring alerts, optimization controls, and versioned research workspace outputs.
 
 ## Run
 
@@ -84,6 +85,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Persistent memory is stored locally under `.ris-memory/`, which is excluded from Git. Local hashing embeddings are lightweight retrieval signals, not external model embeddings or full semantic proof.
 - Unified knowledge graph edges mark inferred relationships separately from retrieved metadata relationships and should be treated as exploration candidates unless independently verified.
 - Predictive intelligence is heuristic and evidence-bound. It estimates strategic likelihoods from retrieved metadata, graph signals, memory, and existing scores; it does not guarantee publication, citations, hot-topic status, or scholarly impact.
+- The autonomous academic operating layer coordinates workflows and drafts dossiers from existing evidence-bound modules. It does not run real experiments, submit IRB, manage real-time collaboration permissions, verify final citations, or guarantee publication outcomes.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

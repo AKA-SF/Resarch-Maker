@@ -47,6 +47,7 @@ import { buildSelfImprovingAcademicIntelligence } from "./self-improving";
 import { buildAgenticResearchLoop } from "./refinement-loop";
 import { buildPersistentScholarlyMemory } from "./scholarly-memory";
 import { buildPredictiveAcademicIntelligence } from "./predictive-intelligence";
+import { buildAutonomousAcademicOS } from "./autonomous-os";
 
 const broadConcepts = new Set([
   "psychology",
@@ -534,6 +535,23 @@ export function buildResearchIntelligenceResult(
     discipline,
     strategy
   });
+  const autonomousAcademicOS = buildAutonomousAcademicOS({
+    topics,
+    papers,
+    synthesis,
+    gaps,
+    debates: debateAnalysis,
+    academicOS: academicResearchOS,
+    multiAgentWorkflow,
+    predictive: predictiveAcademicIntelligence,
+    memory: persistentScholarlyMemory,
+    selfImproving: selfImprovingIntelligence,
+    competition: competitionIntelligence,
+    bibliometric: bibliometricAnalysis,
+    discipline,
+    methodology,
+    strategy
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -564,6 +582,7 @@ export function buildResearchIntelligenceResult(
     agenticResearchLoop,
     persistentScholarlyMemory,
     predictiveAcademicIntelligence,
+    autonomousAcademicOS,
     copilot,
     domainIntelligence,
     gaps,

@@ -731,6 +731,202 @@ export default function Home() {
               </section>
 
               <section className="split wide-left">
+                <section className="panel autonomous-os-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Academic OS</p>
+                      <h2>자율 연구 운영 대시보드</h2>
+                    </div>
+                    <ClipboardList size={22} />
+                  </div>
+                  <p>{result.autonomousAcademicOS.adaptiveStateSummary}</p>
+                  <div className="progress-grid">
+                    {result.autonomousAcademicOS.progressDashboard.map((item) => (
+                      <div key={`os-progress-${item.label}`}>
+                        <span>{item.label}</span>
+                        <strong>{item.completed}/{item.total}</strong>
+                        <em>{item.status === "on_track" ? "진행 양호" : "검토 필요"}</em>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="autonomous-stage-grid">
+                    {result.autonomousAcademicOS.workflowStages.map((stage) => (
+                      <article key={`os-stage-${stage.id}`}>
+                        <div>
+                          <span>{stage.status.replaceAll("_", " ")}</span>
+                          <strong>{stage.label}</strong>
+                        </div>
+                        <p>{stage.outputSummary}</p>
+                        <small>{stage.evidenceBoundary}</small>
+                        <em>{stage.nextAction}</em>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.autonomousAcademicOS.operatingBoundary}</p>
+                </section>
+
+                <section className="panel monitoring-os-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Monitoring</p>
+                      <h2>모니터링 / 알림</h2>
+                    </div>
+                    <TriangleAlert size={22} />
+                  </div>
+                  <div className="monitoring-alert-list">
+                    {result.autonomousAcademicOS.monitoringAlerts.map((alert) => (
+                      <article key={`monitoring-${alert.type}-${alert.label}`}>
+                        <span>{alert.severity}</span>
+                        <strong>{alert.label}</strong>
+                        <p>{alert.evidence}</p>
+                        <em>{alert.suggestedAction}</em>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel production-pipeline-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Research Production</p>
+                      <h2>연구 생산 파이프라인</h2>
+                    </div>
+                    <FileText size={22} />
+                  </div>
+                  <div className="production-draft-grid">
+                    {[
+                      ["문헌고찰", result.autonomousAcademicOS.productionPipeline.literatureReviewDraft],
+                      ["개념 프레임워크", result.autonomousAcademicOS.productionPipeline.conceptualFrameworkDraft],
+                      ["방법론 섹션", result.autonomousAcademicOS.productionPipeline.methodologySectionDraft],
+                      ["토론/기여", result.autonomousAcademicOS.productionPipeline.discussionContributionDraft],
+                      ["후속 연구", result.autonomousAcademicOS.productionPipeline.futureResearchSection],
+                      ["학회 초록", result.autonomousAcademicOS.productionPipeline.conferenceAbstractDraft]
+                    ].map(([label, draft]) => (
+                      <article key={`production-${label}`}>
+                        <strong>{label}</strong>
+                        <p>{draft}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.autonomousAcademicOS.productionPipeline.productionBoundary}</p>
+                </section>
+
+                <section className="panel planner-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Intelligent Planner</p>
+                      <h2>지능형 연구 플래너</h2>
+                    </div>
+                    <MapIcon size={22} />
+                  </div>
+                  <div className="timeline-list">
+                    {result.autonomousAcademicOS.researchPlanner.milestoneTracking.map((item) => (
+                      <article key={`planner-milestone-${item.dueOrder}-${item.milestone}`}>
+                        <strong>{item.dueOrder}. {item.milestone}</strong>
+                        <span>{item.status}</span>
+                        <p>{item.evidence}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">출판 순서 전략</h3>
+                  <ul className="plain-list">
+                    {result.autonomousAcademicOS.researchPlanner.publicationSequencing.slice(0, 4).map((item) => (
+                      <li key={`publication-sequence-${item.slice(0, 34)}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <p className="muted">{result.autonomousAcademicOS.researchPlanner.plannerBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel scholarly-reasoning-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Scholarly Reasoning</p>
+                      <h2>학술 추론 패널</h2>
+                    </div>
+                    <Brain size={22} />
+                  </div>
+                  <div className="reasoning-grid">
+                    <div>
+                      <h3>이론 비교</h3>
+                      <ul className="plain-list">
+                        {result.autonomousAcademicOS.scholarlyReasoning.competingTheoryEvaluation.slice(0, 4).map((item, index) => (
+                          <li key={`reasoning-theory-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>방법론 트레이드오프</h3>
+                      <ul className="plain-list">
+                        {result.autonomousAcademicOS.scholarlyReasoning.methodologyTradeoffAnalysis.slice(0, 4).map((item, index) => (
+                          <li key={`reasoning-method-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>논쟁/모순 해소</h3>
+                      <ul className="plain-list">
+                        {result.autonomousAcademicOS.scholarlyReasoning.contradictionResolutionWorkflow.slice(0, 4).map((item, index) => (
+                          <li key={`reasoning-debate-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.autonomousAcademicOS.scholarlyReasoning.reasoningBoundary}</p>
+                </section>
+
+                <section className="panel os-workspace-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Workspace</p>
+                      <h2>워크스페이스 / 버전 추적</h2>
+                    </div>
+                    <Users size={22} />
+                  </div>
+                  <strong>{topicShortTitle(result.autonomousAcademicOS.workspaceCollaboration.projectTitle)}</strong>
+                  <div className="version-list">
+                    {result.autonomousAcademicOS.workspaceCollaboration.proposalVersions.map((version) => (
+                      <article key={`proposal-version-${version.version}`}>
+                        <span>{version.version}</span>
+                        <strong>{topicShortTitle(version.title)}</strong>
+                        <p>{version.changeSummary}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="chips">
+                    {result.autonomousAcademicOS.workspaceCollaboration.exportableDossierSections.map((section) => (
+                      <span key={`dossier-${section}`}>{section}</span>
+                    ))}
+                  </div>
+                  <p className="muted">{result.autonomousAcademicOS.workspaceCollaboration.persistenceBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel os-optimization-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Adaptive Optimization</p>
+                    <h2>최적화 컨트롤</h2>
+                  </div>
+                  <ShieldCheck size={22} />
+                </div>
+                <div className="os-control-grid">
+                  {result.autonomousAcademicOS.optimizationControls.map((control) => (
+                    <article key={`os-control-${control.objective}`}>
+                      <span>우선순위 {control.priority}</span>
+                      <strong>{control.objective.replaceAll("_", " ")}</strong>
+                      <p>{control.recommendedMove}</p>
+                      <em>{control.expectedTradeoff}</em>
+                      <small>{control.evidence}</small>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">
                     <div>

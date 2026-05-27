@@ -761,9 +761,133 @@ button:disabled {
 .predictive-evaluation-panel,
 .optimization-panel,
 .predictive-simulation-panel,
-.impact-panel {
+.impact-panel,
+.autonomous-os-panel,
+.monitoring-os-panel,
+.production-pipeline-panel,
+.planner-panel,
+.scholarly-reasoning-panel,
+.os-workspace-panel,
+.os-optimization-panel {
   display: grid;
   gap: 14px;
+}
+
+.autonomous-os-panel > p,
+.production-pipeline-panel p,
+.planner-panel p,
+.scholarly-reasoning-panel p,
+.os-workspace-panel p,
+.os-optimization-panel p {
+  color: #34413a;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.progress-grid,
+.autonomous-stage-grid,
+.production-draft-grid,
+.reasoning-grid,
+.os-control-grid,
+.monitoring-alert-list,
+.version-list {
+  display: grid;
+  gap: 10px;
+}
+
+.progress-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.progress-grid div,
+.autonomous-stage-grid article,
+.production-draft-grid article,
+.reasoning-grid div,
+.os-control-grid article,
+.monitoring-alert-list article,
+.version-list article {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
+.progress-grid span,
+.autonomous-stage-grid span,
+.os-control-grid span,
+.monitoring-alert-list span,
+.version-list span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.progress-grid strong {
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.progress-grid em,
+.autonomous-stage-grid em,
+.os-control-grid em,
+.monitoring-alert-list em {
+  color: #4f5d56;
+  font-size: 0.78rem;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.autonomous-stage-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.autonomous-stage-grid article div {
+  display: grid;
+  gap: 4px;
+}
+
+.autonomous-stage-grid strong,
+.production-draft-grid strong,
+.reasoning-grid h3,
+.os-control-grid strong,
+.monitoring-alert-list strong,
+.version-list strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.autonomous-stage-grid small,
+.os-control-grid small {
+  color: var(--muted);
+  font-size: 0.77rem;
+  line-height: 1.4;
+}
+
+.production-draft-grid,
+.reasoning-grid,
+.os-control-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.reasoning-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.monitoring-alert-list article {
+  border-left: 4px solid var(--warning);
+}
+
+.version-list article {
+  grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.version-list article p {
+  grid-column: 2;
 }
 
 .loop-steps {
@@ -1526,8 +1650,18 @@ details ul {
   .score-compare,
   .graph-summary-grid,
   .prediction-signal-grid,
-  .optimization-grid {
+  .optimization-grid,
+  .progress-grid,
+  .autonomous-stage-grid,
+  .production-draft-grid,
+  .reasoning-grid,
+  .os-control-grid,
+  .version-list {
     grid-template-columns: 1fr;
+  }
+
+  .version-list article p {
+    grid-column: auto;
   }
 
   .control-panel {

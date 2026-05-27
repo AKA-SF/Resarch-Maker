@@ -294,4 +294,31 @@ describe("research analysis", () => {
     expect(result.predictiveAcademicIntelligence.impactIntelligence.downstreamResearchPathways.length).toBeGreaterThan(0);
     expect(result.predictiveAcademicIntelligence.predictionBoundary).toContain("휴리스틱");
   });
+
+  it("orchestrates autonomous academic operating workflows and production pipelines", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "theory-heavy research"
+    );
+
+    expect(result.autonomousAcademicOS.workflowStages.map((stage) => stage.id)).toEqual([
+      "topic_generation",
+      "proposal_generation",
+      "literature_synthesis",
+      "methodology_planning",
+      "optimization",
+      "production_export"
+    ]);
+    expect(result.autonomousAcademicOS.productionPipeline.conferenceAbstractDraft.length).toBeGreaterThan(40);
+    expect(result.autonomousAcademicOS.researchPlanner.milestoneTracking.length).toBeGreaterThan(0);
+    expect(result.autonomousAcademicOS.scholarlyReasoning.methodologyTradeoffAnalysis.length).toBeGreaterThan(0);
+    expect(result.autonomousAcademicOS.monitoringAlerts.length).toBeGreaterThan(0);
+    expect(result.autonomousAcademicOS.optimizationControls.map((control) => control.objective)).toContain("publishability");
+    expect(result.autonomousAcademicOS.workspaceCollaboration.proposalVersions.length).toBeGreaterThanOrEqual(3);
+    expect(result.autonomousAcademicOS.progressDashboard.length).toBeGreaterThan(0);
+    expect(result.autonomousAcademicOS.operatingBoundary).toContain("보장하지 않습니다");
+  });
 });

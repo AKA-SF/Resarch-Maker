@@ -1177,6 +1177,131 @@ export type PredictiveAcademicIntelligence = {
   predictionBoundary: string;
 };
 
+export type AutonomousWorkflowStageStatus = "completed" | "ready" | "needs_review" | "blocked";
+
+export type AutonomousWorkflowStage = {
+  id:
+    | "topic_generation"
+    | "proposal_generation"
+    | "literature_synthesis"
+    | "methodology_planning"
+    | "optimization"
+    | "production_export";
+  label: string;
+  status: AutonomousWorkflowStageStatus;
+  ownerAgent: ResearchAgentRole | "operating_system";
+  inputSummary: string;
+  outputSummary: string;
+  evidenceBoundary: string;
+  nextAction: string;
+};
+
+export type ResearchProductionPipeline = {
+  literatureReviewDraft: string;
+  conceptualFrameworkDraft: string;
+  methodologySectionDraft: string;
+  discussionContributionDraft: string;
+  futureResearchSection: string;
+  conferenceAbstractDraft: string;
+  productionBoundary: string;
+};
+
+export type StudyDependency = {
+  study: string;
+  dependsOn: string[];
+  milestone: string;
+  status: "planned" | "ready" | "needs_evidence";
+};
+
+export type IntelligentResearchPlanner = {
+  dissertationThesisPlan: StudyDependency[];
+  multiPaperAgenda: StudyDependency[];
+  publicationSequencing: string[];
+  longTermRoadmap: string[];
+  milestoneTracking: Array<{
+    milestone: string;
+    dueOrder: number;
+    evidence: string;
+    status: "completed" | "ready" | "needs_review";
+  }>;
+  plannerBoundary: string;
+};
+
+export type ScholarlyReasoningPanel = {
+  competingTheoryEvaluation: string[];
+  causalVsExploratoryReasoning: string[];
+  methodologyTradeoffAnalysis: string[];
+  evidenceStrengthEstimation: string[];
+  contradictionResolutionWorkflow: string[];
+  interdisciplinarySynthesisReasoning: string[];
+  reasoningBoundary: string;
+};
+
+export type AutonomousMonitoringAlert = {
+  type:
+    | "emerging_topic"
+    | "rising_theory"
+    | "publication_surge"
+    | "declining_saturated_domain"
+    | "interdisciplinary_opportunity"
+    | "methodology_shift";
+  label: string;
+  severity: "info" | "watch" | "act";
+  evidence: string;
+  suggestedAction: string;
+};
+
+export type AdaptiveOptimizationControl = {
+  objective:
+    | "novelty"
+    | "publishability"
+    | "feasibility"
+    | "interdisciplinary_impact"
+    | "theoretical_rigor"
+    | "practical_relevance"
+    | "fast_publication"
+    | "long_term_positioning";
+  recommendedMove: string;
+  expectedTradeoff: string;
+  evidence: string;
+  priority: number;
+};
+
+export type AutonomousWorkspaceCollaboration = {
+  projectId: string;
+  projectTitle: string;
+  collaborators: string[];
+  proposalVersions: Array<{
+    version: string;
+    title: string;
+    changeSummary: string;
+    evidence: string;
+  }>;
+  researchEvolutionHistory: string[];
+  exportableDossierSections: string[];
+  persistenceBoundary: string;
+};
+
+export type AutonomousAcademicOperatingSystem = {
+  workflowRunId: string;
+  workflowStages: AutonomousWorkflowStage[];
+  adaptiveStateSummary: string;
+  agentCoordination: MultiAgentWorkflow;
+  productionPipeline: ResearchProductionPipeline;
+  researchPlanner: IntelligentResearchPlanner;
+  scholarlyReasoning: ScholarlyReasoningPanel;
+  monitoringAlerts: AutonomousMonitoringAlert[];
+  optimizationControls: AdaptiveOptimizationControl[];
+  workspaceCollaboration: AutonomousWorkspaceCollaboration;
+  progressDashboard: Array<{
+    label: string;
+    completed: number;
+    total: number;
+    status: "on_track" | "needs_review" | "blocked";
+  }>;
+  operatingBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1262,6 +1387,7 @@ export type ResearchIntelligenceResult = {
   agenticResearchLoop: AgenticResearchLoop;
   persistentScholarlyMemory: PersistentScholarlyMemory;
   predictiveAcademicIntelligence: PredictiveAcademicIntelligence;
+  autonomousAcademicOS: AutonomousAcademicOperatingSystem;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];
