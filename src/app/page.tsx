@@ -45,7 +45,8 @@ import {
   type ResearchStrategy,
   type ResearchIntelligenceResult,
   type Topic,
-  type TopicCritiqueType
+  type TopicCritiqueType,
+  type ZoteroSyncResult
 } from "@/lib/research/types";
 import { disciplineLabels, methodologyLabels } from "@/lib/research/domain";
 import { strategyLabels } from "@/lib/research/strategy";
@@ -400,6 +401,9 @@ export default function Home() {
   const [savedWorkspaces, setSavedWorkspaces] = useState<SavedWorkspace[]>([]);
   const [bookmarkedTopics, setBookmarkedTopics] = useState<string[]>([]);
   const [refinementHistory, setRefinementHistory] = useState<RefinementHistoryRecord[]>([]);
+  const [zoteroResult, setZoteroResult] = useState<ZoteroSyncResult | null>(null);
+  const [zoteroLoading, setZoteroLoading] = useState(false);
+  const [zoteroError, setZoteroError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -494,6 +498,23 @@ export default function Home() {
       setError(caught instanceof Error ? caught.message : "분석에 실패했습니다.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function syncZoteroLibrary() {
+    setZoteroLoading(true);
+    setZoteroError(null);
+    try {
+      const response = await fetch("/api/zotero", { method: "GET" });
+      const payload = await response.json() as ZoteroSyncResult;
+      setZoteroResult(payload);
+      if (payload.status.state !== "connected") {
+        setZoteroError(payload.status.message);
+      }
+    } catch (caught) {
+      setZoteroError(caught instanceof Error ? caught.message : "Zotero 동기화에 실패했습니다.");
+    } finally {
+      setZoteroLoading(false);
     }
   }
 
@@ -656,9 +677,143 @@ export default function Home() {
             {loading ? <Loader2 className="spin" size={18} /> : <Search size={18} />}
             연구주제 생성
           </button>
+
+          <section className="zotero-connector">
+            <div className="profile-editor-head">
+              <BookOpen size={17} />
+              <strong>Zotero 개인 라이브러리</strong>
+            </div>
+            <p>로컬 Zotero Desktop API에서만 읽습니다. API 키, PDF 경로, 원문 전체는 저장하거나 표시하지 않습니다.</p>
+            <button type="button" disabled={zoteroLoading} onClick={() => void syncZoteroLibrary()}>
+              {zoteroLoading ? <Loader2 className="spin" size={18} /> : <Network size={18} />}
+              Zotero 동기화
+            </button>
+            {zoteroResult && (
+              <div className={`zotero-status ${zoteroResult.status.state}`}>
+                <strong>{zoteroResult.status.state === "connected" ? "연결됨" : "연결 필요"}</strong>
+                <span>{zoteroResult.status.message}</span>
+                <em>items {zoteroResult.diagnostics.itemsImported} · collections {zoteroResult.diagnostics.collectionsImported} · PDFs {zoteroResult.diagnostics.pdfsDetected}</em>
+              </div>
+            )}
+            {zoteroError && <p className="zotero-warning">{zoteroError}</p>}
+          </section>
         </form>
 
         <section className="output">
+          {zoteroResult && (
+            <section className="panel zotero-dashboard-panel">
+              <div className="panel-head">
+                <div>
+                  <p className="tag">Zotero Personal Intelligence</p>
+                  <h2>개인 연구 라이브러리 대시보드</h2>
+                </div>
+                <BookOpen size={22} />
+              </div>
+              <div className="domain-grid">
+                <div>
+                  <span>저장 논문</span>
+                  <strong>{zoteroResult.items.length}</strong>
+                </div>
+                <div>
+                  <span>컬렉션</span>
+                  <strong>{zoteroResult.collections.length}</strong>
+                </div>
+                <div>
+                  <span>PDF 감지</span>
+                  <strong>{zoteroResult.diagnostics.pdfsDetected}</strong>
+                </div>
+                <div>
+                  <span>분석 모드</span>
+                  <strong>{zoteroResult.diagnostics.fullTextMode === "indexed-snippets-only" ? "Indexed" : "Metadata"}</strong>
+                </div>
+              </div>
+              <p className="muted">{zoteroResult.status.privacyBoundary}</p>
+              {zoteroResult.status.state === "connected" ? (
+                <>
+                  <section className="split">
+                    <div className="zotero-panel-block">
+                      <h3>관심 주제 / 이론</h3>
+                      <div className="chips">
+                        {[...zoteroResult.personalIntelligence.inferredResearchInterests.slice(0, 6), ...zoteroResult.personalIntelligence.dominantTheories.slice(0, 4)].map((item) => (
+                          <span key={`zotero-interest-${item.label}`}>{item.label} · {item.support}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="zotero-panel-block">
+                      <h3>방법론 분포</h3>
+                      <div className="rank-list compact">
+                        {zoteroResult.personalIntelligence.methodologyDistribution.slice(0, 6).map((item) => (
+                          <article key={`zotero-method-${item.methodology}`}>
+                            <strong>{item.methodology}</strong>
+                            <span>{item.count}개 항목</span>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                  <section className="split wide-left">
+                    <div className="zotero-panel-block">
+                      <h3>개인화 연구 갭 / 주제</h3>
+                      <ul className="plain-list">
+                        {zoteroResult.personalIntelligence.personalizedResearchGaps.slice(0, 6).map((gap, index) => (
+                          <li key={`zotero-gap-${index}-${gap.slice(0, 24)}`}>{gap}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="zotero-panel-block">
+                      <h3>읽기 큐</h3>
+                      <div className="rank-list compact">
+                        {zoteroResult.personalIntelligence.readingQueueRecommendations.slice(0, 5).map((item) => (
+                          <article key={`zotero-reading-${item.itemKey}`}>
+                            <strong>{topicShortTitle(item.title)}</strong>
+                            <span>{item.reason}</span>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                  <section className="split">
+                    <div className="zotero-panel-block">
+                      <h3>PDF 분석 신호</h3>
+                      <div className="rank-list compact">
+                        {zoteroResult.pdfInsights.length === 0 ? (
+                          <article>
+                            <strong>PDF indexed text 없음</strong>
+                            <span>첨부 PDF가 없거나 Zotero indexed full text를 읽지 못했습니다.</span>
+                          </article>
+                        ) : (
+                          zoteroResult.pdfInsights.slice(0, 5).map((insight) => (
+                            <article key={`zotero-pdf-${insight.itemKey}`}>
+                              <strong>{topicShortTitle(insight.title)}</strong>
+                              <span>{insight.source} · theories {insight.theoriesFrameworks.length} · methods {insight.methodologies.length}</span>
+                            </article>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                    <div className="zotero-panel-block">
+                      <h3>개인 문헌고찰 초안</h3>
+                      <p>{zoteroResult.personalIntelligence.literatureReviewDraft.generatedSynthesis}</p>
+                      <ul className="plain-list">
+                        {zoteroResult.personalIntelligence.literatureReviewDraft.futureDirections.slice(0, 3).map((item, index) => (
+                          <li key={`zotero-future-${index}-${item.slice(0, 24)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+                </>
+              ) : (
+                <div className="error-state compact-error">
+                  <AlertCircle size={22} />
+                  <div>
+                    <h2>Zotero 연결이 필요합니다</h2>
+                    <p>Zotero Desktop을 실행하고 로컬 API가 켜진 상태에서 다시 동기화하세요. 현재는 개인 라이브러리를 읽지 않았고 mock 데이터도 만들지 않았습니다.</p>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
           {loading && (
             <div className="empty-state">
               <Loader2 className="spin" size={34} />

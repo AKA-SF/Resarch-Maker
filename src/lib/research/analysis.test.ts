@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildResearchIntelligenceResult, detectGaps, synthesizeLiterature } from "./analysis";
 import { disciplines, methodologies, type RetrievedPaper } from "./types";
+import { analyzeZoteroPdfText, buildUnavailableZoteroResult, buildZoteroPersonalIntelligence } from "./zotero";
 
 const papers: RetrievedPaper[] = [
   {
@@ -397,5 +398,36 @@ describe("research analysis", () => {
     expect(result.trustedAcademicIntelligenceInfrastructure.humanInTheLoop.collaborativeReviewQueue.length).toBeGreaterThanOrEqual(5);
     expect(result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.roleBasedEnvironments.map((item) => item.role)).toContain("institution_admin");
     expect(result.trustedAcademicIntelligenceInfrastructure.trustBoundary).toContain("보장");
+  });
+
+  it("analyzes Zotero metadata and indexed PDF signals without fabricating library items", () => {
+    const zoteroItems = [
+      {
+        key: "ABC123",
+        title: "AI education and self-efficacy survey",
+        year: 2025,
+        itemType: "journalArticle",
+        creators: ["A. Researcher"],
+        publicationTitle: "Computers & Education",
+        doi: "10.0000/example",
+        url: "https://example.test",
+        abstractNote: "A survey using self-efficacy and regression in AI education.",
+        tags: ["AI education", "self-efficacy"],
+        collectionKeys: ["C1"],
+        citationKey: "researcher_ai_2025",
+        hasPdfAttachment: true,
+        pdfAttachmentKeys: ["PDF1"]
+      }
+    ];
+    const pdfInsight = analyzeZoteroPdfText(zoteroItems[0], "The study uses regression with students. Limitations include cross-sectional data. Future research should test longitudinal samples.");
+    const intelligence = buildZoteroPersonalIntelligence(zoteroItems, [{ key: "C1", name: "AI Education", parentKey: null, itemCount: 1 }], [pdfInsight]);
+    expect(pdfInsight.source).toBe("zotero-indexed-fulltext");
+    expect(intelligence.dominantTheories.map((item) => item.label)).toContain("self-efficacy");
+    expect(intelligence.dominantMethodologies.map((item) => item.label)).toContain("regression");
+    expect(intelligence.readingQueueRecommendations[0].itemKey).toBe("ABC123");
+
+    const unavailable = buildUnavailableZoteroResult("Zotero Local API에 연결할 수 없습니다.");
+    expect(unavailable.items).toHaveLength(0);
+    expect(unavailable.diagnostics.warnings.join(" ")).toContain("Mock");
   });
 });

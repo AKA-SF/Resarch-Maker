@@ -38,6 +38,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds a self-evolving academic ecosystem layer for snapshot-based continuous learning, dynamic knowledge graph updates, autonomous monitoring feeds, research benchmarking, adaptive agent coordination, institutional/team intelligence, workspace hubs, and long-term research trajectories.
 - Adds a global autonomous scholarly network layer for self-evaluation, QA/confidence checks, weak-signal detection, global ecosystem summaries, adaptive strategy generation, and long-term scholarly evolution planning.
 - Adds a trusted academic intelligence infrastructure layer with evidence-linked reasoning traces, evidence lineage views, transparent decision explanations, governance checks, research audits, human review workflows, and scalable infrastructure plans.
+- Adds Zotero Local API integration for read-only library synchronization, collections, saved-paper metadata, PDF indexed-text signals where available, personal literature maps, reading queues, and library-grounded literature review drafts.
 
 ## Run
 
@@ -92,11 +93,13 @@ Before publishing, keep generated build output, dependencies, local environment 
 - The self-evolving ecosystem layer compares the current OpenAlex search snapshot with local memory and graph signals. It does not run a hidden background crawler, verify funding alignment from external grant databases, or guarantee forecasting accuracy.
 - The global scholarly network layer is a heuristic strategy and QA layer. It does not audit full-text citations, connect to private institutional systems, validate real funding calls, or claim global academic coverage.
 - Trusted infrastructure traces link generated decisions back to retrieved paper IDs and heuristic reasoning steps. They do not replace full-text source verification, institutional governance systems, expert peer review, or secure multi-tenant access control.
+- Zotero integration is read-only in this MVP. It uses the local Zotero Desktop API, does not require API keys, does not write to Zotero collections, and does not return PDF file paths or full PDF text.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits
 
 - Analysis uses metadata and abstracts, not full-text PDFs.
+- Zotero PDF intelligence uses Zotero indexed full-text snippets when the local API permits it; otherwise it falls back to clearly labeled metadata-only analysis.
 - Gap confidence is based on retrieval-set counts and keyword/theory/method signals, not exhaustive systematic review evidence.
 - Citation and bibliometric intelligence are relative to the retrieved OpenAlex result set and should not be treated as an exhaustive field-level map.
 - Vector retrieval uses local token hashing for MVP portability. A future version should swap in a stronger embedding model or vector DB if the user provides an approved provider and privacy model.

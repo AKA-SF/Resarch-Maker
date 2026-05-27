@@ -101,6 +101,111 @@ export type RetrievedPaper = {
   relatedWorks: string[];
 };
 
+export type ZoteroConnectionState = "connected" | "unavailable" | "error";
+
+export type ZoteroConnectionStatus = {
+  state: ZoteroConnectionState;
+  localApiUrl: string;
+  localApiEnabled: boolean | null;
+  message: string;
+  checkedAt: string;
+  privacyBoundary: string;
+};
+
+export type ZoteroCollection = {
+  key: string;
+  name: string;
+  parentKey: string | null;
+  itemCount: number | null;
+};
+
+export type ZoteroLibraryItem = {
+  key: string;
+  title: string;
+  year: number | null;
+  itemType: string;
+  creators: string[];
+  publicationTitle: string;
+  doi: string | null;
+  url: string | null;
+  abstractNote: string;
+  tags: string[];
+  collectionKeys: string[];
+  citationKey: string | null;
+  hasPdfAttachment: boolean;
+  pdfAttachmentKeys: string[];
+};
+
+export type ZoteroPdfInsight = {
+  itemKey: string;
+  title: string;
+  theoriesFrameworks: string[];
+  methodologies: string[];
+  variablesConcepts: string[];
+  limitations: string[];
+  futureWork: string[];
+  datasetsSamples: string[];
+  contradictionSignals: string[];
+  source: "zotero-indexed-fulltext" | "metadata-only";
+  evidenceBoundary: string;
+};
+
+export type ZoteroPersonalResearchIntelligence = {
+  inferredResearchInterests: EvidenceItem[];
+  dominantTheories: EvidenceItem[];
+  dominantMethodologies: EvidenceItem[];
+  adjacentUnexploredAreas: string[];
+  personalizedResearchGaps: string[];
+  recommendedTopics: string[];
+  readingQueueRecommendations: Array<{
+    itemKey: string;
+    title: string;
+    reason: string;
+  }>;
+  personalTheoryGraph: {
+    nodes: GraphNode[];
+    edges: GraphEdge[];
+  };
+  methodologyDistribution: Array<{
+    methodology: string;
+    count: number;
+  }>;
+  topicClusters: Array<{
+    label: string;
+    itemKeys: string[];
+    evidence: string;
+  }>;
+  literatureReviewDraft: {
+    retrievedEvidence: string[];
+    generatedSynthesis: string;
+    gapSummary: string[];
+    futureDirections: string[];
+  };
+  workflowIntegration: {
+    exportableCollectionSuggestions: string[];
+    citationExportFormats: string[];
+    savedAgendaSuggestions: string[];
+    persistenceBoundary: string;
+  };
+  privacyBoundary: string;
+};
+
+export type ZoteroSyncResult = {
+  status: ZoteroConnectionStatus;
+  collections: ZoteroCollection[];
+  items: ZoteroLibraryItem[];
+  pdfInsights: ZoteroPdfInsight[];
+  personalIntelligence: ZoteroPersonalResearchIntelligence;
+  diagnostics: {
+    itemsImported: number;
+    collectionsImported: number;
+    pdfsDetected: number;
+    pdfsAnalyzed: number;
+    fullTextMode: "indexed-snippets-only" | "metadata-only";
+    warnings: string[];
+  };
+};
+
 export type EvidenceItem = {
   label: string;
   paperIds: string[];
