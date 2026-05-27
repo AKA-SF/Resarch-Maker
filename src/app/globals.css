@@ -750,7 +750,12 @@ button:disabled {
 .refinement-loop-panel,
 .rerank-panel,
 .topic-refinement-panel,
-.iteration-history-panel {
+.iteration-history-panel,
+.scholarly-memory-panel,
+.semantic-panel,
+.knowledge-graph-explorer,
+.recall-panel,
+.discovery-panel {
   display: grid;
   gap: 14px;
 }
@@ -907,6 +912,32 @@ button:disabled {
   justify-self: start;
   min-height: 38px;
   padding: 8px 12px;
+}
+
+.graph-summary-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.graph-summary-grid div {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+}
+
+.graph-summary-grid span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.graph-summary-grid strong {
+  font-size: 1.1rem;
 }
 
 .evaluation-list {
@@ -1414,7 +1445,8 @@ details ul {
   .loop-steps,
   .refinement-grid,
   .before-after,
-  .score-compare {
+  .score-compare,
+  .graph-summary-grid {
     grid-template-columns: 1fr;
   }
 

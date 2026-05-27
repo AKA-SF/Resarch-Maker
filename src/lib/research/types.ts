@@ -928,6 +928,153 @@ export type AgenticResearchLoop = {
   loopBoundary: string;
 };
 
+export type MemoryEmbeddingType = "paper" | "topic" | "theory" | "gap" | "literature_summary" | "profile_interest";
+
+export type MemoryEmbeddingItem = {
+  id: string;
+  type: MemoryEmbeddingType;
+  label: string;
+  text: string;
+  vector: number[];
+  sourceSessionId: string;
+  evidencePaperIds: string[];
+};
+
+export type SemanticRetrievalResult = {
+  id: string;
+  type: MemoryEmbeddingType;
+  label: string;
+  similarity: number;
+  evidence: string;
+  sourceSessionId: string;
+  evidencePaperIds: string[];
+};
+
+export type ScholarlyMemoryRecord = {
+  sessionId: string;
+  createdAt: string;
+  keywords: string[];
+  discipline: Discipline;
+  methodology: Methodology;
+  strategy: ResearchStrategy;
+  generatedTopicTitles: string[];
+  theoryRelationships: Array<{
+    source: string;
+    target: string;
+    evidence: string;
+    paperIds: string[];
+  }>;
+  literatureSummaries: string[];
+  gapAnalyses: string[];
+  refinementHistory: string[];
+  userResearchInterests: string[];
+};
+
+export type UnifiedGraphNodeType =
+  | "paper"
+  | "author"
+  | "theory"
+  | "concept"
+  | "methodology"
+  | "dataset"
+  | "venue"
+  | "institution"
+  | "discipline"
+  | "topic";
+
+export type UnifiedKnowledgeGraphNode = {
+  id: string;
+  label: string;
+  type: UnifiedGraphNodeType;
+  support: number;
+  evidencePaperIds: string[];
+};
+
+export type UnifiedKnowledgeGraphEdge = {
+  id: string;
+  source: string;
+  target: string;
+  relation:
+    | "authored_by"
+    | "affiliated_with"
+    | "published_in"
+    | "uses_methodology"
+    | "has_concept"
+    | "grounded_in_theory"
+    | "recommends_dataset"
+    | "belongs_to_discipline"
+    | "similar_to"
+    | "bridges";
+  weight: number;
+  evidence: string;
+  evidencePaperIds: string[];
+  inferred: boolean;
+};
+
+export type MultiHopDiscoveryPath = {
+  path: string[];
+  explanation: string;
+  evidence: string;
+  confidence: "low" | "medium" | "high";
+};
+
+export type UnifiedScholarlyKnowledgeGraph = {
+  nodes: UnifiedKnowledgeGraphNode[];
+  edges: UnifiedKnowledgeGraphEdge[];
+  multiHopDiscoveries: MultiHopDiscoveryPath[];
+  hiddenRelationshipCandidates: MultiHopDiscoveryPath[];
+  interdisciplinaryBridgeDiscoveries: MultiHopDiscoveryPath[];
+  longRangeConceptExploration: MultiHopDiscoveryPath[];
+  graphBoundary: string;
+};
+
+export type VectorRetrievalMemory = {
+  embeddingModel: "local-hashing-v1";
+  embeddingDimension: number;
+  embeddingsGenerated: number;
+  semanticSearchResults: SemanticRetrievalResult[];
+  theorySimilarityResults: SemanticRetrievalResult[];
+  relatedTopicDiscoveries: SemanticRetrievalResult[];
+  crossSessionRecall: SemanticRetrievalResult[];
+  retrievalBoundary: string;
+};
+
+export type IntelligentResearchRecall = {
+  repeatedOrSimilarTopics: SemanticRetrievalResult[];
+  rememberedPriorIdeas: string[];
+  unexploredAdjacentPaths: MultiHopDiscoveryPath[];
+  continuedResearchAgenda: string[];
+  oldSessionConnections: SemanticRetrievalResult[];
+  recallBoundary: string;
+};
+
+export type AdvancedDiscoveryWorkflows = {
+  semanticExplorationMode: string[];
+  relatedDomainsWorkflow: MultiHopDiscoveryPath[];
+  hiddenTheoryConnectionDiscovery: MultiHopDiscoveryPath[];
+  interdisciplinaryExpansionSuggestions: string[];
+  adjacentResearchOpportunities: string[];
+};
+
+export type PersistentScholarlyMemory = {
+  currentSession: ScholarlyMemoryRecord;
+  priorSessionCount: number;
+  storedTopicCount: number;
+  storedTheoryRelationshipCount: number;
+  memoryRecords: ScholarlyMemoryRecord[];
+  vectorRetrieval: VectorRetrievalMemory;
+  unifiedKnowledgeGraph: UnifiedScholarlyKnowledgeGraph;
+  researchRecall: IntelligentResearchRecall;
+  discoveryWorkflows: AdvancedDiscoveryWorkflows;
+  persistence: {
+    enabled: boolean;
+    storage: "local-json";
+    namespace: string;
+    lastSavedAt: string | null;
+    warning: string;
+  };
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1011,6 +1158,7 @@ export type ResearchIntelligenceResult = {
   academicResearchOS: AcademicResearchOS;
   selfImprovingIntelligence: SelfImprovingAcademicIntelligence;
   agenticResearchLoop: AgenticResearchLoop;
+  persistentScholarlyMemory: PersistentScholarlyMemory;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

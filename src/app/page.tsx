@@ -841,6 +841,165 @@ export default function Home() {
               </section>
 
               <section className="split wide-left">
+                <section className="panel scholarly-memory-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Persistent Scholarly Memory</p>
+                      <h2>장기 학술 메모리</h2>
+                    </div>
+                    <Save size={22} />
+                  </div>
+                  <div className="domain-grid">
+                    <div>
+                      <span>이전 세션</span>
+                      <strong>{result.persistentScholarlyMemory.priorSessionCount}</strong>
+                    </div>
+                    <div>
+                      <span>저장 토픽</span>
+                      <strong>{result.persistentScholarlyMemory.storedTopicCount}</strong>
+                    </div>
+                    <div>
+                      <span>이론 관계</span>
+                      <strong>{result.persistentScholarlyMemory.storedTheoryRelationshipCount}</strong>
+                    </div>
+                    <div>
+                      <span>저장 상태</span>
+                      <strong>{result.persistentScholarlyMemory.persistence.enabled ? "로컬 저장됨" : "세션 스냅샷"}</strong>
+                    </div>
+                  </div>
+                  <div className="rank-list compact">
+                    {result.persistentScholarlyMemory.memoryRecords.slice(0, 4).map((record) => (
+                      <article key={`memory-record-${record.sessionId}`}>
+                        <strong>{record.keywords.join(", ")}</strong>
+                        <span>{new Date(record.createdAt).toLocaleString()} · 토픽 {record.generatedTopicTitles.length}개 · 갭 {record.gapAnalyses.length}개</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.persistentScholarlyMemory.persistence.warning}</p>
+                </section>
+                <section className="panel semantic-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Vector Retrieval</p>
+                      <h2>의미 검색 / 벡터 회상</h2>
+                    </div>
+                    <Search size={22} />
+                  </div>
+                  <div className="domain-grid">
+                    <div>
+                      <span>임베딩 모델</span>
+                      <strong>{result.persistentScholarlyMemory.vectorRetrieval.embeddingModel}</strong>
+                    </div>
+                    <div>
+                      <span>생성 임베딩</span>
+                      <strong>{result.persistentScholarlyMemory.vectorRetrieval.embeddingsGenerated}</strong>
+                    </div>
+                  </div>
+                  <div className="rank-list compact">
+                    {result.persistentScholarlyMemory.vectorRetrieval.semanticSearchResults.slice(0, 5).map((item) => (
+                      <article key={`semantic-${item.id}`}>
+                        <strong>{topicShortTitle(item.label)}</strong>
+                        <span>{item.type} · 유사도 {item.similarity} · 세션 {item.sourceSessionId.slice(-8)}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.persistentScholarlyMemory.vectorRetrieval.retrievalBoundary}</p>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel knowledge-graph-explorer">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Unified Knowledge Graph</p>
+                      <h2>통합 학술 지식 그래프</h2>
+                    </div>
+                    <Network size={22} />
+                  </div>
+                  <div className="graph-summary-grid">
+                    {["paper", "author", "theory", "concept", "methodology", "dataset", "venue", "institution", "discipline", "topic"].map((type) => (
+                      <div key={`kg-type-${type}`}>
+                        <span>{type}</span>
+                        <strong>{result.persistentScholarlyMemory.unifiedKnowledgeGraph.nodes.filter((node) => node.type === type).length}</strong>
+                      </div>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">멀티홉 발견</h3>
+                  <div className="timeline-list">
+                    {result.persistentScholarlyMemory.unifiedKnowledgeGraph.multiHopDiscoveries.slice(0, 5).map((path) => (
+                      <article key={`multi-hop-${path.path.join("-")}`}>
+                        <strong>{path.path.join(" → ")}</strong>
+                        <span>{path.evidence} · 신뢰도 {confidenceLabels[path.confidence]}</span>
+                        <p>{path.explanation}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.persistentScholarlyMemory.unifiedKnowledgeGraph.graphBoundary}</p>
+                </section>
+                <section className="panel recall-panel">
+                  <p className="tag">Research Recall</p>
+                  <h2>교차 세션 연구 회상</h2>
+                  <div className="rank-list compact">
+                    {result.persistentScholarlyMemory.researchRecall.oldSessionConnections.length === 0 ? (
+                      <article>
+                        <strong>이전 세션 연결 없음</strong>
+                        <span>분석을 몇 번 실행하면 로컬 메모리에서 유사 아이디어를 회상합니다.</span>
+                      </article>
+                    ) : (
+                      result.persistentScholarlyMemory.researchRecall.oldSessionConnections.slice(0, 5).map((item) => (
+                        <article key={`recall-${item.id}`}>
+                          <strong>{topicShortTitle(item.label)}</strong>
+                          <span>{item.type} · 유사도 {item.similarity} · 세션 {item.sourceSessionId.slice(-8)}</span>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                  <h3 className="subsection-title">이어갈 연구 아젠다</h3>
+                  <ul className="plain-list">
+                    {result.persistentScholarlyMemory.researchRecall.continuedResearchAgenda.slice(0, 5).map((item, index) => (
+                      <li key={`continued-agenda-${index}-${item.slice(0, 32)}`}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              </section>
+
+              <section className="panel discovery-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Advanced Discovery Workflows</p>
+                    <h2>관련 영역 / 숨은 연결 탐색</h2>
+                  </div>
+                  <Compass size={22} />
+                </div>
+                <div className="map-grid">
+                  <div>
+                    <h3>의미 탐색</h3>
+                    <ul className="plain-list">
+                      {result.persistentScholarlyMemory.discoveryWorkflows.semanticExplorationMode.slice(0, 5).map((item, index) => (
+                        <li key={`semantic-mode-${index}-${item.slice(0, 32)}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>숨은 이론 연결</h3>
+                    <ul className="plain-list">
+                      {result.persistentScholarlyMemory.discoveryWorkflows.hiddenTheoryConnectionDiscovery.slice(0, 5).map((item, index) => (
+                        <li key={`hidden-theory-${index}-${item.path.join("-")}`}>{item.path.join(" → ")} · {item.evidence}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>인접 기회</h3>
+                    <ul className="plain-list">
+                      {result.persistentScholarlyMemory.discoveryWorkflows.adjacentResearchOpportunities.slice(0, 5).map((item, index) => (
+                        <li key={`adjacent-opportunity-${index}-${item.slice(0, 32)}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              <section className="split wide-left">
                 <section className="panel profile-dashboard">
                   <div className="panel-head">
                     <div>

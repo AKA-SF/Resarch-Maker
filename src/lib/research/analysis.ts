@@ -3,6 +3,7 @@ import type {
   EvidenceItem,
   Gap,
   Methodology,
+  ScholarlyMemoryRecord,
   ResearcherProfile,
   ResearchStrategy,
   ResearchIntelligenceResult,
@@ -44,6 +45,7 @@ import {
 import { buildAcademicResearchOS } from "./operating-system";
 import { buildSelfImprovingAcademicIntelligence } from "./self-improving";
 import { buildAgenticResearchLoop } from "./refinement-loop";
+import { buildPersistentScholarlyMemory } from "./scholarly-memory";
 
 const broadConcepts = new Set([
   "psychology",
@@ -416,7 +418,8 @@ export function buildResearchIntelligenceResult(
   methodology: Methodology,
   papers: RetrievedPaper[],
   strategy: ResearchStrategy = "beginner-safe research",
-  researcherProfile?: Partial<ResearcherProfile>
+  researcherProfile?: Partial<ResearcherProfile>,
+  priorMemoryRecords: ScholarlyMemoryRecord[] = []
 ): ResearchIntelligenceResult {
   const synthesis = synthesizeLiterature(papers);
   const theoryGraph = buildTheoryGraph(papers, keywords);
@@ -501,6 +504,21 @@ export function buildResearchIntelligenceResult(
     discipline,
     researcherProfile
   });
+  const persistentScholarlyMemory = buildPersistentScholarlyMemory({
+    keywords,
+    discipline,
+    methodology,
+    strategy,
+    researcherProfile,
+    papers,
+    synthesis,
+    graph: theoryGraph,
+    gaps,
+    topics,
+    bibliometricAnalysis,
+    datasetIntelligence,
+    priorRecords: priorMemoryRecords
+  });
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -529,6 +547,7 @@ export function buildResearchIntelligenceResult(
     academicResearchOS,
     selfImprovingIntelligence,
     agenticResearchLoop,
+    persistentScholarlyMemory,
     copilot,
     domainIntelligence,
     gaps,

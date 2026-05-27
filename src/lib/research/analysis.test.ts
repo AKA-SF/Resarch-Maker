@@ -223,4 +223,51 @@ describe("research analysis", () => {
     expect(result.agenticResearchLoop.rerankedTopics[0].rank).toBe(1);
     expect(result.agenticResearchLoop.loopBoundary).toContain("원문에 없는 논문");
   });
+
+  it("builds persistent scholarly memory, vector retrieval, recall, and unified graph outputs", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "beginner-safe research",
+      {
+        interests: ["AI education"],
+        preferredMethodologies: ["quantitative"],
+        noveltyTolerance: "medium",
+        careerStage: "student"
+      },
+      [
+        {
+          sessionId: "previous-session",
+          createdAt: "2026-01-01T00:00:00.000Z",
+          keywords: ["AI", "education"],
+          discipline: "education",
+          methodology: "quantitative",
+          strategy: "beginner-safe research",
+          generatedTopicTitles: ["AI education and self-efficacy prior topic"],
+          theoryRelationships: [
+            {
+              source: "self-efficacy",
+              target: "technology acceptance model",
+              evidence: "prior co-occurrence memory",
+              paperIds: ["p1"]
+            }
+          ],
+          literatureSummaries: ["Prior literature summary about AI education"],
+          gapAnalyses: ["Prior gap about longitudinal AI education research"],
+          refinementHistory: ["Prior refinement history"],
+          userResearchInterests: ["AI education"]
+        }
+      ]
+    );
+    expect(result.persistentScholarlyMemory.priorSessionCount).toBe(1);
+    expect(result.persistentScholarlyMemory.vectorRetrieval.embeddingsGenerated).toBeGreaterThan(0);
+    expect(result.persistentScholarlyMemory.vectorRetrieval.crossSessionRecall.length).toBeGreaterThan(0);
+    expect(result.persistentScholarlyMemory.unifiedKnowledgeGraph.nodes.some((node) => node.type === "paper")).toBe(true);
+    expect(result.persistentScholarlyMemory.unifiedKnowledgeGraph.nodes.some((node) => node.type === "author")).toBe(true);
+    expect(result.persistentScholarlyMemory.unifiedKnowledgeGraph.edges.length).toBeGreaterThan(0);
+    expect(result.persistentScholarlyMemory.researchRecall.rememberedPriorIdeas).toContain("AI education and self-efficacy prior topic");
+    expect(result.persistentScholarlyMemory.persistence.enabled).toBe(false);
+  });
 });

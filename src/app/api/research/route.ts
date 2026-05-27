@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildResearchIntelligenceResult } from "@/lib/research/analysis";
 import { fetchOpenAlexWorks } from "@/lib/research/openalex";
+import { loadScholarlyMemoryRecords, saveScholarlyMemoryRecord } from "@/lib/research/scholarly-memory";
 import {
   careerStages,
   disciplines,
@@ -96,8 +97,14 @@ export async function POST(request: Request) {
   const researcherProfile = parseResearcherProfile(body.researcherProfile);
 
   try {
+    const priorMemoryRecords = await loadScholarlyMemoryRecords();
     const papers = await fetchOpenAlexWorks(keywords);
-    return NextResponse.json(buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy, researcherProfile));
+    const result = buildResearchIntelligenceResult(keywords, body.discipline, body.methodology, papers, strategy, researcherProfile, priorMemoryRecords);
+    const savedAt = await saveScholarlyMemoryRecord(result.persistentScholarlyMemory.currentSession);
+    result.persistentScholarlyMemory.persistence.enabled = true;
+    result.persistentScholarlyMemory.persistence.lastSavedAt = savedAt;
+    result.persistentScholarlyMemory.persistence.warning = "로컬 JSON 파일에 세션 메모리를 저장했습니다. 저장소에는 커밋되지 않습니다.";
+    return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown retrieval error";
     return NextResponse.json(

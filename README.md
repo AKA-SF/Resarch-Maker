@@ -32,6 +32,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Generates complete research proposal drafts, conceptual frameworks, variable relationship maps, reasoning workflows, refinement actions, literature review workspaces, academic writing suggestions, and thesis/conference/journal workflow plans.
 - Adds self-improving intelligence views for researcher profiles, continuous trend snapshots, transparent topic/proposal evaluation, AI mentor critique, institutional mapping, expanded knowledge graph signals, and research scenario simulation.
 - Adds an agentic self-improving research loop that critiques each generated topic, proposes evidence-bound improvements, re-scores refined topics, compares before/after versions, re-ranks candidates, and stores local refine-again history.
+- Adds persistent scholarly memory with local JSON session storage, local hashing-based vector retrieval, cross-session recall, and a unified scholarly knowledge graph spanning papers, authors, theories, concepts, methodologies, datasets, venues, institutions, disciplines, and generated topics.
 
 ## Run
 
@@ -79,6 +80,8 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Continuous intelligence is a current-session OpenAlex snapshot, not a background monitor. Institutional, author, and collaboration panels only display metadata returned by retrieved papers.
 - Evaluation, mentor, and scenario outputs are transparent heuristics based on retrieved evidence, profile settings, and existing app scores. They do not guarantee research quality, funding, publication, or future field movement.
 - Topic refinement loops use existing retrieved evidence, topic scores, graph signals, and methodology fit. Score increases describe improved planning assumptions, not proven scholarly superiority.
+- Persistent memory is stored locally under `.ris-memory/`, which is excluded from Git. Local hashing embeddings are lightweight retrieval signals, not external model embeddings or full semantic proof.
+- Unified knowledge graph edges mark inferred relationships separately from retrieved metadata relationships and should be treated as exploration candidates unless independently verified.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits
@@ -86,5 +89,6 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Analysis uses metadata and abstracts, not full-text PDFs.
 - Gap confidence is based on retrieval-set counts and keyword/theory/method signals, not exhaustive systematic review evidence.
 - Citation and bibliometric intelligence are relative to the retrieved OpenAlex result set and should not be treated as an exhaustive field-level map.
+- Vector retrieval uses local token hashing for MVP portability. A future version should swap in a stronger embedding model or vector DB if the user provides an approved provider and privacy model.
 - Scoring is heuristic and designed to be replaced later by richer citation, venue, vector, graph, and expert-review signals.
 - The copilot does not replace a human literature review; it structures candidate plans and explicitly separates evidence from inference.
