@@ -378,4 +378,24 @@ describe("research analysis", () => {
     expect(result.globalAutonomousScholarlyNetwork.researchQualityAssurance.citationConsistencyChecks.length).toBeGreaterThan(0);
     expect(result.globalAutonomousScholarlyNetwork.networkBoundary).toContain("보장하지 않습니다");
   });
+
+  it("builds trusted reasoning traces, governance, audits, review workflows, and infrastructure plans", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "interdisciplinary innovation"
+    );
+
+    expect(result.trustedAcademicIntelligenceInfrastructure.reasoningTraces.length).toBeGreaterThan(0);
+    expect(result.trustedAcademicIntelligenceInfrastructure.reasoningTraces[0].traceSteps.map((step) => step.step)).toContain("retrieved_evidence");
+    expect(result.trustedAcademicIntelligenceInfrastructure.evidenceLineageViews[0].supportingPapers.length).toBeGreaterThan(0);
+    expect(result.trustedAcademicIntelligenceInfrastructure.governanceReliability.citationConsistencyValidation.length).toBeGreaterThan(0);
+    expect(result.trustedAcademicIntelligenceInfrastructure.transparentDecisions.map((item) => item.decisionType)).toContain("topic_ranking");
+    expect(result.trustedAcademicIntelligenceInfrastructure.autonomousResearchAudits[0].evidenceStrength).toBeGreaterThanOrEqual(1);
+    expect(result.trustedAcademicIntelligenceInfrastructure.humanInTheLoop.collaborativeReviewQueue.length).toBeGreaterThanOrEqual(5);
+    expect(result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.roleBasedEnvironments.map((item) => item.role)).toContain("institution_admin");
+    expect(result.trustedAcademicIntelligenceInfrastructure.trustBoundary).toContain("보장");
+  });
 });

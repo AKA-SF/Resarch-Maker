@@ -1315,6 +1315,198 @@ export default function Home() {
               </section>
 
               <section className="split wide-left">
+                <section className="panel trusted-reasoning-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Trusted Reasoning</p>
+                      <h2>추론 경로 탐색기</h2>
+                    </div>
+                    <Search size={22} />
+                  </div>
+                  <div className="trace-grid">
+                    {result.trustedAcademicIntelligenceInfrastructure.reasoningTraces.slice(0, 6).map((trace) => (
+                      <article key={`trace-${trace.id}`}>
+                        <span>{trace.targetType} · 신뢰 {trace.confidenceScore}/10</span>
+                        <strong>{topicShortTitle(trace.target)}</strong>
+                        <p>{trace.evidencePathSummary}</p>
+                        <div className="trace-steps">
+                          {trace.traceSteps.slice(0, 3).map((step) => (
+                            <em key={`trace-step-${trace.id}-${step.step}`}>{step.step.replaceAll("_", " ")} · {confidenceLabels[step.confidence]}</em>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.trustedAcademicIntelligenceInfrastructure.trustBoundary}</p>
+                </section>
+
+                <section className="panel evidence-lineage-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Evidence Lineage</p>
+                      <h2>근거 계보</h2>
+                    </div>
+                    <BookOpen size={22} />
+                  </div>
+                  <div className="lineage-list">
+                    {result.trustedAcademicIntelligenceInfrastructure.evidenceLineageViews.slice(0, 5).map((trace) => (
+                      <article key={`lineage-${trace.id}`}>
+                        <strong>{topicShortTitle(trace.target)}</strong>
+                        <span>{trace.supportingPapers.length} papers · {trace.supportingTheories.slice(0, 3).join(", ") || "theory signal 부족"}</span>
+                        <ul className="plain-list">
+                          {trace.supportingPapers.slice(0, 2).map((paper) => (
+                            <li key={`lineage-paper-${trace.id}-${paper.id}`}>{paper.title} ({paper.year ?? "n.d."})</li>
+                          ))}
+                        </ul>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel governance-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Governance Reliability</p>
+                      <h2>거버넌스 / 위험 패널</h2>
+                    </div>
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div className="governance-grid">
+                    <div>
+                      <h3>환각 위험</h3>
+                      <ul className="plain-list">
+                        {result.trustedAcademicIntelligenceInfrastructure.governanceReliability.hallucinationDetection.slice(0, 4).map((item) => (
+                          <li key={`trusted-hallucination-${item.target}`}>{topicShortTitle(item.target)} · {item.risk}: {item.reason}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>인용 일관성</h3>
+                      <ul className="plain-list">
+                        {result.trustedAcademicIntelligenceInfrastructure.governanceReliability.citationConsistencyValidation.slice(0, 4).map((item, index) => (
+                          <li key={`trusted-citation-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>모순 인식</h3>
+                      <ul className="plain-list">
+                        {result.trustedAcademicIntelligenceInfrastructure.governanceReliability.contradictionAwareness.slice(0, 4).map((item, index) => (
+                          <li key={`trusted-contradiction-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.trustedAcademicIntelligenceInfrastructure.governanceReliability.governanceBoundary}</p>
+                </section>
+
+                <section className="panel transparent-decision-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Transparent Decisions</p>
+                      <h2>AI 의사결정 설명</h2>
+                    </div>
+                    <Brain size={22} />
+                  </div>
+                  <div className="decision-list">
+                    {result.trustedAcademicIntelligenceInfrastructure.transparentDecisions.slice(0, 8).map((decision) => (
+                      <article key={`transparent-decision-${decision.decisionType}-${decision.decision}`}>
+                        <span>{decision.decisionType.replaceAll("_", " ")} · {confidenceLabels[decision.confidence]}</span>
+                        <strong>{topicShortTitle(decision.decision)}</strong>
+                        <p>{decision.why}</p>
+                        <small>근거 {decision.evidenceInfluence.length}개 · trace {decision.relatedTraceIds.join(", ") || "직접 trace 없음"}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel audit-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Audit</p>
+                      <h2>연구 감사 엔진</h2>
+                    </div>
+                    <ClipboardList size={22} />
+                  </div>
+                  <div className="audit-grid">
+                    {result.trustedAcademicIntelligenceInfrastructure.autonomousResearchAudits.slice(0, 4).map((audit) => (
+                      <article key={`audit-${audit.auditId}`}>
+                        <strong>{topicShortTitle(audit.target)}</strong>
+                        <div className="audit-scores">
+                          <span>이론 {audit.theoryCoherence}</span>
+                          <span>근거 {audit.evidenceStrength}</span>
+                          <span>방법 {audit.methodologyValidity}</span>
+                          <span>출판 {audit.publicationFeasibility}</span>
+                        </div>
+                        <p>{audit.findings.slice(0, 2).join(" ")}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="panel human-review-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Human-in-the-Loop</p>
+                      <h2>협업 리뷰 / 승인 워크플로</h2>
+                    </div>
+                    <Users size={22} />
+                  </div>
+                  <div className="timeline-list">
+                    {result.trustedAcademicIntelligenceInfrastructure.humanInTheLoop.collaborativeReviewQueue.map((item) => (
+                      <article key={`review-queue-${item.reviewerRole}-${item.item}`}>
+                        <strong>{item.reviewerRole.replaceAll("_", " ")}</strong>
+                        <span>{item.item}</span>
+                        <p>{item.requestedAction}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.trustedAcademicIntelligenceInfrastructure.humanInTheLoop.reviewBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel infrastructure-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Scalable Research Governance</p>
+                    <h2>대규모 학술 인프라 설계</h2>
+                  </div>
+                  <Building2 size={22} />
+                </div>
+                <div className="map-grid">
+                  <div>
+                    <h3>수집 파이프라인</h3>
+                    <ul className="plain-list">
+                      {result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.ingestionPipelinePlan.map((item) => (
+                        <li key={`infra-ingestion-${item}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>역할 기반 환경</h3>
+                    <ul className="plain-list">
+                      {result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.roleBasedEnvironments.map((role) => (
+                        <li key={`infra-role-${role.role}`}>{role.role}: {role.permissions.slice(0, 2).join(", ")}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>장기 지속성</h3>
+                    <ul className="plain-list">
+                      {result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.longTermPersistencePlan.map((item) => (
+                        <li key={`infra-persistence-${item}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <p className="muted">{result.trustedAcademicIntelligenceInfrastructure.scalableInfrastructure.infrastructureBoundary}</p>
+              </section>
+
+              <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">
                     <div>

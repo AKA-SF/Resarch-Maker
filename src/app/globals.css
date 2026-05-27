@@ -781,7 +781,14 @@ button:disabled {
 .self-evaluation-panel,
 .signal-map-panel,
 .strategy-network-panel,
-.evolution-network-panel {
+.evolution-network-panel,
+.trusted-reasoning-panel,
+.evidence-lineage-panel,
+.governance-panel,
+.transparent-decision-panel,
+.audit-panel,
+.human-review-panel,
+.infrastructure-panel {
   display: grid;
   gap: 14px;
 }
@@ -804,7 +811,14 @@ button:disabled {
 .self-evaluation-panel p,
 .signal-map-panel p,
 .strategy-network-panel p,
-.evolution-network-panel p {
+.evolution-network-panel p,
+.trusted-reasoning-panel p,
+.evidence-lineage-panel p,
+.governance-panel p,
+.transparent-decision-panel p,
+.audit-panel p,
+.human-review-panel p,
+.infrastructure-panel p {
   color: #34413a;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -826,7 +840,11 @@ button:disabled {
 .qa-list,
 .self-eval-grid,
 .signal-list,
-.strategy-card-grid {
+.strategy-card-grid,
+.trace-grid,
+.lineage-list,
+.decision-list,
+.audit-grid {
   display: grid;
   gap: 10px;
 }
@@ -850,7 +868,11 @@ button:disabled {
 .qa-list article,
 .self-eval-grid article,
 .signal-list article,
-.strategy-card-grid article {
+.strategy-card-grid article,
+.trace-grid article,
+.lineage-list article,
+.decision-list article,
+.audit-grid article {
   background: #f8faf9;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -871,7 +893,10 @@ button:disabled {
 .qa-list span,
 .self-eval-grid span,
 .signal-list span,
-.strategy-card-grid span {
+.strategy-card-grid span,
+.trace-grid span,
+.lineage-list span,
+.decision-list span {
   color: var(--muted);
   font-size: 0.76rem;
   font-weight: 850;
@@ -917,7 +942,11 @@ button:disabled {
 .qa-list strong,
 .self-eval-grid strong,
 .signal-list strong,
-.strategy-card-grid strong {
+.strategy-card-grid strong,
+.trace-grid strong,
+.lineage-list strong,
+.decision-list strong,
+.audit-grid strong {
   color: var(--ink);
   font-size: 0.9rem;
   line-height: 1.35;
@@ -929,7 +958,8 @@ button:disabled {
 .benchmark-list small,
 .global-ecosystem-grid small,
 .signal-list small,
-.strategy-card-grid small {
+.strategy-card-grid small,
+.decision-list small {
   color: var(--muted);
   font-size: 0.77rem;
   line-height: 1.4;
@@ -961,7 +991,9 @@ button:disabled {
 .relationship-update-grid,
 .benchmark-list,
 .self-eval-grid,
-.strategy-card-grid {
+.strategy-card-grid,
+.trace-grid,
+.audit-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -972,6 +1004,37 @@ button:disabled {
 
 .qa-list.compact article {
   background: #fffaf2;
+}
+
+.trace-steps,
+.audit-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trace-steps em,
+.audit-scores span {
+  background: #eef5f2;
+  border-radius: 999px;
+  color: #34413a;
+  font-size: 0.74rem;
+  font-style: normal;
+  font-weight: 800;
+  padding: 5px 8px;
+}
+
+.governance-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.governance-grid div {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
 }
 
 .benchmark-list article > div {
@@ -1762,7 +1825,10 @@ details ul {
   .global-ecosystem-grid,
   .self-eval-grid,
   .signal-list,
-  .strategy-card-grid {
+  .strategy-card-grid,
+  .trace-grid,
+  .audit-grid,
+  .governance-grid {
     grid-template-columns: 1fr;
   }
 

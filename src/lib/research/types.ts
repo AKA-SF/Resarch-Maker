@@ -1524,6 +1524,108 @@ export type GlobalAutonomousScholarlyNetwork = {
   networkBoundary: string;
 };
 
+export type ReasoningTraceStep = {
+  step: "retrieved_evidence" | "extracted_signal" | "generated_inference" | "scored_decision" | "human_review_needed";
+  summary: string;
+  evidencePaperIds: string[];
+  confidence: "low" | "medium" | "high";
+};
+
+export type VerifiableReasoningTrace = {
+  id: string;
+  targetType: "topic" | "gap" | "methodology" | "theory_relationship" | "forecast";
+  target: string;
+  conclusion: string;
+  traceSteps: ReasoningTraceStep[];
+  supportingPapers: Array<{
+    id: string;
+    title: string;
+    year: number | null;
+    source: string;
+  }>;
+  supportingTheories: string[];
+  confidenceScore: number;
+  evidencePathSummary: string;
+};
+
+export type GovernanceReliabilityLayer = {
+  hallucinationDetection: ResearchQualityAssuranceLayer["hallucinationRiskFlags"];
+  unsupportedClaimDetection: ResearchQualityAssuranceLayer["unsupportedClaimChecks"];
+  citationConsistencyValidation: ResearchQualityAssuranceLayer["citationConsistencyChecks"];
+  methodologyPlausibilityChecks: ResearchQualityAssuranceLayer["methodologicalPlausibilityValidation"];
+  contradictionAwareness: string[];
+  outputConfidenceScores: ResearchQualityAssuranceLayer["evidenceConfidenceEstimates"];
+  governanceBoundary: string;
+};
+
+export type TransparentAIDecision = {
+  decisionType: "topic_ranking" | "methodology_recommendation" | "theory_relationship" | "gap_detection" | "forecast_influence";
+  decision: string;
+  why: string;
+  evidenceInfluence: string[];
+  relatedTraceIds: string[];
+  confidence: "low" | "medium" | "high";
+};
+
+export type AutonomousResearchAudit = {
+  auditId: string;
+  target: string;
+  theoryCoherence: number;
+  evidenceStrength: number;
+  methodologyValidity: number;
+  noveltyJustification: number;
+  interdisciplinaryPlausibility: number;
+  publicationFeasibility: number;
+  findings: string[];
+  requiredHumanChecks: string[];
+};
+
+export type HumanInTheLoopWorkflow = {
+  feedbackIntegration: string[];
+  expertOverrides: Array<{
+    target: string;
+    editableDecision: string;
+    currentRecommendation: string;
+  }>;
+  collaborativeReviewQueue: Array<{
+    reviewerRole: "researcher" | "advisor" | "methodologist" | "domain_expert" | "institution_admin";
+    item: string;
+    requestedAction: string;
+  }>;
+  proposalApprovalStates: Array<{
+    proposal: string;
+    status: "draft" | "needs_review" | "approved_candidate" | "rejected_candidate";
+    reason: string;
+  }>;
+  reviewerCommentPrompts: string[];
+  reviewBoundary: string;
+};
+
+export type ScalableScholarlyInfrastructure = {
+  ingestionPipelinePlan: string[];
+  scheduledUpdatePlan: string[];
+  institutionWorkspaceModel: string[];
+  longTermPersistencePlan: string[];
+  multiUserCollaborationModel: string[];
+  roleBasedEnvironments: Array<{
+    role: "student" | "researcher" | "advisor" | "lab_admin" | "institution_admin";
+    permissions: string[];
+  }>;
+  infrastructureBoundary: string;
+};
+
+export type TrustedAcademicIntelligenceInfrastructure = {
+  trustedRunId: string;
+  reasoningTraces: VerifiableReasoningTrace[];
+  evidenceLineageViews: VerifiableReasoningTrace[];
+  governanceReliability: GovernanceReliabilityLayer;
+  transparentDecisions: TransparentAIDecision[];
+  autonomousResearchAudits: AutonomousResearchAudit[];
+  humanInTheLoop: HumanInTheLoopWorkflow;
+  scalableInfrastructure: ScalableScholarlyInfrastructure;
+  trustBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1612,6 +1714,7 @@ export type ResearchIntelligenceResult = {
   autonomousAcademicOS: AutonomousAcademicOperatingSystem;
   selfEvolvingAcademicEcosystem: SelfEvolvingAcademicEcosystem;
   globalAutonomousScholarlyNetwork: GlobalAutonomousScholarlyNetwork;
+  trustedAcademicIntelligenceInfrastructure: TrustedAcademicIntelligenceInfrastructure;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];
