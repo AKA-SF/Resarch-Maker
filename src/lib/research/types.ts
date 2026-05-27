@@ -611,6 +611,107 @@ export type ResearchMemorySeed = {
   }>;
 };
 
+export type ResearchProposalDraft = {
+  title: string;
+  abstract: string;
+  introduction: string;
+  problemStatement: string;
+  researchObjectives: string[];
+  researchQuestions: string[];
+  hypothesesPropositions: string[];
+  theoreticalFramework: string;
+  literatureSynthesis: string;
+  methodologyPlan: string;
+  expectedContribution: string;
+  limitations: string[];
+  futureWorkDirections: string[];
+  evidenceBoundary: string;
+};
+
+export type ConceptualFrameworkNode = {
+  id: string;
+  label: string;
+  type: "theory" | "independent" | "mediator" | "moderator" | "dependent" | "context";
+};
+
+export type ConceptualFrameworkEdge = {
+  source: string;
+  target: string;
+  label: string;
+  explanation: string;
+};
+
+export type ConceptualFramework = {
+  modelTitle: string;
+  nodes: ConceptualFrameworkNode[];
+  edges: ConceptualFrameworkEdge[];
+  mediatorModeratorSuggestions: string[];
+  theoryIntegrationDiagram: string;
+  causalPathwayExplanation: string;
+  evidenceBoundary: string;
+};
+
+export type ResearchReasoningWorkflow = {
+  theoryComparison: string[];
+  methodologyTradeoffs: string[];
+  designSelection: string;
+  publicationStrategyReasoning: string[];
+  interdisciplinarySynthesis: string[];
+};
+
+export type RefinementAction = {
+  action: "improve_weak_topic" | "reduce_oversaturation" | "increase_publishability" | "improve_novelty" | "simplify_scope" | "follow_up_chain";
+  title: string;
+  recommendation: string;
+  rationale: string;
+  evidence: string;
+};
+
+export type LiteratureWorkspaceItem = {
+  paperId: string;
+  title: string;
+  cluster: string;
+  theme: string;
+  annotation: string;
+  contradictionTag: "none" | "possible contradiction" | "methodological tension" | "theoretical tension";
+  evidenceStrength: "low" | "medium" | "high";
+};
+
+export type LiteratureReviewWorkspace = {
+  annotations: LiteratureWorkspaceItem[];
+  paperClusters: ResearchCluster[];
+  thematicCategories: EvidenceItem[];
+  contradictionTags: DebateSignal[];
+  evidenceStrengthSummary: string;
+  draftingWorkspaceMarkdown: string;
+};
+
+export type AcademicWritingIntelligence = {
+  academicToneRewrite: string;
+  contributionStatements: string[];
+  significanceStatements: string[];
+  discussionSuggestions: string[];
+  futureResearchSuggestions: string[];
+};
+
+export type ResearchWorkflowAutomation = {
+  thesisDissertationPlan: RoadmapItem[];
+  conferencePaperPlan: RoadmapItem[];
+  journalTargetingPlan: RoadmapItem[];
+  multiPaperAgendaConstruction: RoadmapItem[];
+  longTermStrategy: RoadmapItem[];
+};
+
+export type AcademicResearchOS = {
+  proposalDraft: ResearchProposalDraft;
+  conceptualFramework: ConceptualFramework;
+  reasoningWorkflow: ResearchReasoningWorkflow;
+  refinementActions: RefinementAction[];
+  literatureWorkspace: LiteratureReviewWorkspace;
+  writingIntelligence: AcademicWritingIntelligence;
+  workflowAutomation: ResearchWorkflowAutomation;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -691,6 +792,7 @@ export type ResearchIntelligenceResult = {
   deepResearchSynthesis: DeepResearchSynthesis;
   researchForecast: ResearchForecast;
   researchMemorySeed: ResearchMemorySeed;
+  academicResearchOS: AcademicResearchOS;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

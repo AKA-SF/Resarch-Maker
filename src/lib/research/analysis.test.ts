@@ -152,4 +152,23 @@ describe("research analysis", () => {
     expect(result.researchForecast.forecastBoundary).toContain("휴리스틱");
     expect(result.researchMemorySeed.priorGeneratedTopicTitles.length).toBeGreaterThan(0);
   });
+
+  it("generates academic research OS proposal, framework, refinement, writing, and workflow outputs", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "theory-heavy research"
+    );
+    expect(result.academicResearchOS.proposalDraft.title).toContain("이론 중심형");
+    expect(result.academicResearchOS.proposalDraft.abstract.length).toBeGreaterThan(40);
+    expect(result.academicResearchOS.conceptualFramework.nodes.length).toBeGreaterThanOrEqual(4);
+    expect(result.academicResearchOS.conceptualFramework.edges.length).toBeGreaterThan(0);
+    expect(result.academicResearchOS.reasoningWorkflow.methodologyTradeoffs.length).toBeGreaterThan(0);
+    expect(result.academicResearchOS.refinementActions.length).toBeGreaterThanOrEqual(6);
+    expect(result.academicResearchOS.literatureWorkspace.annotations.length).toBeGreaterThan(0);
+    expect(result.academicResearchOS.writingIntelligence.contributionStatements.length).toBeGreaterThan(0);
+    expect(result.academicResearchOS.workflowAutomation.thesisDissertationPlan.length).toBeGreaterThan(0);
+  });
 });

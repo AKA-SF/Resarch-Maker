@@ -29,6 +29,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Generates deep synthesis outputs for theory synthesis, competing frameworks, unresolved debates, interdisciplinary connections, and conceptual integration proposals.
 - Persists local research memory seeds, evolving agendas, comparison snapshots, and collaborative workspace history in the browser.
 - Adds forecast dashboards for high-growth areas, likely future trends, saturated areas, declining themes, and interdisciplinary opportunity zones.
+- Generates complete research proposal drafts, conceptual frameworks, variable relationship maps, reasoning workflows, refinement actions, literature review workspaces, academic writing suggestions, and thesis/conference/journal workflow plans.
 
 ## Run
 
@@ -72,6 +73,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Multi-agent outputs are structured rule-based workflow traces, not autonomous external browsing agents or hidden LLM claims.
 - Forecasts are search-result heuristics based on retrieved metadata, topic frequency, and recentness; they are not predictions of field-level certainty.
 - Research memory is stored locally in the browser. It should not be treated as cloud collaboration or shared access control.
+- Proposal, conceptual framework, and writing outputs are generated planning drafts. They do not establish causal relationships or scholarly claims without later human review and source verification.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

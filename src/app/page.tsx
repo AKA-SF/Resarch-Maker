@@ -695,6 +695,166 @@ export default function Home() {
                 </section>
               </section>
 
+              <section className="split wide-left">
+                <section className="panel proposal-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Proposal Builder</p>
+                      <h2>연구 제안서 생성 워크스페이스</h2>
+                    </div>
+                    <FileText size={22} />
+                  </div>
+                  <h3>{result.academicResearchOS.proposalDraft.title}</h3>
+                  <p><strong>초록:</strong> {result.academicResearchOS.proposalDraft.abstract}</p>
+                  <p><strong>문제 진술:</strong> {result.academicResearchOS.proposalDraft.problemStatement}</p>
+                  <div className="proposal-grid">
+                    <div>
+                      <h4>연구목표</h4>
+                      <ul className="plain-list">
+                        {result.academicResearchOS.proposalDraft.researchObjectives.map((item) => (
+                          <li key={`objective-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4>한계</h4>
+                      <ul className="plain-list">
+                        {result.academicResearchOS.proposalDraft.limitations.slice(0, 4).map((item) => (
+                          <li key={`limit-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.academicResearchOS.proposalDraft.evidenceBoundary}</p>
+                </section>
+                <section className="panel framework-panel">
+                  <p className="tag">Conceptual Framework</p>
+                  <h2>개념 프레임워크 시각화</h2>
+                  <div className="framework-map">
+                    {result.academicResearchOS.conceptualFramework.nodes.map((node) => (
+                      <div className={`framework-node ${node.type}`} key={node.id}>
+                        <span>{node.type}</span>
+                        <strong>{node.label}</strong>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="timeline-list">
+                    {result.academicResearchOS.conceptualFramework.edges.map((edge) => (
+                      <article key={`${edge.source}-${edge.target}-${edge.label}`}>
+                        <strong>{edge.label}</strong>
+                        <span>{edge.explanation}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.academicResearchOS.conceptualFramework.causalPathwayExplanation}</p>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel">
+                  <p className="tag">Advanced Reasoning</p>
+                  <h2>연구 추론 워크플로우</h2>
+                  <div className="map-grid">
+                    <div>
+                      <h3>이론 비교</h3>
+                      <ul className="plain-list">
+                        {result.academicResearchOS.reasoningWorkflow.theoryComparison.slice(0, 3).map((item) => (
+                          <li key={`reason-theory-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>방법론 트레이드오프</h3>
+                      <ul className="plain-list">
+                        {result.academicResearchOS.reasoningWorkflow.methodologyTradeoffs.slice(0, 3).map((item) => (
+                          <li key={`reason-method-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>출판 전략</h3>
+                      <ul className="plain-list">
+                        {result.academicResearchOS.reasoningWorkflow.publicationStrategyReasoning.slice(0, 3).map((item) => (
+                          <li key={`reason-pub-${item}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+                <section className="panel">
+                  <p className="tag">Refinement Workflow</p>
+                  <h2>자율 연구 개선 액션</h2>
+                  <div className="rank-list">
+                    {result.academicResearchOS.refinementActions.map((action) => (
+                      <article key={action.action}>
+                        <strong>{action.title}</strong>
+                        <p>{action.recommendation}</p>
+                        <span>{action.evidence}</span>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel">
+                  <p className="tag">Literature Review Workspace</p>
+                  <h2>지능형 문헌리뷰 작업공간</h2>
+                  <div className="rank-list">
+                    {result.academicResearchOS.literatureWorkspace.annotations.slice(0, 6).map((item) => (
+                      <article key={`annotation-${item.paperId}`}>
+                        <strong>{topicShortTitle(item.title)}</strong>
+                        <span>{item.cluster} · {item.theme} · 근거강도 {item.evidenceStrength} · {item.contradictionTag}</span>
+                        <p>{item.annotation}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.academicResearchOS.literatureWorkspace.evidenceStrengthSummary}</p>
+                </section>
+                <section className="panel">
+                  <p className="tag">Academic Writing Assistant</p>
+                  <h2>학술 글쓰기 보조</h2>
+                  <p><strong>학술 톤 문장:</strong> {result.academicResearchOS.writingIntelligence.academicToneRewrite}</p>
+                  <h3>기여문장</h3>
+                  <ul className="plain-list">
+                    {result.academicResearchOS.writingIntelligence.contributionStatements.map((item) => (
+                      <li key={`contrib-statement-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <h3 className="subsection-title">토론/후속 연구 제안</h3>
+                  <ul className="plain-list">
+                    {[...result.academicResearchOS.writingIntelligence.discussionSuggestions, ...result.academicResearchOS.writingIntelligence.futureResearchSuggestions].slice(0, 5).map((item) => (
+                      <li key={`writing-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              </section>
+
+              <section className="panel">
+                <p className="tag">Workflow Automation</p>
+                <h2>학위·학회·저널·다편 논문 자동화 플랜</h2>
+                <div className="workflow-grid">
+                  <div>
+                    <h3>학위논문</h3>
+                    {result.academicResearchOS.workflowAutomation.thesisDissertationPlan.map((item) => (
+                      <article key={`thesis-${item.title}`}><strong>{item.title}</strong><p>{item.rationale}</p></article>
+                    ))}
+                  </div>
+                  <div>
+                    <h3>학회/저널</h3>
+                    {[...result.academicResearchOS.workflowAutomation.conferencePaperPlan, ...result.academicResearchOS.workflowAutomation.journalTargetingPlan.slice(0, 2)].map((item) => (
+                      <article key={`venue-plan-${item.title}`}><strong>{item.title}</strong><p>{item.rationale}</p></article>
+                    ))}
+                  </div>
+                  <div>
+                    <h3>다편 연구 아젠다</h3>
+                    {result.academicResearchOS.workflowAutomation.multiPaperAgendaConstruction.map((item) => (
+                      <article key={`agenda-plan-${item.title}`}><strong>{item.title}</strong><p>{item.rationale}</p></article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
               <section className="split">
                 <section className="panel">
                   <div className="panel-head">

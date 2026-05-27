@@ -40,6 +40,7 @@ import {
   buildResearchForecast,
   buildResearchMemorySeed
 } from "./agents";
+import { buildAcademicResearchOS } from "./operating-system";
 
 const broadConcepts = new Set([
   "psychology",
@@ -447,6 +448,21 @@ export function buildResearchIntelligenceResult(
   const deepResearchSynthesis = buildDeepResearchSynthesis(synthesis, literatureMap, debateAnalysis, topics);
   const researchForecast = buildResearchForecast(competitionIntelligence, trendAnalysis, researchRoadmap, bibliometricAnalysis);
   const researchMemorySeed = buildResearchMemorySeed(topics, theoryGraph, literatureMap, strategy);
+  const academicResearchOS = buildAcademicResearchOS(
+    topics,
+    papers,
+    synthesis,
+    literatureReviewDraft,
+    citationIntelligence,
+    debateAnalysis,
+    gaps,
+    bibliometricAnalysis,
+    publicationIntelligence,
+    competitionIntelligence,
+    discipline,
+    methodology,
+    strategy
+  );
   const domainIntelligence = getDomainIntelligence(discipline);
 
   return {
@@ -472,6 +488,7 @@ export function buildResearchIntelligenceResult(
     deepResearchSynthesis,
     researchForecast,
     researchMemorySeed,
+    academicResearchOS,
     copilot,
     domainIntelligence,
     gaps,
