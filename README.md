@@ -35,6 +35,7 @@ MVP web app for generating research topic candidates from scholarly metadata.
 - Adds persistent scholarly memory with local JSON session storage, local hashing-based vector retrieval, cross-session recall, and a unified scholarly knowledge graph spanning papers, authors, theories, concepts, methodologies, datasets, venues, institutions, disciplines, and generated topics.
 - Adds predictive academic intelligence for trend forecasting, publication outcome estimates, advanced topic evaluation, autonomous strategy optimization, scenario simulation, and research impact pathway analysis.
 - Adds a fully autonomous academic operating layer that coordinates topic-to-proposal workflows, research production drafts, dependency-aware planning, scholarly reasoning panels, monitoring alerts, optimization controls, and versioned research workspace outputs.
+- Adds a self-evolving academic ecosystem layer for snapshot-based continuous learning, dynamic knowledge graph updates, autonomous monitoring feeds, research benchmarking, adaptive agent coordination, institutional/team intelligence, workspace hubs, and long-term research trajectories.
 
 ## Run
 
@@ -86,6 +87,7 @@ Before publishing, keep generated build output, dependencies, local environment 
 - Unified knowledge graph edges mark inferred relationships separately from retrieved metadata relationships and should be treated as exploration candidates unless independently verified.
 - Predictive intelligence is heuristic and evidence-bound. It estimates strategic likelihoods from retrieved metadata, graph signals, memory, and existing scores; it does not guarantee publication, citations, hot-topic status, or scholarly impact.
 - The autonomous academic operating layer coordinates workflows and drafts dossiers from existing evidence-bound modules. It does not run real experiments, submit IRB, manage real-time collaboration permissions, verify final citations, or guarantee publication outcomes.
+- The self-evolving ecosystem layer compares the current OpenAlex search snapshot with local memory and graph signals. It does not run a hidden background crawler, verify funding alignment from external grant databases, or guarantee forecasting accuracy.
 - Copilot recommendations are rule-based inferences from retrieved evidence, graph metrics, topic scores, and methodology signals. They are not generated from hidden sources.
 
 ## Known MVP limits

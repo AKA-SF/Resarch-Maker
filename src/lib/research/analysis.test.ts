@@ -321,4 +321,36 @@ describe("research analysis", () => {
     expect(result.autonomousAcademicOS.progressDashboard.length).toBeGreaterThan(0);
     expect(result.autonomousAcademicOS.operatingBoundary).toContain("보장하지 않습니다");
   });
+
+  it("builds a self-evolving academic intelligence ecosystem", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "interdisciplinary innovation",
+      {
+        interests: ["AI education"],
+        preferredMethodologies: ["quantitative", "SEM"],
+        noveltyTolerance: "high",
+        careerStage: "researcher"
+      }
+    );
+
+    expect(result.selfEvolvingAcademicEcosystem.continuousLearning.ingestionWorkflow.map((step) => step.step)).toEqual([
+      "retrieve",
+      "compare",
+      "update_graph",
+      "refine_gaps",
+      "rescore_topics",
+      "refresh_forecast"
+    ]);
+    expect(result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.ecosystemNodes.length).toBeGreaterThan(0);
+    expect(result.selfEvolvingAcademicEcosystem.ecosystemMonitoringFeeds.length).toBeGreaterThan(0);
+    expect(result.selfEvolvingAcademicEcosystem.researchBenchmarking[0].overallBenchmark).toBeGreaterThanOrEqual(1);
+    expect(result.selfEvolvingAcademicEcosystem.adaptiveAgentCoordination.iterativePlanImprovements.length).toBeGreaterThan(0);
+    expect(result.selfEvolvingAcademicEcosystem.institutionalTeamIntelligence.facultyExpertiseAlignment.length).toBeGreaterThan(0);
+    expect(result.selfEvolvingAcademicEcosystem.advancedWorkspaceEcosystem.exportableInstitutionalDossier).toContain("Institutional trend profile");
+    expect(result.selfEvolvingAcademicEcosystem.ecosystemBoundary).toContain("보장하지 않습니다");
+  });
 });

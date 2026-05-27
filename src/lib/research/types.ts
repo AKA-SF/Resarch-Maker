@@ -1302,6 +1302,142 @@ export type AutonomousAcademicOperatingSystem = {
   operatingBoundary: string;
 };
 
+export type ContinuousScholarlyLearning = {
+  ingestionWorkflow: Array<{
+    step: "retrieve" | "compare" | "update_graph" | "refine_gaps" | "rescore_topics" | "refresh_forecast";
+    status: "completed" | "ready" | "needs_review";
+    evidence: string;
+    nextAction: string;
+  }>;
+  theoryRelationshipUpdates: Array<{
+    source: string;
+    target: string;
+    previousSignal: string;
+    updatedSignal: string;
+    evidence: string;
+    paperIds: string[];
+  }>;
+  gapRefinements: Array<{
+    originalGap: string;
+    refinedGap: string;
+    evidence: string;
+    confidence: "low" | "medium" | "high";
+  }>;
+  topicScoringEvolution: Array<{
+    topicTitle: string;
+    previousScore: number;
+    evolvedScore: number;
+    reason: string;
+  }>;
+  interdisciplinaryBridgeDetections: MultiHopDiscoveryPath[];
+  forecastingModelAdaptations: string[];
+  learningBoundary: string;
+};
+
+export type SelfEvolvingKnowledgeGraph = {
+  ecosystemNodes: UnifiedKnowledgeGraphNode[];
+  ecosystemEdges: UnifiedKnowledgeGraphEdge[];
+  dynamicRelationshipUpdates: ContinuousScholarlyLearning["theoryRelationshipUpdates"];
+  multiHopDiscovery: MultiHopDiscoveryPath[];
+  hiddenConceptDiscovery: MultiHopDiscoveryPath[];
+  evolvingTheoryLineage: Array<{
+    theory: string;
+    lineage: string[];
+    evidence: string;
+    paperIds: string[];
+  }>;
+  graphEvolutionSummary: string;
+  graphBoundary: string;
+};
+
+export type EcosystemMonitoringFeed = {
+  type:
+    | "fast_growing_area"
+    | "oversaturated_domain"
+    | "funding_aligned_trend"
+    | "institutional_shift"
+    | "publication_surge"
+    | "emerging_methodology"
+    | "interdisciplinary_convergence";
+  label: string;
+  priority: "low" | "medium" | "high";
+  evidence: string;
+  generatedInterpretation: string;
+  suggestedAction: string;
+  paperIds: string[];
+};
+
+export type ResearchBenchmark = {
+  topicTitle: string;
+  literatureDensity: number;
+  methodologicalRigorNormFit: number;
+  journalExpectationFit: number;
+  interdisciplinaryNovelty: number;
+  likelyCitationPotential: number;
+  longTermScalability: number;
+  overallBenchmark: number;
+  reasoning: string[];
+  evidence: string;
+};
+
+export type AdaptiveAgentCoordination = {
+  theoryDebates: Array<{
+    positionA: string;
+    positionB: string;
+    resolution: string;
+    evidence: string;
+  }>;
+  methodologyComparisons: Array<{
+    methodA: string;
+    methodB: string;
+    recommendation: string;
+    tradeoff: string;
+    evidence: string;
+  }>;
+  proposalCritiques: string[];
+  iterativePlanImprovements: string[];
+  coordinationBoundary: string;
+};
+
+export type InstitutionalTeamIntelligence = {
+  departmentResearchProfiling: InstitutionalIntelligence["departmentResearchMap"];
+  labGroupCollaborationMapping: InstitutionalIntelligence["labGroupAlignment"];
+  facultyExpertiseAlignment: InstitutionalIntelligence["facultyExpertiseMatches"];
+  strategicResearchDashboard: string[];
+  collaborationOpportunityDiscovery: InstitutionalIntelligence["collaborationOpportunities"];
+  institutionalBoundary: string;
+};
+
+export type AdvancedWorkspaceEcosystem = {
+  persistentWorkspaceStatus: string;
+  teamCollaborationHub: string[];
+  versionedProposalEvolution: AutonomousWorkspaceCollaboration["proposalVersions"];
+  longTermResearchMemory: string[];
+  crossProjectKnowledgeSharing: string[];
+  exportableInstitutionalDossier: string[];
+  workspaceBoundary: string;
+};
+
+export type LongTermResearchTrajectoryView = {
+  trajectory: string;
+  currentPosition: string;
+  nextMilestones: string[];
+  evidence: string;
+};
+
+export type SelfEvolvingAcademicEcosystem = {
+  ecosystemRunId: string;
+  continuousLearning: ContinuousScholarlyLearning;
+  selfEvolvingKnowledgeGraph: SelfEvolvingKnowledgeGraph;
+  ecosystemMonitoringFeeds: EcosystemMonitoringFeed[];
+  researchBenchmarking: ResearchBenchmark[];
+  adaptiveAgentCoordination: AdaptiveAgentCoordination;
+  institutionalTeamIntelligence: InstitutionalTeamIntelligence;
+  advancedWorkspaceEcosystem: AdvancedWorkspaceEcosystem;
+  longTermTrajectoryViews: LongTermResearchTrajectoryView[];
+  ecosystemBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1388,6 +1524,7 @@ export type ResearchIntelligenceResult = {
   persistentScholarlyMemory: PersistentScholarlyMemory;
   predictiveAcademicIntelligence: PredictiveAcademicIntelligence;
   autonomousAcademicOS: AutonomousAcademicOperatingSystem;
+  selfEvolvingAcademicEcosystem: SelfEvolvingAcademicEcosystem;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

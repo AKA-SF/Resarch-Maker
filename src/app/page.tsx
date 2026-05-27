@@ -927,6 +927,224 @@ export default function Home() {
               </section>
 
               <section className="split wide-left">
+                <section className="panel evolving-ecosystem-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Self-Evolving Ecosystem</p>
+                      <h2>라이브 학술 생태계 대시보드</h2>
+                    </div>
+                    <Compass size={22} />
+                  </div>
+                  <div className="domain-grid">
+                    <div>
+                      <span>학습 단계</span>
+                      <strong>{result.selfEvolvingAcademicEcosystem.continuousLearning.ingestionWorkflow.length}</strong>
+                    </div>
+                    <div>
+                      <span>동적 관계</span>
+                      <strong>{result.selfEvolvingAcademicEcosystem.continuousLearning.theoryRelationshipUpdates.length}</strong>
+                    </div>
+                    <div>
+                      <span>그래프 노드</span>
+                      <strong>{result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.ecosystemNodes.length}</strong>
+                    </div>
+                    <div>
+                      <span>모니터링 피드</span>
+                      <strong>{result.selfEvolvingAcademicEcosystem.ecosystemMonitoringFeeds.length}</strong>
+                    </div>
+                  </div>
+                  <div className="learning-workflow-grid">
+                    {result.selfEvolvingAcademicEcosystem.continuousLearning.ingestionWorkflow.map((step) => (
+                      <article key={`learning-step-${step.step}`}>
+                        <span>{step.status}</span>
+                        <strong>{step.step.replaceAll("_", " ")}</strong>
+                        <p>{step.evidence}</p>
+                        <em>{step.nextAction}</em>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfEvolvingAcademicEcosystem.ecosystemBoundary}</p>
+                </section>
+
+                <section className="panel ecosystem-feed-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Monitoring Feed</p>
+                      <h2>생태계 모니터링</h2>
+                    </div>
+                    <BarChart3 size={22} />
+                  </div>
+                  <div className="ecosystem-feed-list">
+                    {result.selfEvolvingAcademicEcosystem.ecosystemMonitoringFeeds.slice(0, 8).map((feed) => (
+                      <article key={`ecosystem-feed-${feed.type}-${feed.label}`}>
+                        <span>{feed.type.replaceAll("_", " ")} · {feed.priority}</span>
+                        <strong>{feed.label}</strong>
+                        <p>{feed.generatedInterpretation}</p>
+                        <small>{feed.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel evolving-graph-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Evolving Knowledge Graph</p>
+                      <h2>진화형 지식 그래프</h2>
+                    </div>
+                    <Network size={22} />
+                  </div>
+                  <p>{result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.graphEvolutionSummary}</p>
+                  <div className="relationship-update-grid">
+                    {result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.dynamicRelationshipUpdates.slice(0, 6).map((edge) => (
+                      <article key={`evolving-edge-${edge.source}-${edge.target}`}>
+                        <strong>{edge.source} → {edge.target}</strong>
+                        <span>{edge.previousSignal} · {edge.updatedSignal}</span>
+                        <p>{edge.evidence}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">숨은 개념 발견</h3>
+                  <div className="timeline-list">
+                    {result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.hiddenConceptDiscovery.slice(0, 4).map((path) => (
+                      <article key={`hidden-concept-${path.path.join("-")}`}>
+                        <strong>{path.path.join(" → ")}</strong>
+                        <span>{confidenceLabels[path.confidence]} · {path.evidence}</span>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfEvolvingAcademicEcosystem.selfEvolvingKnowledgeGraph.graphBoundary}</p>
+                </section>
+
+                <section className="panel benchmark-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Research Benchmarking</p>
+                      <h2>연구 벤치마킹</h2>
+                    </div>
+                    <Scale size={22} />
+                  </div>
+                  <div className="benchmark-list">
+                    {result.selfEvolvingAcademicEcosystem.researchBenchmarking.slice(0, 3).map((benchmark) => (
+                      <article key={`benchmark-${benchmark.topicTitle}`}>
+                        <div>
+                          <strong>{topicShortTitle(benchmark.topicTitle)}</strong>
+                          <span>종합 {benchmark.overallBenchmark}/10</span>
+                        </div>
+                        <p>문헌 {benchmark.literatureDensity} · 방법론 {benchmark.methodologicalRigorNormFit} · 저널 기대 {benchmark.journalExpectationFit}</p>
+                        <small>{benchmark.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel agent-coordination-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Adaptive Agent Coordination</p>
+                      <h2>에이전트 토론 / 개선 루프</h2>
+                    </div>
+                    <MessageSquare size={22} />
+                  </div>
+                  <div className="map-grid">
+                    <div>
+                      <h3>이론 토론</h3>
+                      <ul className="plain-list">
+                        {result.selfEvolvingAcademicEcosystem.adaptiveAgentCoordination.theoryDebates.slice(0, 3).map((debate, index) => (
+                          <li key={`theory-debate-${index}-${debate.positionA}`}>{debate.positionA} vs {debate.positionB}: {debate.resolution}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>방법론 비교</h3>
+                      <ul className="plain-list">
+                        {result.selfEvolvingAcademicEcosystem.adaptiveAgentCoordination.methodologyComparisons.slice(0, 3).map((comparison) => (
+                          <li key={`method-compare-${comparison.methodA}-${comparison.methodB}`}>{comparison.methodA} / {comparison.methodB}: {comparison.recommendation}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3>반복 개선</h3>
+                      <ul className="plain-list">
+                        {result.selfEvolvingAcademicEcosystem.adaptiveAgentCoordination.iterativePlanImprovements.slice(0, 4).map((item, index) => (
+                          <li key={`iterative-improvement-${index}-${item.slice(0, 28)}`}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <p className="muted">{result.selfEvolvingAcademicEcosystem.adaptiveAgentCoordination.coordinationBoundary}</p>
+                </section>
+
+                <section className="panel ecosystem-workspace-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Collaborative Research Hub</p>
+                      <h2>협업 워크스페이스 생태계</h2>
+                    </div>
+                    <Users size={22} />
+                  </div>
+                  <p>{result.selfEvolvingAcademicEcosystem.advancedWorkspaceEcosystem.persistentWorkspaceStatus}</p>
+                  <div className="chips">
+                    {result.selfEvolvingAcademicEcosystem.advancedWorkspaceEcosystem.teamCollaborationHub.map((member) => (
+                      <span key={`ecosystem-collab-${member}`}>{member}</span>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">장기 연구 궤적</h3>
+                  <div className="timeline-list">
+                    {result.selfEvolvingAcademicEcosystem.longTermTrajectoryViews.slice(0, 4).map((view) => (
+                      <article key={`trajectory-${view.trajectory}`}>
+                        <strong>{view.trajectory}</strong>
+                        <span>{topicShortTitle(view.currentPosition)}</span>
+                        <p>{view.nextMilestones.join(" → ")}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.selfEvolvingAcademicEcosystem.advancedWorkspaceEcosystem.workspaceBoundary}</p>
+                </section>
+              </section>
+
+              <section className="panel institutional-ecosystem-panel">
+                <div className="panel-head">
+                  <div>
+                    <p className="tag">Institutional & Team Intelligence</p>
+                    <h2>기관 규모 연구 인텔리전스</h2>
+                  </div>
+                  <Building2 size={22} />
+                </div>
+                <div className="map-grid">
+                  <div>
+                    <h3>학과 프로필</h3>
+                    <ul className="plain-list">
+                      {result.selfEvolvingAcademicEcosystem.institutionalTeamIntelligence.departmentResearchProfiling.slice(0, 5).map((item) => (
+                        <li key={`ecosystem-dept-${item.area}`}>{item.area} · {item.paperCount}편</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>연구실/그룹 정렬</h3>
+                    <ul className="plain-list">
+                      {result.selfEvolvingAcademicEcosystem.institutionalTeamIntelligence.labGroupCollaborationMapping.slice(0, 5).map((item) => (
+                        <li key={`ecosystem-lab-${item.group}`}>{item.group}: {item.alignment}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3>협업 기회</h3>
+                    <ul className="plain-list">
+                      {result.selfEvolvingAcademicEcosystem.institutionalTeamIntelligence.collaborationOpportunityDiscovery.slice(0, 5).map((item) => (
+                        <li key={`ecosystem-opportunity-${item.source}-${item.target}`}>{item.source} ↔ {item.target}: {item.opportunity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <p className="muted">{result.selfEvolvingAcademicEcosystem.institutionalTeamIntelligence.institutionalBoundary}</p>
+              </section>
+
+              <section className="split wide-left">
                 <section className="panel refinement-loop-panel">
                   <div className="panel-head">
                     <div>
