@@ -150,6 +150,21 @@ const refinedScoreLabels: Record<string, string> = {
   evidenceSupport: "근거 지지"
 };
 
+const predictionDirectionLabels: Record<string, string> = {
+  rising: "상승",
+  declining: "하락",
+  stable: "안정",
+  saturated: "포화",
+  accelerating: "가속"
+};
+
+const optimizationVariantLabels: Record<string, string> = {
+  publication_likelihood: "출판가능성",
+  novelty: "참신성",
+  feasibility: "실행가능성",
+  risk_impact_balance: "위험/임팩트 균형"
+};
+
 const nodeColors: Record<GraphNode["type"], string> = {
   theory: "#176b5f",
   concept: "#3b68a8",
@@ -997,6 +1012,153 @@ export default function Home() {
                     </ul>
                   </div>
                 </div>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel predictive-forecast-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Predictive Forecasting</p>
+                      <h2>예측 연구 인텔리전스</h2>
+                    </div>
+                    <BarChart3 size={22} />
+                  </div>
+                  <div className="prediction-signal-grid">
+                    {result.predictiveAcademicIntelligence.forecasting.likelyFutureHotTopics.slice(0, 6).map((item) => (
+                      <article key={`hot-topic-${item.label}-${item.direction}`}>
+                        <span>{predictionDirectionLabels[item.direction]} · {item.horizon} · {confidenceLabels[item.confidence]}</span>
+                        <strong>{item.label}</strong>
+                        <em>{item.score}/10</em>
+                        <p>{item.generatedForecast}</p>
+                        <small>{item.evidence}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <p className="muted">{result.predictiveAcademicIntelligence.forecasting.forecastBoundary}</p>
+                </section>
+                <section className="panel publication-prediction-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Publication Prediction</p>
+                      <h2>출판 결과 추정</h2>
+                    </div>
+                    <Target size={22} />
+                  </div>
+                  <div className="rank-list">
+                    {result.predictiveAcademicIntelligence.publicationOutcomes.slice(0, 3).map((item) => (
+                      <article key={`publication-outcome-${item.topicTitle}`}>
+                        <strong>{topicShortTitle(item.topicTitle)}</strong>
+                        <span>출판가능성 {item.publishabilityLikelihood}/10 · venue fit {item.journalConferenceFit}/10 · citation potential {item.citationPotential}/10</span>
+                        <p>{item.reasoning[0]}</p>
+                        <p className="muted">{item.warning}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split">
+                <section className="panel predictive-evaluation-panel">
+                  <p className="tag">Advanced Evaluation</p>
+                  <h2>예측 평가 엔진</h2>
+                  <div className="evaluation-list">
+                    {result.predictiveAcademicIntelligence.advancedEvaluation.slice(0, 3).map((item) => (
+                      <article key={`predictive-eval-${item.topicTitle}`}>
+                        <div>
+                          <strong>{topicShortTitle(item.topicTitle)}</strong>
+                          <span>종합 {item.overall}/10</span>
+                        </div>
+                        <div className="evaluation-bars">
+                          {[
+                            ["이론 정합성", item.theoreticalCoherence],
+                            ["실증 검증성", item.empiricalTestability],
+                            ["방법론 엄밀성", item.methodologicalRigor],
+                            ["장기 확장성", item.longTermResearchScalability]
+                          ].map(([label, value]) => (
+                            <p key={`predictive-score-${item.topicTitle}-${label}`}>
+                              <span>{label}</span>
+                              <i style={{ width: `${Number(value) * 10}%` }} />
+                              <strong>{value}</strong>
+                            </p>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+                <section className="panel optimization-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Autonomous Optimization</p>
+                      <h2>연구 전략 자동 최적화</h2>
+                    </div>
+                    <Rocket size={22} />
+                  </div>
+                  <div className="optimization-grid">
+                    {result.predictiveAcademicIntelligence.optimizationVariants.map((variant) => (
+                      <article key={`optimization-${variant.variant}`}>
+                        <span>{optimizationVariantLabels[variant.variant]}</span>
+                        <strong>{variant.title}</strong>
+                        <p>{variant.optimizedResearchQuestion}</p>
+                        <small>{variant.expectedTradeoff}</small>
+                        <div>
+                          <em>신규성 {variant.scoreProfile.novelty}</em>
+                          <em>실행 {variant.scoreProfile.feasibility}</em>
+                          <em>출판 {variant.scoreProfile.publishability}</em>
+                          <em>위험 {variant.scoreProfile.risk}</em>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="split wide-left">
+                <section className="panel predictive-simulation-panel">
+                  <div className="panel-head">
+                    <div>
+                      <p className="tag">Strategy Simulation</p>
+                      <h2>예측 전략 시뮬레이션</h2>
+                    </div>
+                    <Scale size={22} />
+                  </div>
+                  <div className="scenario-grid">
+                    {result.predictiveAcademicIntelligence.strategySimulations.map((scenario) => (
+                      <article key={`predictive-scenario-${scenario.scenario}`}>
+                        <span>{scenario.scenario.replaceAll("_", " ")}</span>
+                        <strong>{scenario.comparativeScore}/10</strong>
+                        <p>{scenario.predictedUpside}</p>
+                        <em>{scenario.evidence}</em>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">비교 시나리오</h3>
+                  <ul className="plain-list">
+                    {result.predictiveAcademicIntelligence.comparativeScenarioAnalysis.map((item, index) => (
+                      <li key={`comparative-scenario-${index}-${item.slice(0, 30)}`}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="panel impact-panel">
+                  <p className="tag">Impact Intelligence</p>
+                  <h2>연구 임팩트 추정</h2>
+                  <div className="rank-list compact">
+                    {result.predictiveAcademicIntelligence.impactIntelligence.likelyResearchCommunitiesImpacted.slice(0, 5).map((community) => (
+                      <article key={`impact-community-${community.community}`}>
+                        <strong>{community.community}</strong>
+                        <span>영향 가능성 {community.likelihood}/10</span>
+                        <p>{community.evidence}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <h3 className="subsection-title">후속 경로</h3>
+                  <ul className="plain-list">
+                    {result.predictiveAcademicIntelligence.impactIntelligence.downstreamResearchPathways.map((item) => (
+                      <li key={`downstream-${item}`}>{item}</li>
+                    ))}
+                  </ul>
+                  <p className="muted">{result.predictiveAcademicIntelligence.impactIntelligence.impactBoundary}</p>
+                </section>
               </section>
 
               <section className="split wide-left">

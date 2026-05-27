@@ -1075,6 +1075,108 @@ export type PersistentScholarlyMemory = {
   };
 };
 
+export type PredictiveSignal = {
+  label: string;
+  score: number;
+  direction: "rising" | "declining" | "stable" | "saturated" | "accelerating";
+  horizon: "near-term" | "mid-term" | "long-term";
+  evidence: string;
+  generatedForecast: string;
+  confidence: "low" | "medium" | "high";
+  evidencePaperIds: string[];
+};
+
+export type PredictiveResearchForecasting = {
+  emergingResearchDomains: PredictiveSignal[];
+  risingTheoriesFrameworks: PredictiveSignal[];
+  futureMethodologyTrends: PredictiveSignal[];
+  acceleratingInterdisciplinaryAreas: PredictiveSignal[];
+  decliningSaturatedTopics: PredictiveSignal[];
+  likelyFutureHotTopics: PredictiveSignal[];
+  forecastBoundary: string;
+};
+
+export type PublicationOutcomeEstimate = {
+  topicTitle: string;
+  publishabilityLikelihood: number;
+  journalConferenceFit: number;
+  citationPotential: number;
+  noveltyDurability: number;
+  methodologicalAcceptanceLikelihood: number;
+  interdisciplinaryImpactPotential: number;
+  reasoning: string[];
+  evidence: string;
+  warning: string;
+};
+
+export type AdvancedPredictiveEvaluation = {
+  topicTitle: string;
+  theoreticalCoherence: number;
+  empiricalTestability: number;
+  methodologicalRigor: number;
+  replicationFeasibility: number;
+  literatureSupportStrength: number;
+  practicalRelevance: number;
+  longTermResearchScalability: number;
+  overall: number;
+  reasoning: string[];
+};
+
+export type ResearchOptimizationVariant = {
+  variant: "publication_likelihood" | "novelty" | "feasibility" | "risk_impact_balance";
+  title: string;
+  optimizedResearchQuestion: string;
+  strategy: string;
+  expectedTradeoff: string;
+  scoreProfile: {
+    novelty: number;
+    feasibility: number;
+    publishability: number;
+    impact: number;
+    risk: number;
+  };
+  evidence: string;
+};
+
+export type PredictiveStrategySimulation = {
+  scenario:
+    | "safe_publication_path"
+    | "high_risk_high_impact_path"
+    | "dissertation_strategy"
+    | "multi_paper_agenda"
+    | "interdisciplinary_expansion"
+    | "long_term_positioning";
+  predictedUpside: string;
+  riskWarnings: string[];
+  recommendedMoves: string[];
+  comparativeScore: number;
+  evidence: string;
+};
+
+export type ResearchImpactIntelligence = {
+  predictedContributionAreas: PredictiveSignal[];
+  likelyResearchCommunitiesImpacted: Array<{
+    community: string;
+    likelihood: number;
+    evidence: string;
+  }>;
+  potentialInterdisciplinaryInfluence: PredictiveSignal[];
+  futureExpansionOpportunities: string[];
+  downstreamResearchPathways: string[];
+  impactBoundary: string;
+};
+
+export type PredictiveAcademicIntelligence = {
+  forecasting: PredictiveResearchForecasting;
+  publicationOutcomes: PublicationOutcomeEstimate[];
+  advancedEvaluation: AdvancedPredictiveEvaluation[];
+  optimizationVariants: ResearchOptimizationVariant[];
+  strategySimulations: PredictiveStrategySimulation[];
+  impactIntelligence: ResearchImpactIntelligence;
+  comparativeScenarioAnalysis: string[];
+  predictionBoundary: string;
+};
+
 export type Topic = {
   title: string;
   rationale: string;
@@ -1159,6 +1261,7 @@ export type ResearchIntelligenceResult = {
   selfImprovingIntelligence: SelfImprovingAcademicIntelligence;
   agenticResearchLoop: AgenticResearchLoop;
   persistentScholarlyMemory: PersistentScholarlyMemory;
+  predictiveAcademicIntelligence: PredictiveAcademicIntelligence;
   copilot: CopilotIntelligence;
   domainIntelligence: DomainIntelligence;
   gaps: Gap[];

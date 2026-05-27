@@ -270,4 +270,28 @@ describe("research analysis", () => {
     expect(result.persistentScholarlyMemory.researchRecall.rememberedPriorIdeas).toContain("AI education and self-efficacy prior topic");
     expect(result.persistentScholarlyMemory.persistence.enabled).toBe(false);
   });
+
+  it("generates predictive forecasting, publication estimates, optimization, simulation, and impact intelligence", () => {
+    const result = buildResearchIntelligenceResult(
+      ["AI", "education", "self-efficacy"],
+      "education",
+      "quantitative",
+      papers,
+      "high-impact/high-risk research",
+      {
+        interests: ["AI education"],
+        preferredMethodologies: ["quantitative", "SEM"],
+        noveltyTolerance: "high",
+        careerStage: "researcher"
+      }
+    );
+    expect(result.predictiveAcademicIntelligence.forecasting.likelyFutureHotTopics.length).toBeGreaterThan(0);
+    expect(result.predictiveAcademicIntelligence.publicationOutcomes[0].publishabilityLikelihood).toBeGreaterThanOrEqual(1);
+    expect(result.predictiveAcademicIntelligence.publicationOutcomes[0].warning).toContain("보장하지 않습니다");
+    expect(result.predictiveAcademicIntelligence.advancedEvaluation[0].overall).toBeGreaterThanOrEqual(1);
+    expect(result.predictiveAcademicIntelligence.optimizationVariants.map((item) => item.variant)).toContain("novelty");
+    expect(result.predictiveAcademicIntelligence.strategySimulations.length).toBeGreaterThanOrEqual(6);
+    expect(result.predictiveAcademicIntelligence.impactIntelligence.downstreamResearchPathways.length).toBeGreaterThan(0);
+    expect(result.predictiveAcademicIntelligence.predictionBoundary).toContain("휴리스틱");
+  });
 });
